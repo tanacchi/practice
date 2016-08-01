@@ -4,6 +4,8 @@ int kansuu(int x);
 
 void print(void);
 
+int command_num(int i, char src[]);
+
 int main(int argc, char* argv[]){
 
   int command_num = -1;
@@ -14,27 +16,14 @@ int main(int argc, char* argv[]){
 	   "(Please add option)\n");
     return -1;
   }
-  int i;
+  int i, command;
   for (i = 1; i < argc; i++){
-  
-    if      (!(strcmp(argv[i], "-a"))) command_num = 0;
-    else if (!(strcmp(argv[i], "-b"))) command_num = 1;
-    else if (!(strcmp(argv[i], "-c"))) command_num = 2;
-    else if (!(strcmp(argv[i], "-d"))) command_num = 3;
-    else if (!(strcmp(argv[i], "-e"))) command_num = 4;
-    else if (!(strcmp(argv[i], "-f"))) command_num = 5;
-    else if (!(strcmp(argv[i], "-g"))) command_num = 6;
-    else if (!(strcmp(argv[i], "-h"))) command_num = 7;
-    else if (!(strcmp(argv[i], "-i"))) command_num = 8;
-    else if (!(strcmp(argv[i], "-j"))) command_num = 9;
-    else if (!(strcmp(argv[i], "-k"))) command_num = 10;
-    else {
+    command = command_num(i, argv);
+
+    switch (command){
+    case -1:
       printf("command not be found\n");
       return -1;
-    }
-
-    switch (command_num){
-    
     case 0:
       printf("kansuu=%d\n", kansuu(10));
       break;
@@ -54,7 +43,6 @@ int main(int argc, char* argv[]){
     default:
       printf("task not be made\n");
     }
-
   }
   return 0;
 }
@@ -75,3 +63,20 @@ void print(void){
   
 }
 
+int command_num(int i, char src[]){ 
+
+    if      (!(strcmp(src[i], "-a"))) return 0;
+    else if (!(strcmp(src[i], "-b"))) return 1;
+    else if (!(strcmp(src[i], "-c"))) return 2;
+    else if (!(strcmp(src[i], "-d"))) return 3;
+    else if (!(strcmp(src[i], "-e"))) return 4;
+    else if (!(strcmp(src[i], "-f"))) return 5;
+    else if (!(strcmp(src[i], "-g"))) return 6;
+    else if (!(strcmp(src[i], "-h"))) return 7;
+    else if (!(strcmp(src[i], "-i"))) return 8;
+    else if (!(strcmp(src[i], "-j"))) return 9;
+    else if (!(strcmp(src[i], "-k"))) return 10;
+    else                              return -1;
+
+}
+    
