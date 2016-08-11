@@ -1,13 +1,19 @@
 #include <stdio.h>
 #include <string.h>
+#include <stdlib.h>
+#include <time.h>
+
+#define width 80
 
 int kansuu(int x);
-
 void print(void);
-
 int command_num(int i, char src[]);
-
 void multiple_ary(void);
+void prime_number(void);
+int judge_prime(int x;);
+void jyanken(void);
+int input_plr(char *src);
+void command_practice(void);
 
 int main(int argc, char* argv[]){
   
@@ -20,7 +26,11 @@ int main(int argc, char* argv[]){
   int i, command;
   for (i = 1; i < argc; i++){
 
-    if      (!(strcmp(argv[i], "-a"))) command = 0;
+    if      (!(strcmp(argv[1], "-all"))){
+      argc = 10;
+      command = i - 1;
+    }
+    else if (!(strcmp(argv[i], "-a"))) command = 0;
     else if (!(strcmp(argv[i], "-b"))) command = 1;
     else if (!(strcmp(argv[i], "-c"))) command = 2;
     else if (!(strcmp(argv[i], "-d"))) command = 3;
@@ -48,13 +58,24 @@ int main(int argc, char* argv[]){
       multiple_ary();
       break;
     case 3:
+      prime_number();
+      break;
     case 4:
+      jyanken();
+      break;
     case 5:
+      command_practice();
+      break;
     case 6:
+      break;
     case 7:
+      break;
     case 8:
+      break;
     case 9:
+      break;
     case 10:
+      break;
 	
     default:
       printf("task not be made\n");
@@ -88,10 +109,163 @@ char* plate[3][5] = {		/* 4x6 pointer array*/
   for (i = 0; i < 3; i++){
     for (j = 0; j < 5; j++){
       /* for (k = 0; k < 10; k++){ */
-  	printf("%s"/* "%c" */, plate);
+  	printf("%s"/* "%c" */, plate[i][j]);
       /* } */
       putchar('\t');
     }
     putchar('\n');
   }  
 }
+
+void prime_number(void){
+
+  int MAX;
+  int num;
+  int ans;
+  int count = 0;
+
+  char* ask;
+  
+  printf("this command is prime number!!\n");
+
+  /* while (1){ */			
+    count = 0;
+    printf("insert MAX\n");
+    scanf("%d", &MAX);
+    putchar('\n');
+    
+    for (num = 2; num <= MAX; num++){
+      ans = judge_prime(num);
+      if (ans){
+	printf("%d   ", num);
+	count++;
+      }
+    }
+    printf("\n[x%d]\n\n", count);
+  
+    /* printf("continue? (y/n)\n"); */
+    /* scanf("%s", &ask); */
+    /* if (!(strcmp(ask, "n"))) break; */
+  /* } */
+  
+}
+
+int judge_prime(int x){
+  int y;
+
+  for (y = 2; y <= (x / 2); y++){
+    if (!(x % y)) return 0;
+  }
+  return 1;
+}
+
+void jyanken(void){
+
+  int round = 0, win = 0, drw = 0;
+  int plr, cpu;
+
+  double rate = 0;
+
+  char insert[width];
+  char replay[width];  
+  
+  while(1){
+
+    round++;
+    
+    do{
+      if (!(drw)){
+	printf("\nJYANKEN...");
+      }
+      else{
+	printf("\nAIKODE...[x%d]", drw);
+      }
+  
+      printf("\t\t\t\t(rock    scissors   paper)\n");
+      scanf("%s", &insert);
+
+      plr = input_plr(insert);
+      if (plr == 0) printf("\n[TRY_AGAIN!!]");
+      
+    }while(!plr);
+
+    srand((unsigned)time(NULL));
+    cpu = (int)(rand() / (RAND_MAX+1.0)*3.0);
+    cpu++;
+
+    int judge = (plr - cpu + 3) % 3;
+
+    if(judge == 0){
+      printf("\n\n[DRAW!!]\n");
+      drw++;
+    }
+    else{
+      if(judge == 1){
+	printf("\n\n[YOU LOSE!!]\n");
+      }
+      else{
+	win++;
+	printf("\n\n[YOU WIN!!]\n");
+      }
+      drw = 0;
+      rate = ((double)win / (double)round) * 100;
+      printf("rate[%f]\n\n", rate);
+
+      printf("PLAY MORE??\n[y/n]\n");
+      scanf("%s", replay);
+
+      if(strcmp(replay, "n") == 0)
+	break;
+    }
+  }
+  printf("\nSee you~~\n\n");
+
+}
+
+int input_plr(char *src){
+  
+  char* board[3][5] = {
+    {"rock",     "r", "ROCK",     "gu-",   "1"},
+    {"scissors", "s", "SCISSORS", "choki", "2"},
+    {"paper",    "p", "PAPER",    "pa-",   "3"}
+  };
+
+  int i, j;
+  for (i = 0; i < 3; i++){
+    for (j = 0; j < 5; j++){
+      if (!(strcmp(src, board[i][j]))) return i + 1;
+    }
+  }
+  return 0;
+}
+
+
+void command_practice(void){
+
+  char* ch;
+  char com[2] = {};
+
+  int com_num;
+  
+  scanf("%s", ch);
+
+  if (!(strncmp(ch, "-", 1 )))
+    printf("this is command header.\n");
+  else
+    printf("WTF\n");
+
+  strncpy(com, ch + 1, 1 );
+
+  printf("%c\n", *com + 1);
+
+  printf("%d\n", *com + 1);
+
+  com_num = *com;
+
+  /* int i; */
+  /* for (i = 0; i < 10; i++){ */
+  /*   printf("%d\n", com_num); */
+  /*   printf("%c\n", com_num); */
+  /* } */
+}
+
