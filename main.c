@@ -254,18 +254,14 @@ void command_practice(void){
   else
     printf("WTF\n");
 
-  strncpy(com, ch + 1, 1 );
+  /* strncpy(com, ch + 1, 1 ); */
 
-  printf("%c\n", *com + 1);
+  /* com_num = com[0]; */
 
-  printf("%d\n", *com + 1);
-
-  com_num = *com;
-
+  
+  /* printf("%c\n", com_num); */
   /* int i; */
-  /* for (i = 0; i < 10; i++){ */
-  /*   printf("%d\n", com_num); */
-  /*   printf("%c\n", com_num); */
-  /* } */
+  /* printf("%d\n", com_num); */
+
 }
 
