@@ -14,6 +14,7 @@ int judge_prime(int x;);
 void jyanken(void);
 int input_plr(char *src);
 void command_practice(void);
+void help_menu(void);
 
 int main(int argc, char* argv[]){
   
@@ -67,8 +68,9 @@ int main(int argc, char* argv[]){
       command_practice();
       break;
     case 6:
-      break;
+     break;
     case 7:
+      help_menu();
       break;
     case 8:
       break;
@@ -161,7 +163,7 @@ int judge_prime(int x){
 
 void jyanken(void){
 
-  int round = 0, win = 0, drw = 0;
+  int round = 1, win = 0, drw = 0;
   int plr, cpu;
 
   double rate = 0;
@@ -170,18 +172,16 @@ void jyanken(void){
   char replay[width];  
   
   while(1){
-
-    round++;
     
     do{
       if (!(drw)){
-	printf("\nJYANKEN...");
+	printf("\nJYANKEN..."
+	       "\tround[%d]  win[%d]\n", round, win);
       }
       else{
-	printf("\nAIKODE...[x%d]", drw);
+	printf("\nAIKODE...[x%d]\n", drw);
       }
   
-      printf("\t\t\t\t(rock    scissors   paper)\n");
       scanf("%s", &insert);
 
       plr = input_plr(insert);
@@ -216,6 +216,7 @@ void jyanken(void){
 
       if(strcmp(replay, "n") == 0)
 	break;
+      round++;
     }
   }
   printf("\nSee you~~\n\n");
@@ -265,3 +266,9 @@ void command_practice(void){
 
 }
 
+void help_menu(){
+
+
+
+
+}
