@@ -49,34 +49,34 @@ int main(int argc, char* argv[]){
     case -1:
       printf("command not be found\n");
       return -1;
-    case 0:
+    case 0:			/* -a */
       printf("kansuu=%d\n", kansuu(10));
       break;
-    case 1:
+    case 1:			/* -b */
       print();
       break;
-    case 2:
+    case 2:			/* -c */
       multiple_ary();
       break;
-    case 3:
+    case 3:			/* -d */
       prime_number();
       break;
-    case 4:
+    case 4:			/* -e */
       jyanken();
       break;
-    case 5:
+    case 5:			/* -f */
       command_practice();
       break;
-    case 6:
+    case 6:			/* -g */
      break;
-    case 7:
+    case 7:			/* -h */
       help_menu();
       break;
-    case 8:
+    case 8:			/* -i */
       break;
-    case 9:
+    case 9:			/* -j */
       break;
-    case 10:
+    case 10:			/* -k */
       break;
 	
     default:
@@ -247,14 +247,19 @@ void command_practice(void){
   char com[2] = {};
 
   int com_num;
+
   
-  scanf("%s", ch);
+  scanf("%s", &ch);
 
   if (!(strncmp(ch, "-", 1 )))
     printf("this is command header.\n");
   else
     printf("WTF\n");
 
+  com_num = strncmp(ch, "-a", 2);
+
+  printf("%d", com_num);
+  
   /* strncpy(com, ch + 1, 1 ); */
 
   /* com_num = com[0]; */
@@ -267,8 +272,24 @@ void command_practice(void){
 }
 
 void help_menu(){
+  char* list[8][2] = {
+    {"-all", "perform all command"},
+    {"-a", "kansuu"},
+    {"-b", "print"},
+    {"-c", "multiple_ary"},
+    {"-d", "prime_number"},
+    {"-e", "jyanken"},
+    {"-f", "command_practice"},
+    {"-h", "help_menu"}
+  };
 
-
-
-
+  int i, j;
+  for (i = 0; i < 8; i++){
+    for (j = 0; j < 2; j++){
+      printf("%s", list[i][j]);
+      putchar('\t');
+    }
+    putchar('\n');
+  }
 }
+
