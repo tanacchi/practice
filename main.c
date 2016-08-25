@@ -14,13 +14,14 @@ int judge_prime(int x;);
 void jyanken(void);
 int input_plr(char *src);
 void command_practice(void);
+void dictionary(void);
 void help_menu(void);
 
 int main(int argc, char* argv[]){
   
   if (argc < 2){
     printf(
-	   "\nERROR!\n"
+	   "ERROR!\n"
 	   "(Please add option)\n");
     return -1;
   }
@@ -65,9 +66,10 @@ int main(int argc, char* argv[]){
       jyanken();
       break;
     case 5:			/* -f */
-      command_practice();
+      /* command_practice(); */
       break;
-    case 6:			/* -g */
+    case 6:
+      dictionary();             /* -g */
      break;
     case 7:			/* -h */
       help_menu();
@@ -257,7 +259,6 @@ void command_practice(void){
     printf("WTF\n");
 
   com_num = strncmp(ch, "-a", 2);
-
   printf("%d", com_num);
   
   /* strncpy(com, ch + 1, 1 ); */
@@ -271,8 +272,34 @@ void command_practice(void){
 
 }
 
+void dictionary(void){
+
+  char* input[9] = {"banana","grape","pear","orange","apple","strawberry","grapefruit","watermelon", '\0'};
+
+  char* output[8] = {};
+  char* ss;
+  
+  int i, j, k;
+  for (i = 0; input[i] != '\0'; i++)
+    printf("%s\n", input[i]);
+  putchar('\n');
+  
+  for (i = 1; input[i] != '\0'; i++)
+    for (j = 0; j < i; j++)
+      if (strcmp(input[i], input[j]) < 0){
+  	ss = input[i];
+  	input[i] = input[j];
+  	input[j] = ss;
+      }
+    
+  for (i = 0; input[i] != '\0'; i++)
+    printf("%s\n", input[i]);
+  putchar('\n');
+  
+}
+
 void help_menu(){
-  char* list[8][2] = {
+  char* list[9][2] = {
     {"-all", "perform all command"},
     {"-a", "kansuu"},
     {"-b", "print"},
@@ -280,11 +307,12 @@ void help_menu(){
     {"-d", "prime_number"},
     {"-e", "jyanken"},
     {"-f", "command_practice"},
+    {"-g", "dictionary"},
     {"-h", "help_menu"}
   };
 
   int i, j;
-  for (i = 0; i < 8; i++){
+  for (i = 0; i < 9; i++){
     for (j = 0; j < 2; j++){
       printf("%s", list[i][j]);
       putchar('\t');
