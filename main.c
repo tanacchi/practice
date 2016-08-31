@@ -16,6 +16,7 @@ int input_plr(char *src);
 void command_practice(void);
 void dictionary(void);
 void help_menu(void);
+void pointer_calc(void);
 
 int main(int argc, char* argv[]){
   
@@ -74,7 +75,8 @@ int main(int argc, char* argv[]){
     case 7:			/* -h */
       help_menu();
       break;
-    case 8:			/* -i */
+    case 8:
+      pointer_calc();             /* -i */
       break;
     case 9:			/* -j */
       break;
@@ -299,7 +301,7 @@ void dictionary(void){
 }
 
 void help_menu(){
-  char* list[9][2] = {
+  char* list[10][2] = {
     {"-all", "perform all command"},
     {"-a", "kansuu"},
     {"-b", "print"},
@@ -308,11 +310,12 @@ void help_menu(){
     {"-e", "jyanken"},
     {"-f", "command_practice"},
     {"-g", "dictionary"},
-    {"-h", "help_menu"}
+    {"-h", "help_menu"},
+    {"-i", "pointer_calc"}
   };
 
   int i, j;
-  for (i = 0; i < 9; i++){
+  for (i = 0; i < 10; i++){
     for (j = 0; j < 2; j++){
       printf("%s", list[i][j]);
       putchar('\t');
@@ -321,3 +324,20 @@ void help_menu(){
   }
 }
 
+void pointer_calc(void){
+  char* str = "nkasdvnaerovnvnandkvnfdvjakdvnaenvvndfkvnroibnrxacnajknfjvn\0";
+  char* start_point = str;
+  int length;
+
+  printf("%s\n", str);
+
+  int i;
+  /* for (i = 0; *(str + i) == '\0'; i++) */
+  /*   if (*str == 'a') printf("ah"); */
+
+  while (*(str++) != '\0') ;
+
+  length = str = start_point - 1;
+
+  printf("%d\n", length);
+}
