@@ -325,19 +325,35 @@ void help_menu(){
 }
 
 void pointer_calc(void){
-  char* str = "nkasdvnaerovnvnandkvnfdvjakdvnaenvvndfkvnroibnrxacnajknfjvn\0";
-  char* start_point = str;
-  int length;
 
-  printf("%s\n", str);
-
+  char* str = "nkasdvnae";
+  
+  /* [*(str + i) ] ????  */
+  
   int i;
-  /* for (i = 0; *(str + i) == '\0'; i++) */
-  /*   if (*str == 'a') printf("ah"); */
+  for (i = 0; *(str+i) != '\0'; i++){
+    printf("%s\n", str+i);
+    if (*(str+i) == 'd') printf("a\n");
+  }
+  
+  putchar('\n');
 
-  while (*(str++) != '\0') ;
+  while (*(str++) != '\0'){
+    printf("%s\n", str);
+    if (*str == 'd') printf("[yeah]\n");
+  }
+  
+  char* src[4] = {
+    "jsdncvnewivn",
+    "wvoineivdevn",
+    "wjedfvbliwvb",
+    NULL
+  };
 
-  length = str = start_point - 1;
-
-  printf("%d\n", length);
+  for (i = 0; src[i] != NULL; i++){
+    while (*(src[i]++) != '\0'){
+      printf("%s\n", src[i]);
+      if (*src[i] == 'i') printf("[yeah]\n");
+    }
+  }
 }
