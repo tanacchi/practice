@@ -330,7 +330,7 @@ void pointer_calc(void){
   
   /* [*(str + i) ] ????  */
   
-  int i;
+  int i, j;
   for (i = 0; *(str+i) != '\0'; i++){
     printf("%s\n", str+i);
     if (*(str+i) == 'd') printf("a\n");
@@ -343,7 +343,7 @@ void pointer_calc(void){
     if (*str == 'd') printf("[yeah]\n");
   }
   
-  char* src[4] = {
+  char** src = {
     "jsdncvnewivn",
     "wvoineivdevn",
     "wjedfvbliwvb",
@@ -354,6 +354,14 @@ void pointer_calc(void){
     while (*(src[i]++) != '\0'){
       printf("%s\n", src[i]);
       if (*src[i] == 'i') printf("[yeah]\n");
+    }
+  }
+
+  for (i = 0; src[i] != NULL; i++){
+    for (j = 0; src[i][j] != '\0'; j++){
+      if (src[i][j] == 'i'){
+	printf("[yeah]\n");
+      }
     }
   }
 }
