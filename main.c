@@ -5,87 +5,89 @@
 
 #define width 80
 
-int kansuu(int x);
+int kansuu(int );
 void print(void);
-int command_num(int i, char src[]);
+int com_num(int, char*);
 void multiple_ary(void);
 void prime_number(void);
-int judge_prime(int x;);
+int judge_prime(int);
 void jyanken(void);
-int input_plr(char *src);
-void command_practice(void);
+int input_plr(char*);
+void com_practice(void);
 void dictionary(void);
 void help_menu(void);
 void pointer_calc(void);
+void struct_practice(void);
 
 int main(int argc, char* argv[]){
+
+  void (*command)(void);
   
   if (argc < 2){
-    printf(
-	   "ERROR!\n"
+    printf("ERROR!\n"
 	   "(Please add option)\n");
     return -1;
   }
-  int i, command;
+  int i, com;
   for (i = 1; i < argc; i++){
 
-    if      (!(strcmp(argv[1], "-all"))){
-      argc = 10;
-      command = i - 1;
-    }
-    else if (!(strcmp(argv[i], "-a"))) command = 0;
-    else if (!(strcmp(argv[i], "-b"))) command = 1;
-    else if (!(strcmp(argv[i], "-c"))) command = 2;
-    else if (!(strcmp(argv[i], "-d"))) command = 3;
-    else if (!(strcmp(argv[i], "-e"))) command = 4;
-    else if (!(strcmp(argv[i], "-f"))) command = 5;
-    else if (!(strcmp(argv[i], "-g"))) command = 6;
-    else if (!(strcmp(argv[i], "-h"))) command = 7;
-    else if (!(strcmp(argv[i], "-i"))) command = 8;
-    else if (!(strcmp(argv[i], "-j"))) command = 9;
-    else if (!(strcmp(argv[i], "-k"))) command = 10;
-    else command = -1;
+    if (argv[i] == "-a") ;
+    if (argv[i] == "-b") ;
+    if (argv[i] == "-c") command = print;
+    if (argv[i] == "-d") command = multiple_ary;
+    if (argv[i] == "-e") command = prime_number;
+    if (argv[i] == "-f") command = jyanken;	  
+    if (argv[i] == "-g") ;
+    if (argv[i] == "-h") command = &help_menu;
+    if (argv[i] == "-i") command = dictionary;
+    if (argv[i] == "-j") command = pointer_calc;
+    if (argv[i] == "-k") ;
+    if (argv[i] == "-l") ;
 
-
-    switch (command){
-    case -1:
-      printf("command not be found\n");
-      return -1;
-    case 0:			/* -a */
-      printf("kansuu=%d\n", kansuu(10));
-      break;
-    case 1:			/* -b */
-      print();
-      break;
-    case 2:			/* -c */
-      multiple_ary();
-      break;
-    case 3:			/* -d */
-      prime_number();
-      break;
-    case 4:			/* -e */
-      jyanken();
-      break;
-    case 5:			/* -f */
-      /* command_practice(); */
-      break;
-    case 6:
-      dictionary();             /* -g */
-     break;
-    case 7:			/* -h */
-      help_menu();
-      break;
-    case 8:
-      pointer_calc();             /* -i */
-      break;
-    case 9:			/* -j */
-      break;
-    case 10:			/* -k */
-      break;
+    help_menu();
+    
+    (*command)();
+    
+    /* switch (argv[i][1]/\* com *\/){ */
+    /* case 'a': */
+    /*   argv[i][1] = 'a+i'; */
+    /*   break; */
+    /* case 'b':			 */
+    /*   printf("kansuu=%d\n", kansuu(10)); */
+    /*   break; */
+    /* case 'c':			 */
+    /*   print(); */
+    /*   break; */
+    /* case 'd':			 */
+    /*   multiple_ary(); */
+    /*   break; */
+    /* case 'e':			 */
+    /*   prime_number(); */
+    /*   break; */
+    /* case 'f':			 */
+    /*   jyanken(); */
+    /*   break; */
+    /* case 'g':			 */
+    /*   /\* com_practice(); *\/ */
+    /*   break; */
+    /* case 'h': */
+    /*   help_menu();              */
+    /*  break; */
+    /* case 'i':			 */
+    /*   dictionary(); */
+    /*   break; */
+    /* case 'j': */
+    /*   pointer_calc();            */
+    /*   break; */
+    /* case 'k': */
+    /*   struct_practice(); */
+    /*   break; */
+    /* case 'l':			 */
+    /*   break; */
 	
-    default:
-      printf("task not be made\n");
-    }
+    /* default: */
+    /*   printf("task not be made\n"); */
+    /* } */
   }
   return 0;
 }
@@ -132,7 +134,7 @@ void prime_number(void){
 
   char* ask;
   
-  printf("this command is prime number!!\n");
+  printf("this com is prime number!!\n");
 
   /* while (1){ */			
     count = 0;
@@ -245,7 +247,7 @@ int input_plr(char *src){
 }
 
 
-void command_practice(void){
+void com_practice(void){
 
   char* ch;
   char com[2] = {};
@@ -256,7 +258,7 @@ void command_practice(void){
   scanf("%s", &ch);
 
   if (!(strncmp(ch, "-", 1 )))
-    printf("this is command header.\n");
+    printf("this is com header.\n");
   else
     printf("WTF\n");
 
@@ -301,21 +303,23 @@ void dictionary(void){
 }
 
 void help_menu(){
-  char* list[10][2] = {
-    {"-all", "perform all command"},
-    {"-a", "kansuu"},
-    {"-b", "print"},
-    {"-c", "multiple_ary"},
-    {"-d", "prime_number"},
-    {"-e", "jyanken"},
-    {"-f", "command_practice"},
-    {"-g", "dictionary"},
+  char* list[width][2] = {
+    {"-a", "all com"},
+    {"-b", "kansuu"},
+    {"-c", "print"},
+    {"-d", "multiple_ary"},
+    {"-e", "prime_number"},
+    {"-f", "jyanken"},
+    {"-g", "com_practice"},
     {"-h", "help_menu"},
-    {"-i", "pointer_calc"}
+    {"-i", "dictionary"},
+    {"-j", "pointer_calc"},
+    {"-k", "struct_practice"},
+    NULL
   };
 
   int i, j;
-  for (i = 0; i < 10; i++){
+  for (i = 0; list[i][0] != NULL; i++){
     for (j = 0; j < 2; j++){
       printf("%s", list[i][j]);
       putchar('\t');
@@ -343,7 +347,7 @@ void pointer_calc(void){
     if (*str == 'd') printf("[yeah]\n");
   }
   
-  char** src = {
+  char* src[4] = {
     "jsdncvnewivn",
     "wvoineivdevn",
     "wjedfvbliwvb",
@@ -365,3 +369,5 @@ void pointer_calc(void){
     }
   }
 }
+
+
