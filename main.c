@@ -19,6 +19,8 @@ void help_menu(void);
 void pointer_calc(void);
 void struct_practice(void);
 
+void nothing(void);
+
 int main(int argc, char* argv[]){
 
   void (*command)(void);
@@ -31,20 +33,21 @@ int main(int argc, char* argv[]){
   int i, com;
   for (i = 1; i < argc; i++){
 
-    if (argv[i] == "-a") ;
-    if (argv[i] == "-b") ;
-    if (argv[i] == "-c") command = print;
-    if (argv[i] == "-d") command = multiple_ary;
-    if (argv[i] == "-e") command = prime_number;
-    if (argv[i] == "-f") command = jyanken;	  
-    if (argv[i] == "-g") ;
-    if (argv[i] == "-h") command = &help_menu;
-    if (argv[i] == "-i") command = dictionary;
-    if (argv[i] == "-j") command = pointer_calc;
-    if (argv[i] == "-k") ;
-    if (argv[i] == "-l") ;
+    if (!strcmp(argv[i], "-a")) command = nothing;
+    if (!strcmp(argv[i], "-b")) command = nothing;
+    if (!strcmp(argv[i], "-c")) command = print;
+    if (!strcmp(argv[i], "-d")) command = multiple_ary;
+    if (!strcmp(argv[i], "-e")) command = prime_number;
+    if (!strcmp(argv[i], "-f")) command = jyanken;	  
+    if (!strcmp(argv[i], "-g")) command = nothing;
+    if (!strcmp(argv[i], "-h")) command = help_menu;
+    if (!strcmp(argv[i], "-i")) command = dictionary;
+    if (!strcmp(argv[i], "-j")) command = pointer_calc;
+    if (!strcmp(argv[i], "-k")) command = nothing;
+    if (!strcmp(argv[i], "-l")) command = nothing;
 
-    help_menu();
+    
+    printf("%p\n" , command);
     
     (*command)();
     
@@ -188,7 +191,7 @@ void jyanken(void){
 	printf("\nAIKODE...[x%d]\n", drw);
       }
   
-      scanf("%s", &insert);
+      scanf("%s", insert);
 
       plr = input_plr(insert);
       if (plr == 0) printf("\n[TRY_AGAIN!!]");
@@ -255,7 +258,7 @@ void com_practice(void){
   int com_num;
 
   
-  scanf("%s", &ch);
+  scanf("%s", ch);
 
   if (!(strncmp(ch, "-", 1 )))
     printf("this is com header.\n");
@@ -370,4 +373,7 @@ void pointer_calc(void){
   }
 }
 
+void nothing(void){
+  ;
 
+}
