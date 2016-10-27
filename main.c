@@ -45,52 +45,9 @@ int main(int argc, char* argv[]){
     if (!strcmp(argv[i], "-j")) command = pointer_calc;
     if (!strcmp(argv[i], "-k")) command = nothing;
     if (!strcmp(argv[i], "-l")) command = nothing;
-
-    
-    printf("%p\n" , command);
     
     (*command)();
     
-    /* switch (argv[i][1]/\* com *\/){ */
-    /* case 'a': */
-    /*   argv[i][1] = 'a+i'; */
-    /*   break; */
-    /* case 'b':			 */
-    /*   printf("kansuu=%d\n", kansuu(10)); */
-    /*   break; */
-    /* case 'c':			 */
-    /*   print(); */
-    /*   break; */
-    /* case 'd':			 */
-    /*   multiple_ary(); */
-    /*   break; */
-    /* case 'e':			 */
-    /*   prime_number(); */
-    /*   break; */
-    /* case 'f':			 */
-    /*   jyanken(); */
-    /*   break; */
-    /* case 'g':			 */
-    /*   /\* com_practice(); *\/ */
-    /*   break; */
-    /* case 'h': */
-    /*   help_menu();              */
-    /*  break; */
-    /* case 'i':			 */
-    /*   dictionary(); */
-    /*   break; */
-    /* case 'j': */
-    /*   pointer_calc();            */
-    /*   break; */
-    /* case 'k': */
-    /*   struct_practice(); */
-    /*   break; */
-    /* case 'l':			 */
-    /*   break; */
-	
-    /* default: */
-    /*   printf("task not be made\n"); */
-    /* } */
   }
   return 0;
 }
