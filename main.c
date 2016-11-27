@@ -5,7 +5,7 @@
 
 #define width 80
 
-int kansuu(int );
+int kansuu(int);
 void print(void);
 int com_num(int, char*);
 void multiple_ary(void);
@@ -27,7 +27,7 @@ int main(int argc, char* argv[]){
   
   if (argc < 2){
     printf("ERROR!\n"
-	   "(Please add option)\n");
+           "(Please add option)\n");
     return -1;
   }
   int i, com;
@@ -67,20 +67,16 @@ void print(void){
     
 void multiple_ary(void){
 
-char* plate[3][5] = {		/* 4x6 pointer array*/
-    {"Rock",    "r", "1", "gu-",   "ROCK"},
-    {"scissors","s", "2", "choki", "SCISSORS"},
-    {"paper",   "p", "3", "pa-",   "PAPER"},
-};
+  char* plate[3][6] = {		/* 4x6 pointer array*/
+    {"Rock",    "r", "1", "gu-",   "ROCK", NULL},
+    {"scissors","s", "2", "choki", "SCISSORS", NULL},
+    {"paper",   "p", "3", "pa-",   "PAPER", NULL},
+  };
 
   int i, j, k;
   for (i = 0; i < 3; i++){
-    for (j = 0; j < 5; j++){
-      /* for (k = 0; k < 10; k++){ */
-  	printf("%s"/* "%c" */, plate[i][j]);
-      /* } */
-      putchar('\t');
-    }
+    for (j = 0; plate[i][j] != NULL; j++)
+      printf("%s", plate[i][j]);
     putchar('\n');
   }  
 }
@@ -97,23 +93,23 @@ void prime_number(void){
   printf("this com is prime number!!\n");
 
   /* while (1){ */			
-    count = 0;
-    printf("insert MAX\n");
-    scanf("%d", &MAX);
-    putchar('\n');
+  count = 0;
+  printf("insert MAX\n");
+  scanf("%d", &MAX);
+  putchar('\n');
     
-    for (num = 2; num <= MAX; num++){
-      ans = judge_prime(num);
-      if (ans){
-	printf("%d   ", num);
-	count++;
-      }
+  for (num = 2; num <= MAX; num++){
+    ans = judge_prime(num);
+    if (ans){
+      printf("%d   ", num);
+      count++;
     }
-    printf("\n[x%d]\n\n", count);
+  }
+  printf("\n[x%d]\n\n", count);
   
-    /* printf("continue? (y/n)\n"); */
-    /* scanf("%s", &ask); */
-    /* if (!(strcmp(ask, "n"))) break; */
+  /* printf("continue? (y/n)\n"); */
+  /* scanf("%s", &ask); */
+  /* if (!(strcmp(ask, "n"))) break; */
   /* } */
   
 }
@@ -141,11 +137,11 @@ void jyanken(void){
     
     do{
       if (!(drw)){
-	printf("\nJYANKEN..."
-	       "\tround[%d]  win[%d]\n", round, win);
+        printf("\nJYANKEN..."
+               "\tround[%d]  win[%d]\n", round, win);
       }
       else{
-	printf("\nAIKODE...[x%d]\n", drw);
+        printf("\nAIKODE...[x%d]\n", drw);
       }
   
       scanf("%s", insert);
@@ -167,11 +163,11 @@ void jyanken(void){
     }
     else{
       if(judge == 1){
-	printf("\n\n[YOU LOSE!!]\n");
+        printf("\n\n[YOU LOSE!!]\n");
       }
       else{
-	win++;
-	printf("\n\n[YOU WIN!!]\n");
+        win++;
+        printf("\n\n[YOU WIN!!]\n");
       }
       drw = 0;
       rate = ((double)win / (double)round) * 100;
@@ -181,7 +177,7 @@ void jyanken(void){
       scanf("%s", replay);
 
       if(strcmp(replay, "n") == 0)
-	break;
+        break;
       round++;
     }
   }
@@ -251,9 +247,9 @@ void dictionary(void){
   for (i = 1; input[i] != '\0'; i++)
     for (j = 0; j < i; j++)
       if (strcmp(input[i], input[j]) < 0){
-  	ss = input[i];
-  	input[i] = input[j];
-  	input[j] = ss;
+        ss = input[i];
+        input[i] = input[j];
+        input[j] = ss;
       }
     
   for (i = 0; input[i] != '\0'; i++)
@@ -324,7 +320,7 @@ void pointer_calc(void){
   for (i = 0; src[i] != NULL; i++){
     for (j = 0; src[i][j] != '\0'; j++){
       if (src[i][j] == 'i'){
-	printf("[yeah]\n");
+        printf("[yeah]\n");
       }
     }
   }
