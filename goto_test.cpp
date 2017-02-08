@@ -1,13 +1,19 @@
 #include <stdio.h>
 
+int i;
+
 int main()
 {
+ head:
+  i = 0;
+  
  loop:
-  for (int i = 0; i < 10000000; i++) ;
+
+  if (i++ < 100000000) goto loop;
 
   printf("Hello, world!\n");
 
-  goto loop;
+  goto head;
   
   return 0;
 }
