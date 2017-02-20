@@ -1,11 +1,21 @@
-#include <stdio.h>
+:se:include <stdio.h>
 #include <string.h>
 #include <stdlib.h>
 #include <time.h>
 
 #define width 80
 
+<<<<<<< 071a3c1af014f74e46403bd29d9c4ae8a2888985
 int kansuu(int);
+=======
+typedef void (*COMPTR)(void);
+/* コマンド番号と関数ポインタの構造体
+  for 文まわす
+関数ポインタの配列
+ */
+
+int kansuu(int );
+>>>>>>> Add junk code from windows cygwin
 void print(void);
 int com_num(int, char*);
 void multiple_ary(void);
@@ -18,20 +28,21 @@ void dictionary(void);
 void help_menu(void);
 void pointer_calc(void);
 void struct_practice(void);
+void no_action(void);
 
 void nothing(void);
 
 int main(int argc, char* argv[]){
 
-  void (*command)(void);
-  
   if (argc < 2){
     printf("ERROR!\n"
            "(Please add option)\n");
     return -1;
   }
+  
   int i, com;
   for (i = 1; i < argc; i++){
+<<<<<<< 071a3c1af014f74e46403bd29d9c4ae8a2888985
 
     if (!strcmp(argv[i], "-a")) command = nothing;
     if (!strcmp(argv[i], "-b")) command = nothing;
@@ -45,8 +56,25 @@ int main(int argc, char* argv[]){
     if (!strcmp(argv[i], "-j")) command = pointer_calc;
     if (!strcmp(argv[i], "-k")) command = nothing;
     if (!strcmp(argv[i], "-l")) command = nothing;
+=======
+>>>>>>> Add junk code from windows cygwin
     
-    (*command)();
+    COMPTR command = NULL;
+    if (!strcmp(argv[i], "-a")) command = &no_action;
+    if (!strcmp(argv[i], "-b")) command = &no_action;
+    if (!strcmp(argv[i], "-c")) command = &print;
+    if (!strcmp(argv[i], "-d")) command = &multiple_ary;
+    if (!strcmp(argv[i], "-e")) command = &prime_number;
+    if (!strcmp(argv[i], "-f")) command = &jyanken;	  
+    if (!strcmp(argv[i], "-g")) command = &no_action;
+    if (!strcmp(argv[i], "-h")) command = &help_menu;
+    if (!strcmp(argv[i], "-i")) command = &dictionary;
+    if (!strcmp(argv[i], "-j")) command = &pointer_calc;
+    if (!strcmp(argv[i], "-k")) command = &no_action;
+    if (!strcmp(argv[i], "-l")) command = &no_action;
+    
+    if (command != NULL)
+      (*command)();
     
   }
   return 0;
@@ -326,7 +354,12 @@ void pointer_calc(void){
   }
 }
 
+<<<<<<< 071a3c1af014f74e46403bd29d9c4ae8a2888985
 void nothing(void){
   ;
 
+=======
+void no_action(void){
+  ;
+>>>>>>> Add junk code from windows cygwin
 }
