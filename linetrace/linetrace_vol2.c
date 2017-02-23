@@ -21,9 +21,15 @@ enum Mode {
 	MODE_ED
 };
 
+enum {
+	LEFT,
+	RIGHT
+};
+
 int task_init(const unsigned short MainCycle);
-int task_read(int* position);
+int task_read(int* position, int nextRun);
 int task_shift(int* runOrder);
+int task_ed();
 
 void run_motor(int left, int right) {
 	Mtr_Run_lv(right, -left, 0, 0, 0, 0);
@@ -40,8 +46,8 @@ int judge_position(int isLeftBlack, int isRightBlack) {
 	if ( isLeftBlack &&  isRightBlack) return 3;
 }
 
-void Line_control(int Pos, int* Param) {
-	switch (Pos) {
+void Line_control(int* Param, int Position) {
+	switch (Position) {
 	case 0: run_motor(Param[0], Param[0]); break;
 	case 1: run_motor(Param[0], Param[1]); break;
 	case 2: run_motor(Param[1], Param[0]); break;
@@ -50,29 +56,29 @@ void Line_control(int Pos, int* Param) {
 	Wait(0.1);
 }
 
-void Over_line(int Pos, int* Param) {
-	switch (Pos) {
-	case 0: run_motor(Param[0], Param[0]); break;
-	case 1: run_motor(Param[0], Param[1]); break;
-	case 2: run_motor(Param[1], Param[0]); break;
-	case 3: run_motor(Param[0], Param[0]); break;
+void Line_over(int* Param, int Position) {
+	switch (Position) {
+	case 0: run_motor( Param[0],  Param[1]); break;
+	case 1: run_motor( Param[1], -Param[0]); break;
+	case 2: run_motor( Param[0], -Param[1]); break;
+	case 3: run_motor( Param[0],  Param[1]); break;
 	}
 	Wait(0.1);
 }
 
 int traceList[][2] = {
 		{HIGH, LOW},
-		{HIGH, MIDLE},
-		{HIGH, -HIGH},
+		{HIGH, LOW},
+		{HIGH, LOW},
 		{HIGH, LOW},
 		NULL
 };
 
 int overList[][2] = {
-		{HIGH, HIGH},
-		{HIGH, HIGH},
-		{HIGH, HIGH},
-		{HIGH, HIGH},
+		{HIGH,  LOW},
+		{ LOW, HIGH},
+		{HIGH,  LOW},
+		{ LOW, HIGH},
 		NULL
 };
 
@@ -84,17 +90,15 @@ int task_trace(int runOrder, int Position) {
 
 int task_over(int runOrder, int Position) {
 	LED(2);
-	Over_line(overList[runOrder], Position);
- 	return (Position != WW) ? MODE_READ : MODE_SHIFT;
-
+	Line_over(overList[runOrder], Position);
+	return (Position != WW) ? MODE_READ : MODE_SHIFT;
 }
 
 int main() {
 	int mode = 0;
 	int Position;
 	int runOrder = 0;
-
-	LED(3);
+	int nextRun = MODE_TRACE;
 
 	while (1) {
 		switch (mode) {
@@ -102,16 +106,18 @@ int main() {
 			mode = task_init(60);
 			break;
 		case MODE_READ:
-			mode = task_read(&Position);
+			mode = task_read(&Position, nextRun);
 			break;
 		case MODE_TRACE:
 			mode = task_trace(runOrder, Position);
 			break;
 		case MODE_OVER:
 			mode = task_over(runOrder, Position);
+			nextRun = MODE_OVER;
 			break;
 		case MODE_SHIFT:
 			mode = task_shift(&runOrder);
+			nextRun = MODE_TRACE;
 			break;
 		case MODE_ED:
 			mode = task_ed();
@@ -125,15 +131,14 @@ int task_init(const unsigned short MainCycle) {
 	return MODE_READ;
 }
 
-int task_read(int* position) {
-	int isLeftBlack = read_sensor(0), isRightBlack = read_sensor(1);
-	*position = judge_position(isLeftBlack, isRightBlack);
-	return (*position != BB) ? MODE_TRACE : MODE_OVER;  //  !!!!!!!!!!!!!!!!!!!!!!!!
+int task_read(int* position, int nextRun) {
+	*position = judge_position(read_sensor(LEFT), read_sensor(RIGHT));
+	return nextRun;
 }
 
 int task_shift(int* runOrder) {
 	(*runOrder)++;
-	return (traceList[*runOrder] != NULL) ? MODE_READ : MODE_ED;
+	return (traceList[*runOrder] != NULL && overList[*runOrder] != NULL) ? MODE_READ : MODE_ED;
 }
 
 int task_ed() {
