@@ -20,3 +20,33 @@ int main() {
     LED(judge_position());
   return 0;
 }
+
+/* 
+
+// MODEs
+
+
+
+
+
+
+
+
+
+// INPUTs
+
+
+// SETs
+
+
+// OUTPUTs
+
+
+
+
+// STRUCTURE
+
+
+
+
+ */
