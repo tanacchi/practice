@@ -22,44 +22,6 @@ enum Sensor_result{
 	WW, WB, BW, BB
 };
 
-enum LR {
-	LEFT,
-	RIGHT
-};
-
-//          {{}, {}, {}, {}},
-
-int param_list[][4][2] = {
-
-		//WW            WB            BW            BB
-		{{FAST, FAST}, {SLOW, FAST}, {FAST, SLOW}, {FAST, FAST}}, //  0.over start line
-		{{STOP, FAST}, {FAST, STOP}, {STOP, FAST}, {FAST, SLOW}}, //  1.right edge until T
-		{{FAST, STOP}, {FAST, SLOW}, {SLOW, FAST}, {FAST, FAST}}, //  2.over T zone
-		{{FAST, FAST}, {FAST, STOP}, {STOP, FAST}, {FAST, FAST}}, //  3.trace until +
-		{{FAST, FAST}, {FAST,-FAST}, {-FAST,FAST}, {FAST, FAST}}, //  4.over +
-		{{FAST, FAST}, {FAST,-SLOW}, {-SLOW,FAST}, {FAST, FAST}}, //  5.trace until condenser
-		{{FAST, FAST}, {SLOW, FAST}, {SLOW, FAST}, {FAST, FAST}}, //  6.enter condenser
-		{{FAST, FAST}, {FAST, STOP}, {STOP, FAST}, {FAST, FAST}}, //  7.run between condenser
-		{{FAST, FAST}, {SLOW, FAST}, {FAST, SLOW}, {FAST, FAST}}, //  8.get out condenser
-		{{FAST, FAST}, {FAST, STOP}, {STOP, FAST}, {FAST, FAST}}, //  9.trace until +
-		{{FAST, FAST}, {SLOW,-FAST}, {-FAST,SLOW}, {FAST, FAST}}, // 10.over +
-		{{SLOW,-SLOW}, {SLOW,-SLOW}, {SLOW,-SLOW}, {SLOW,-SLOW}}, // 11.turn right until WB
-		{{SLOW,-SLOW}, {SLOW,-SLOW}, {SLOW,-SLOW}, {SLOW,-SLOW}}, // 12.turn right until WW
-		{{FAST, STOP}, {FAST, STOP}, {STOP, FAST}, {STOP, FAST}}, // 13.left edge until T
-		{{FAST, STOP}, {FAST, STOP}, {FAST, STOP}, {FAST, STOP}}, // 14.turn right until WW
-		{{FAST, FAST}, {FAST,-SLOW}, {-SLOW,FAST}, {FAST, FAST}}, // 15.trace until く
-		{{STOP,-FAST}, {STOP,-FAST}, {STOP,-FAST}, {STOP,-FAST}}, // 16.toward right
-		{{SLOW, FAST}, {FAST, SLOW}, {SLOW, FAST}, {FAST, SLOW}}, // 17.right edge until +
-		NULL
-};
-
-//     {{FAST, FAST}, {FAST, STOP}, {STOP, FAST}, {FAST, FAST}}, // Normal trace
-
-int order_preset[] = {
-		WW, BB, WW, BB, WW, BB, WW, BB, WW, BB,
-		WW, WB, WW, BB, WW, BB, WW, BB
-};
-
 int read_sensor(unsigned char ch);
 void motor_run(int* param);
 int judge_position();
@@ -70,6 +32,67 @@ int task_run(int run_order, int position);
 int task_shift(int* run_order);
 int task_ed();
 
+const int stop_motor[2] = {STOP, STOP};
+
+const int param_list[][4][2] = {
+
+		//   WW            WB            BW            BB
+		{{FAST, FAST}, {SLOW, FAST}, {FAST, SLOW}, {FAST, FAST}}, //  0.over start line
+		{{STOP, FAST}, {FAST, STOP}, {STOP, FAST}, {FAST, STOP}}, //  1.right edge until T
+		{{FAST, STOP}, {FAST, SLOW}, {SLOW, FAST}, {FAST, FAST}}, //  2.over T zone
+		{{FAST, FAST}, {FAST, STOP}, {STOP, FAST}, {FAST, FAST}}, //  3.trace until +
+		{{FAST, FAST}, {FAST,-FAST}, {-FAST,FAST}, {FAST, FAST}}, //  4.over +
+		{{FAST, FAST}, {FAST,-SLOW}, {-SLOW,FAST}, {FAST, FAST}}, //  5.trace until condenser
+		{{FAST, FAST}, {SLOW, FAST}, {SLOW, FAST}, {FAST, FAST}}, //  6.enter the condenser
+		{{FAST, FAST}, {FAST, STOP}, {STOP, FAST}, {FAST, FAST}}, //  7.run between plate
+		{{FAST, FAST}, {SLOW, FAST}, {FAST, SLOW}, {FAST, FAST}}, //  8.get out condenser
+		{{FAST, FAST}, {FAST, STOP}, {STOP, FAST}, {FAST, FAST}}, //  9.trace until +
+		{{FAST, FAST}, {SLOW,-FAST}, {-FAST,SLOW}, {FAST, FAST}}, // 10.over +
+		{{SLOW,-SLOW}, {SLOW,-SLOW}, {SLOW,-SLOW}, {SLOW,-SLOW}}, // 11.turn right until WB
+		{{SLOW,-SLOW}, {SLOW,-SLOW}, {SLOW,-SLOW}, {SLOW,-SLOW}}, // 12.turn right until WW
+		{{FAST, STOP}, {FAST, STOP}, {STOP, FAST}, {STOP, FAST}}, // 13.left edge until T
+		{{FAST, STOP}, {FAST, STOP}, {FAST, STOP}, {FAST, STOP}}, // 14.turn right until WW
+		{{FAST, FAST}, {FAST,-SLOW}, {-SLOW,FAST}, {FAST, FAST}}, // 15.trace until く
+		{{SLOW,-SLOW}, {SLOW,-SLOW}, {SLOW,-SLOW}, {SLOW,-SLOW}}, // 16.toward right until WW
+		{{FAST, FAST}, {FAST, STOP}, {STOP, FAST}, {FAST, FAST}}, // 17.trace until +
+		{{FAST, FAST}, {FAST, FAST}, {FAST, FAST}, {FAST, FAST}}, // 18.over +
+		{{FAST, FAST}, {FAST, STOP}, {STOP, FAST}, {FAST, FAST}}, // 19.trace until condenser
+		{{FAST, FAST}, {FAST,-SLOW}, {-SLOW,FAST}, {FAST, FAST}}, // 20.enter the condenser
+		{{FAST, FAST}, {FAST, STOP}, {STOP, FAST}, {FAST, FAST}}, // 21.run between plate
+		{{FAST, FAST}, {FAST,-FAST}, {-FAST,FAST}, {FAST, FAST}}, // 22.get out condenser
+		{{FAST, FAST}, {FAST,-SLOW}, {-SLOW,FAST}, {FAST, FAST}}, // 23.trace until +
+		{{FAST, FAST}, {SLOW,-FAST}, {-FAST,SLOW}, {FAST, FAST}}, // 24.over +
+		{{-SLOW,SLOW}, {-SLOW,SLOW}, {-SLOW,SLOW}, {-SLOW,SLOW}}, // 25.turn left until BW
+		{{-SLOW,SLOW}, {-SLOW,SLOW}, {-SLOW,SLOW}, {-SLOW,SLOW}}, // 26.turn left until WW
+		{{FAST, FAST}, {FAST,-FAST}, {-FAST,FAST}, {FAST, FAST}}, // 27.trace until く
+		{{STOP, SLOW}, {STOP, SLOW}, {STOP, SLOW}, {STOP, SLOW}}, // 28.toward left until WW
+		{{STOP, FAST}, {FAST, STOP}, {STOP, FAST}, {FAST, STOP}}, // 29.right edge until T
+		{{FAST, FAST}, {STOP, FAST}, {FAST, STOP}, {FAST, FAST}}, // 30.over T
+		{{SLOW,-SLOW}, {SLOW,-SLOW}, {SLOW,-SLOW}, {SLOW,-SLOW}}, // 31.turn right until WB
+		{{SLOW,-SLOW}, {SLOW,-SLOW}, {SLOW,-SLOW}, {SLOW,-SLOW}}, // 32.turn right until WW
+		{{FAST, FAST}, {FAST, STOP}, {STOP, FAST}, {FAST, FAST}}, // 33.trace until Goal
+		{{-FAST,FAST}, {-FAST,FAST}, {-FAST,FAST}, {-FAST,FAST}}, // 34.toward left until WW
+		{{-FAST,FAST}, {-FAST,FAST}, {-FAST,FAST}, {-FAST,FAST}}, // 35.toward left until BW
+		{{-FAST,FAST}, {-FAST,FAST}, {-FAST,FAST}, {-FAST,FAST}}, // 36.toward left until WW
+		{{-SLOW,-SLOW}, {-SLOW,-SLOW}, {-SLOW,-SLOW}, {-SLOW,-SLOW}}, // 37.back until BB
+		NULL
+};
+
+//     {{FAST, FAST}, {FAST, STOP}, {STOP, FAST}, {FAST, FAST}}, // Normal trace
+
+const int order_preset[] = {
+	//   0	 1   2   3   4   5   6   7   8   9
+		WW, BB, WW, BB, WW, BB, WW, BB, WW, BB,
+
+	//  10  11  12  13  14  15  16  17  18  19
+		WW, WB, WW, BB, WW, BB, WW, BB, WW, BB,
+
+	//  20  21  22  23  24  25  26  27  28  29
+		WW, BB, WW, BB, WW, BW, WW, BB, WW, BB,
+
+	//  30  31  32  33  34  35  36  37
+		WW, WB, WW, BB, WW, BW, WW, BB
+};
 
 int main() {
 	int position, run_order = 0;
@@ -82,7 +105,7 @@ int main() {
 			mode = task_init(120);
 			break;
 		case MODE_OP:
-			mode = task_op();
+			mode = task_op(&run_order, &position);
 			break;
 		case MODE_READ:
 			mode = task_read(&run_order, &position);
@@ -119,7 +142,8 @@ int task_init(const unsigned short main_cycle) {
 	return MODE_OP;
 }
 
-int task_op() {
+int task_op(int* run_order, int* position) {
+	*run_order = *position = 29;       //!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 	return (!getSW()) ? MODE_OP : MODE_READ;
 }
 
@@ -139,7 +163,6 @@ int task_shift(int* run_order) {
 }
 
 int task_ed() {
-	static int stop[2] = {STOP, STOP};
-	motor_run(stop);
-	return MODE_ED;
+	motor_run(stop_motor);
+	return MODE_OP;
 }
