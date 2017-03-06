@@ -25,7 +25,7 @@ enum Sensor_result{
 int is_sensor_Black(unsigned char ch);
 void run_motor(int* param);
 int get_position();
-int task_init(const unsigned short main_cycle);
+int task_init(int* run_order);
 int task_op();
 int task_read(int* run_order, int* position);
 int task_run(int run_order, int position);
@@ -35,44 +35,44 @@ int task_ed();
 const int param_list[][4][2] = {
 
   //   WW            WB            BW            BB
-  {{FAST, FAST}, {SLOW, FAST}, {FAST, SLOW}, {FAST, FAST}}, //  0.over start line
-  {{STOP, FAST}, {FAST, STOP}, {STOP, FAST}, {FAST, STOP}}, //  1.right edge until T
-  {{FAST, STOP}, {FAST, SLOW}, {SLOW, FAST}, {FAST, FAST}}, //  2.over T zone
-  {{FAST, FAST}, {FAST, STOP}, {STOP, FAST}, {FAST, FAST}}, //  3.trace until +
-  {{FAST, FAST}, {FAST,-FAST}, {-FAST,FAST}, {FAST, FAST}}, //  4.over +
-  {{FAST, FAST}, {FAST,-SLOW}, {-SLOW,FAST}, {FAST, FAST}}, //  5.trace until condenser
-  {{FAST, FAST}, {SLOW, FAST}, {SLOW, FAST}, {FAST, FAST}}, //  6.enter the condenser
-  {{FAST, FAST}, {FAST, STOP}, {STOP, FAST}, {FAST, FAST}}, //  7.run between plate
-  {{FAST, FAST}, {SLOW, FAST}, {FAST, SLOW}, {FAST, FAST}}, //  8.get out condenser
-  {{FAST, FAST}, {FAST, STOP}, {STOP, FAST}, {FAST, FAST}}, //  9.trace until +
-  {{FAST, FAST}, {SLOW,-FAST}, {-FAST,SLOW}, {FAST, FAST}}, // 10.over +
-  {{SLOW,-SLOW}, {SLOW,-SLOW}, {SLOW,-SLOW}, {SLOW,-SLOW}}, // 11.turn right until WB
-  {{SLOW,-SLOW}, {SLOW,-SLOW}, {SLOW,-SLOW}, {SLOW,-SLOW}}, // 12.turn right until WW
-  {{FAST, STOP}, {FAST, STOP}, {STOP, FAST}, {STOP, FAST}}, // 13.left edge until T
-  {{FAST, STOP}, {FAST, STOP}, {FAST, STOP}, {FAST, STOP}}, // 14.turn right until WW
-  {{FAST, FAST}, {FAST,-SLOW}, {-SLOW,FAST}, {FAST, FAST}}, // 15.trace until く
-  {{SLOW,-SLOW}, {SLOW,-SLOW}, {SLOW,-SLOW}, {SLOW,-SLOW}}, // 16.toward right until WW
-  {{FAST, FAST}, {FAST, STOP}, {STOP, FAST}, {FAST, FAST}}, // 17.trace until +
-  {{FAST, FAST}, {FAST, FAST}, {FAST, FAST}, {FAST, FAST}}, // 18.over +
-  {{FAST, FAST}, {FAST, STOP}, {STOP, FAST}, {FAST, FAST}}, // 19.trace until condenser
-  {{FAST, FAST}, {FAST,-SLOW}, {-SLOW,FAST}, {FAST, FAST}}, // 20.enter the condenser
-  {{FAST, FAST}, {FAST, STOP}, {STOP, FAST}, {FAST, FAST}}, // 21.run between plate
-  {{FAST, FAST}, {FAST,-FAST}, {-FAST,FAST}, {FAST, FAST}}, // 22.get out condenser
-  {{FAST, FAST}, {FAST,-SLOW}, {-SLOW,FAST}, {FAST, FAST}}, // 23.trace until +
-  {{FAST, FAST}, {SLOW,-FAST}, {-FAST,SLOW}, {FAST, FAST}}, // 24.over +
-  {{-SLOW,SLOW}, {-SLOW,SLOW}, {-SLOW,SLOW}, {-SLOW,SLOW}}, // 25.turn left until BW
-  {{-SLOW,SLOW}, {-SLOW,SLOW}, {-SLOW,SLOW}, {-SLOW,SLOW}}, // 26.turn left until WW
-  {{FAST, FAST}, {FAST,-FAST}, {-FAST,FAST}, {FAST, FAST}}, // 27.trace until く
-  {{STOP, SLOW}, {STOP, SLOW}, {STOP, SLOW}, {STOP, SLOW}}, // 28.toward left until WW
-  {{STOP, FAST}, {FAST, STOP}, {STOP, FAST}, {FAST, STOP}}, // 29.right edge until T
-  {{FAST, FAST}, {STOP, FAST}, {FAST, STOP}, {FAST, FAST}}, // 30.over T
-  {{SLOW,-SLOW}, {SLOW,-SLOW}, {SLOW,-SLOW}, {SLOW,-SLOW}}, // 31.turn right until WB
-  {{SLOW,-SLOW}, {SLOW,-SLOW}, {SLOW,-SLOW}, {SLOW,-SLOW}}, // 32.turn right until WW
-  {{FAST, FAST}, {FAST, STOP}, {STOP, FAST}, {FAST, FAST}}, // 33.trace until Goal
-  {{-FAST,FAST}, {-FAST,FAST}, {-FAST,FAST}, {-FAST,FAST}}, // 34.toward left until WW
-  {{-FAST,FAST}, {-FAST,FAST}, {-FAST,FAST}, {-FAST,FAST}}, // 35.toward left until BW
-  {{-FAST,FAST}, {-FAST,FAST}, {-FAST,FAST}, {-FAST,FAST}}, // 36.toward left until WW
-  {{-SLOW,-SLOW}, {-SLOW,-SLOW}, {-SLOW,-SLOW}, {-SLOW,-SLOW}}, // 37.back until BB
+  {{ FAST,  FAST}, { SLOW,  FAST}, { FAST,  SLOW}, { FAST,  FAST}}, //  0.over start line
+  {{ STOP,  FAST}, { FAST,  STOP}, { STOP,  FAST}, { FAST,  STOP}}, //  1.right edge until T
+  {{ FAST,  STOP}, { FAST,  SLOW}, { SLOW,  FAST}, { FAST,  FAST}}, //  2.over T zone
+  {{ FAST,  FAST}, { FAST,  STOP}, { STOP,  FAST}, { FAST,  FAST}}, //  3.trace until +
+  {{ FAST,  FAST}, { FAST, -FAST}, {-FAST,  FAST}, { FAST,  FAST}}, //  4.over +
+  {{ FAST,  FAST}, { FAST, -SLOW}, {-SLOW,  FAST}, { FAST,  FAST}}, //  5.trace until condenser
+  {{ FAST,  FAST}, { SLOW,  FAST}, { SLOW,  FAST}, { FAST,  FAST}}, //  6.enter the condenser
+  {{ FAST,  FAST}, { FAST,  STOP}, { STOP,  FAST}, { FAST,  FAST}}, //  7.run between plate
+  {{ FAST,  FAST}, { SLOW,  FAST}, { FAST,  SLOW}, { FAST,  FAST}}, //  8.get out condenser
+  {{ FAST,  FAST}, { FAST,  STOP}, { STOP,  FAST}, { FAST,  FAST}}, //  9.trace until +
+  {{ FAST,  FAST}, { SLOW, -FAST}, {-FAST,  SLOW}, { FAST,  FAST}}, // 10.over +
+  {{ SLOW, -SLOW}, { SLOW, -SLOW}, { SLOW, -SLOW}, { SLOW, -SLOW}}, // 11.turn right until WB
+  {{ SLOW, -SLOW}, { SLOW, -SLOW}, { SLOW, -SLOW}, { SLOW, -SLOW}}, // 12.turn right until WW
+  {{ FAST,  STOP}, { FAST,  STOP}, { STOP,  FAST}, { STOP,  FAST}}, // 13.left edge until T
+  {{ FAST,  STOP}, { FAST,  STOP}, { FAST,  STOP}, { FAST,  STOP}}, // 14.turn right until WW
+  {{ FAST,  FAST}, { FAST, -SLOW}, {-SLOW,  FAST}, { FAST,  FAST}}, // 15.trace until く
+  {{ SLOW, -SLOW}, { SLOW, -SLOW}, { SLOW, -SLOW}, { SLOW, -SLOW}}, // 16.toward right until WW
+  {{ FAST,  FAST}, { FAST,  STOP}, { STOP,  FAST}, { FAST,  FAST}}, // 17.trace until +
+  {{ FAST,  FAST}, { FAST,  FAST}, { FAST,  FAST}, { FAST,  FAST}}, // 18.over +
+  {{ FAST,  FAST}, { FAST,  STOP}, { STOP,  FAST}, { FAST,  FAST}}, // 19.trace until condenser
+  {{ FAST,  FAST}, { FAST, -SLOW}, {-SLOW,  FAST}, { FAST,  FAST}}, // 20.enter the condenser
+  {{ FAST,  FAST}, { FAST,  STOP}, { STOP,  FAST}, { FAST,  FAST}}, // 21.run between plate
+  {{ FAST,  FAST}, { FAST, -FAST}, {-FAST,  FAST}, { FAST,  FAST}}, // 22.get out condenser
+  {{ FAST,  FAST}, { FAST, -SLOW}, {-SLOW,  FAST}, { FAST,  FAST}}, // 23.trace until +
+  {{ FAST,  FAST}, { SLOW, -FAST}, {-FAST,  SLOW}, { FAST,  FAST}}, // 24.over +
+  {{-SLOW,  SLOW}, {-SLOW,  SLOW}, {-SLOW,  SLOW}, {-SLOW,  SLOW}}, // 25.turn left until BW
+  {{-SLOW,  SLOW}, {-SLOW,  SLOW}, {-SLOW,  SLOW}, {-SLOW,  SLOW}}, // 26.turn left until WW
+  {{ FAST,  FAST}, { FAST, -FAST}, {-FAST,  FAST}, { FAST,  FAST}}, // 27.trace until く
+  {{ STOP,  SLOW}, { STOP,  SLOW}, { STOP,  SLOW}, { STOP,  SLOW}}, // 28.toward left until WW
+  {{ STOP,  FAST}, { FAST,  STOP}, { STOP,  FAST}, { FAST,  STOP}}, // 29.right edge until T
+  {{ FAST,  FAST}, { STOP,  FAST}, { FAST,  STOP}, { FAST,  FAST}}, // 30.over T
+  {{ SLOW, -SLOW}, { SLOW, -SLOW}, { SLOW, -SLOW}, { SLOW, -SLOW}}, // 31.turn right until WB
+  {{ SLOW, -SLOW}, { SLOW, -SLOW}, { SLOW, -SLOW}, { SLOW, -SLOW}}, // 32.turn right until WW
+  {{ FAST,  FAST}, { FAST,  STOP}, { STOP,  FAST}, { FAST,  FAST}}, // 33.trace until Goal
+  {{-FAST,  FAST}, {-FAST,  FAST}, {-FAST,  FAST}, {-FAST,  FAST}}, // 34.toward left until WW
+  {{-FAST,  FAST}, {-FAST,  FAST}, {-FAST,  FAST}, {-FAST,  FAST}}, // 35.toward left until BW
+  {{-FAST,  FAST}, {-FAST,  FAST}, {-FAST,  FAST}, {-FAST,  FAST}}, // 36.toward left until WW
+  {{-SLOW, -SLOW}, {-SLOW, -SLOW}, {-SLOW, -SLOW}, {-SLOW, -SLOW}}, // 37.back until BB
   NULL
 };
 
