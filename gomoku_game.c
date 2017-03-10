@@ -44,6 +44,7 @@ int check_length(int board[BOARD_SIZE][BOARD_SIZE], int x, int y);
 int task_judge(int board[BOARD_SIZE][BOARD_SIZE]);
 int task_play_again();
 int task_rand(int board[BOARD_SIZE][BOARD_SIZE], usr_status_t usr_status);
+char* convert_full_into_half_byte(int i);
 
 int main(int argc, char** argv) {
 
@@ -97,20 +98,36 @@ int task_op(int board[BOARD_SIZE][BOARD_SIZE], usr_status_t* usr_status) {
 
 int task_disp(int board[BOARD_SIZE][BOARD_SIZE], usr_status_t* usr_status) {
   int i, j;
+  putchar('\f');
   if (usr_status->round) printf("%d番手\n", usr_status->round);  // TODO: 表示に五目並べ感を出したい
   usr_status->round++;
-  printf("  ");  
-  for (i = 0; i < BOARD_SIZE; i++) printf("%d ", i);
+  printf("　");  
+  for (i = 0; i < BOARD_SIZE; i++) printf("%s", convert_full_into_half_byte(i));
   putchar('\n');
 
   for (i = 0; i < BOARD_SIZE; i++) {
-    printf("%d ", i);
+    printf("%s", convert_full_into_half_byte(i));
     for (j = 0; j < BOARD_SIZE; j++) printf("%s ", convert_num_into_char(board[i][j]));
     putchar('\n');
   }
   putchar('\n');
   
   return MODE_JUDGE;
+}
+
+char* convert_full_into_half_byte(int i) {
+  switch (i) {
+  case 0: return "０";
+  case 1: return "１";
+  case 2: return "２";
+  case 3: return "３";
+  case 4: return "４";
+  case 5: return "５";
+  case 6: return "６";
+  case 7: return "７";
+  case 8: return "８";
+  case 9: return "９";
+  }
 }
 
 int task_input(int board[BOARD_SIZE][BOARD_SIZE], usr_status_t usr_status) {  // TODO: task_randと統合, 入力をもうちょい工夫
@@ -134,8 +151,10 @@ int task_input(int board[BOARD_SIZE][BOARD_SIZE], usr_status_t usr_status) {  //
 int task_rand(int board[BOARD_SIZE][BOARD_SIZE], usr_status_t usr_status) {
   int pos_x = rand() % 10;
   int pos_y = rand() % 10;
+  int i;
   if (board[pos_y][pos_x] == STONE_SPACE && is_inside_board(pos_x, pos_y)) {
     board[pos_y][pos_x] = usr_status.active_player;
+    for (i = 0; i < 100000000; i++) ;
     return MODE_DISP;
   }
   else return MODE_RAND;
@@ -195,10 +214,10 @@ int is_inside_board(int input_x, int input_y) {
 
 int check_length(int board[BOARD_SIZE][BOARD_SIZE], int x, int y) {  // FIXME: まれに判定ミスが生じる
   int i, j, len_flag;                                                // XXX: 右上方向の判定をしていない
-  int dx[] = { 0, 1, 1 };
-  int dy[] = { 1, 0, 1 };
+  int dx[] = { 0, 1, 1, 1 };
+  int dy[] = { 1, 0, 1,-1 };
 
-  for (i = 0; i < 3; i++) {
+  for (i = 0; i < 4; i++) {
     for (j = 1, len_flag = 1; j <= 4; j++) {
       if (board[y][x] != board[y+j*dy[i]][x+j*dx[i]]) {
         len_flag = 0;
