@@ -5,9 +5,7 @@
 
 #define BOARD_SIZE  10
 
-// 選択したポジションがtureか否かを個々でやる必要あり
-
-enum MODE {
+enum TASK_MODE {
   MODE_OP,
   MODE_DISP,
   MODE_INPUT,
@@ -18,6 +16,11 @@ enum MODE {
   MODE_ED
 };
 
+enum GAME {
+  PERSONAL,
+  AUTO
+};
+
 enum STONE {
   STONE_SPACE,
   STONE_BLACK, 
@@ -25,7 +28,7 @@ enum STONE {
 };
 
 typedef struct {
-  const int GAME_MODE;
+  int GAME_MODE;
   int active_player;
   int round;  
 } usr_status_t;
@@ -42,12 +45,16 @@ int task_judge(int board[BOARD_SIZE][BOARD_SIZE]);
 int task_play_again();
 int task_rand(int board[BOARD_SIZE][BOARD_SIZE], usr_status_t usr_status);
 
-int main() {
+int main(int argc, char** argv) {
 
   int mode = MODE_OP;
   int board[BOARD_SIZE][BOARD_SIZE];
   usr_status_t usr_status;
-  
+
+  if (argc < 2) usr_status.GAME_MODE = PERSONAL;
+  else if (!strcmp(argv[1], "--auto")) usr_status.GAME_MODE = AUTO;
+  else usr_status.GAME_MODE = PERSONAL;
+       
   while (1) {
     switch (mode) {
     case MODE_OP:
@@ -85,7 +92,7 @@ int task_op(int board[BOARD_SIZE][BOARD_SIZE], usr_status_t* usr_status) {
   init_board(board);
   task_disp(board, usr_status);
 
-  return MODE_RAND;
+  return (usr_status->GAME_MODE == AUTO) ? MODE_RAND : MODE_INPUT;
 }
 
 int task_disp(int board[BOARD_SIZE][BOARD_SIZE], usr_status_t* usr_status) {
@@ -136,7 +143,7 @@ int task_rand(int board[BOARD_SIZE][BOARD_SIZE], usr_status_t usr_status) {
 
 int task_switch(usr_status_t* usr_status) {
   usr_status->active_player = (usr_status->active_player == STONE_BLACK) ? STONE_WHITE : STONE_BLACK;
-  return MODE_RAND;
+  return (usr_status->GAME_MODE == AUTO) ? MODE_RAND : MODE_INPUT;
 }
 
 int task_judge(int board[BOARD_SIZE][BOARD_SIZE]) {
