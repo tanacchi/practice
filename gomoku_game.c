@@ -38,7 +38,7 @@ void init_board(int board[BOARD_SIZE][BOARD_SIZE]);
 int task_input(int board[BOARD_SIZE][BOARD_SIZE], usr_status_t usr_status);
 int task_op(int board[BOARD_SIZE][BOARD_SIZE], usr_status_t* usr_status);
 int task_switch(usr_status_t* usr_status);
-char* convert_num_into_char(int stone);
+char* convert_num_into_char(int stone);  // HACK: 要らなさそう
 int is_inside_board(int input_x, int input_y);
 int check_length(int board[BOARD_SIZE][BOARD_SIZE], int x, int y);
 int task_judge(int board[BOARD_SIZE][BOARD_SIZE]);
@@ -51,7 +51,7 @@ int main(int argc, char** argv) {
   int board[BOARD_SIZE][BOARD_SIZE];
   usr_status_t usr_status;
 
-  if (argc < 2) usr_status.GAME_MODE = PERSONAL;
+  if (argc < 2) usr_status.GAME_MODE = PERSONAL;  // HACK: switch内で処理したい
   else if (!strcmp(argv[1], "--auto")) usr_status.GAME_MODE = AUTO;
   else usr_status.GAME_MODE = PERSONAL;
        
@@ -90,14 +90,14 @@ int task_op(int board[BOARD_SIZE][BOARD_SIZE], usr_status_t* usr_status) {
   usr_status->round = 0;
   srand((unsigned)time(NULL));
   init_board(board);
-  task_disp(board, usr_status);
+  task_disp(board, usr_status);  // HACK: ここにtaskシリーズはどうかと
 
   return (usr_status->GAME_MODE == AUTO) ? MODE_RAND : MODE_INPUT;
 }
 
 int task_disp(int board[BOARD_SIZE][BOARD_SIZE], usr_status_t* usr_status) {
   int i, j;
-  if (usr_status->round) printf("%d番手\n", usr_status->round);
+  if (usr_status->round) printf("%d番手\n", usr_status->round);  // TODO: 表示に五目並べ感を出したい
   usr_status->round++;
   printf("  ");  
   for (i = 0; i < BOARD_SIZE; i++) printf("%d ", i);
@@ -113,7 +113,7 @@ int task_disp(int board[BOARD_SIZE][BOARD_SIZE], usr_status_t* usr_status) {
   return MODE_JUDGE;
 }
 
-int task_input(int board[BOARD_SIZE][BOARD_SIZE], usr_status_t usr_status) {
+int task_input(int board[BOARD_SIZE][BOARD_SIZE], usr_status_t usr_status) {  // TODO: task_randと統合, 入力をもうちょい工夫
   int pos_x, pos_y;
   
   printf("%s の番です。どこに置きますか？\n",
@@ -152,7 +152,7 @@ int task_judge(int board[BOARD_SIZE][BOARD_SIZE]) {
     for (j = 0; j <= BOARD_SIZE; j++) {
       if (board[i][j] == STONE_SPACE) continue;
       if (check_length(board, j, i)) {
-        printf("%s の勝ちです。\n", (board[i][j] == STONE_BLACK) ? "●" : "○");
+        printf("%s の勝ちです。\n", (board[i][j] == STONE_BLACK) ? "●" : "○"); // HACK: covert_num... ベタ書きのほうが綺麗かも
         return MODE_ASK;
       }
     }
@@ -193,8 +193,8 @@ int is_inside_board(int input_x, int input_y) {
   return ((0 <= input_x && input_x < BOARD_SIZE) && (0 <= input_y && input_y < BOARD_SIZE));
 }
 
-int check_length(int board[BOARD_SIZE][BOARD_SIZE], int x, int y) {
-  int i, j, len_flag;
+int check_length(int board[BOARD_SIZE][BOARD_SIZE], int x, int y) {  // FIXME: まれに判定ミスが生じる
+  int i, j, len_flag;                                                // XXX: 右上方向の判定をしていない
   int dx[] = { 0, 1, 1 };
   int dy[] = { 1, 0, 1 };
 
