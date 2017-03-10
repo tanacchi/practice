@@ -24,40 +24,46 @@ enum STONE {
   STONE_WHITE,
 };
 
-int task_disp(int board[BOARD_SIZE][BOARD_SIZE]);
+typedef struct {
+  const int GAME_MODE;
+  int active_player;
+  int round;  
+} usr_status_t;
+
+int task_disp(int board[BOARD_SIZE][BOARD_SIZE], usr_status_t* usr_status);
 void init_board(int board[BOARD_SIZE][BOARD_SIZE]);
-int task_input(int board[BOARD_SIZE][BOARD_SIZE], int active_player);
-int task_op(int board[BOARD_SIZE][BOARD_SIZE], int* active_player);
-int task_switch(int* active_player);
+int task_input(int board[BOARD_SIZE][BOARD_SIZE], usr_status_t usr_status);
+int task_op(int board[BOARD_SIZE][BOARD_SIZE], usr_status_t* usr_status);
+int task_switch(usr_status_t* usr_status);
 char* convert_num_into_char(int stone);
 int is_inside_board(int input_x, int input_y);
 int check_length(int board[BOARD_SIZE][BOARD_SIZE], int x, int y);
 int task_judge(int board[BOARD_SIZE][BOARD_SIZE]);
 int task_play_again();
-int task_rand(int board[BOARD_SIZE][BOARD_SIZE], int active_player);
+int task_rand(int board[BOARD_SIZE][BOARD_SIZE], usr_status_t usr_status);
 
 int main() {
 
   int mode = MODE_OP;
   int board[BOARD_SIZE][BOARD_SIZE];
-  int active_player;
-
+  usr_status_t usr_status;
+  
   while (1) {
     switch (mode) {
     case MODE_OP:
-      mode = task_op(board, &active_player);
+      mode = task_op(board, &usr_status);
       break;
     case MODE_DISP:
-      mode = task_disp(board);
+      mode = task_disp(board, &usr_status);
       break;
     case MODE_INPUT:
-      mode = task_input(board, active_player);
+      mode = task_input(board, usr_status);
       break;
     case MODE_RAND:
-      mode = task_rand(board, active_player);
+      mode = task_rand(board, usr_status);
       break;
     case MODE_SWITCH:
-      mode = task_switch(&active_player);
+      mode = task_switch(&usr_status);
       break;
     case MODE_JUDGE:
       mode = task_judge(board);
@@ -72,20 +78,20 @@ int main() {
   }
 } 
 
-int task_op(int board[BOARD_SIZE][BOARD_SIZE], int* active_player) {
-  *active_player = STONE_BLACK;
+int task_op(int board[BOARD_SIZE][BOARD_SIZE], usr_status_t* usr_status) {
+  usr_status->active_player = STONE_BLACK;
+  usr_status->round = 0;
   srand((unsigned)time(NULL));
   init_board(board);
-  task_disp(board);
+  task_disp(board, usr_status);
 
   return MODE_RAND;
 }
 
-int task_disp(int board[BOARD_SIZE][BOARD_SIZE]) {
+int task_disp(int board[BOARD_SIZE][BOARD_SIZE], usr_status_t* usr_status) {
   int i, j;
-  static int round;
-  if (round) printf("%d番手\n", round);
-  round++;
+  if (usr_status->round) printf("%d番手\n", usr_status->round);
+  usr_status->round++;
   printf("  ");  
   for (i = 0; i < BOARD_SIZE; i++) printf("%d ", i);
   putchar('\n');
@@ -100,16 +106,16 @@ int task_disp(int board[BOARD_SIZE][BOARD_SIZE]) {
   return MODE_JUDGE;
 }
 
-int task_input(int board[BOARD_SIZE][BOARD_SIZE], int active_player) {
+int task_input(int board[BOARD_SIZE][BOARD_SIZE], usr_status_t usr_status) {
   int pos_x, pos_y;
   
   printf("%s の番です。どこに置きますか？\n",
-         (active_player == STONE_BLACK) ? "●" : "○");
+         (usr_status.active_player == STONE_BLACK) ? "●" : "○");
   scanf("%d %d", &pos_x, &pos_y);
   putchar('\n');
   
   if (board[pos_y][pos_x] == STONE_SPACE && is_inside_board(pos_x, pos_y)) {
-    board[pos_y][pos_x] = active_player;
+    board[pos_y][pos_x] = usr_status.active_player;
     return MODE_DISP;
   }
   else {
@@ -118,25 +124,25 @@ int task_input(int board[BOARD_SIZE][BOARD_SIZE], int active_player) {
   }
 }
 
-int task_rand(int board[BOARD_SIZE][BOARD_SIZE], int active_player) {
+int task_rand(int board[BOARD_SIZE][BOARD_SIZE], usr_status_t usr_status) {
   int pos_x = rand() % 10;
   int pos_y = rand() % 10;
   if (board[pos_y][pos_x] == STONE_SPACE && is_inside_board(pos_x, pos_y)) {
-    board[pos_y][pos_x] = active_player;
+    board[pos_y][pos_x] = usr_status.active_player;
     return MODE_DISP;
   }
   else return MODE_RAND;
 }
 
-int task_switch(int* active_player) {
-  *active_player = (*active_player == STONE_BLACK) ? STONE_WHITE : STONE_BLACK;
+int task_switch(usr_status_t* usr_status) {
+  usr_status->active_player = (usr_status->active_player == STONE_BLACK) ? STONE_WHITE : STONE_BLACK;
   return MODE_RAND;
 }
 
 int task_judge(int board[BOARD_SIZE][BOARD_SIZE]) {
   int i, j, len_flag;
-  for (i = 0; i <= BOARD_SIZE - 5; i++) {
-    for (j = 0; j <= BOARD_SIZE - 5; j++) {
+  for (i = 0; i <= BOARD_SIZE; i++) {
+    for (j = 0; j <= BOARD_SIZE; j++) {
       if (board[i][j] == STONE_SPACE) continue;
       if (check_length(board, j, i)) {
         printf("%s の勝ちです。\n", (board[i][j] == STONE_BLACK) ? "●" : "○");
