@@ -219,7 +219,8 @@ int check_length(int board[BOARD_SIZE][BOARD_SIZE], int x, int y) {  // FIXME: ã
 
   for (i = 0; i < 4; i++) {
     for (j = 1, len_flag = 1; j <= 4; j++) {
-      if (board[y][x] != board[y+j*dy[i]][x+j*dx[i]]) {
+      if (board[y][x] != board[y+j*dy[i]][x+j*dx[i]]
+          || !is_inside_board(x+j*dx[i], y+j*dy[i])) {
         len_flag = 0;
         break;
       }
