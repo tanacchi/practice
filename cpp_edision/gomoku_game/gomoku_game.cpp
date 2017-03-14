@@ -166,12 +166,11 @@ task_mode task_switch(usr_status& status) {
 }
 
 task_mode task_judge(board_type& board) {
-  int i, j, len_flag;
-  for (i = 0; i <= board_size; i++) {
-    for (j = 0; j <= board_size; j++) {
+  for (std::size_t i {}; i < board_size; i++) {
+    for (std::size_t j {}; j < board_size; j++) {
       if (board[i][j] == stone::SPACE) continue;
       if (check_length(board, j, i)) {
-        printf("%s の勝ちです。\n", (board[i][j] == stone::BLACK) ? "●" : "○"); // HACK: covert_num... ベタ書きのほうが綺麗かも
+        std::cout << convert_num_into_char(board[i][j]) << "の勝ちです。" << std::endl;
         return task_mode::ASK;
       }
     }
