@@ -142,7 +142,7 @@ task_mode task_input(stone board[][board_size], usr_status_t usr_status) {  // T
   scanf("%d %d", &pos_x, &pos_y);
   putchar('\n');
   
-  if (board[pos_y][pos_x] == stone::SPACE && is_inside_board(pos_x, pos_y)) {
+  if (is_inside_board(pos_x, pos_y) && board[pos_y][pos_x] == stone::SPACE) {
     board[pos_y][pos_x] = usr_status.active_player;
     return task_mode::DISP;
   }
@@ -156,7 +156,7 @@ task_mode task_rand(stone board[][board_size], usr_status_t usr_status) {
   int pos_x = rand() % 10;
   int pos_y = rand() % 10;
   int i;
-  if (board[pos_y][pos_x] == stone::SPACE && is_inside_board(pos_x, pos_y)) {
+  if (is_inside_board(pos_x, pos_y) && board[pos_y][pos_x] == stone::SPACE) {
     board[pos_y][pos_x] = usr_status.active_player;
     return task_mode::DISP;
   }
@@ -222,8 +222,8 @@ bool check_length(stone board[][board_size], int x, int y) {  // FIXME: まれ�
 
   for (i = 0; i < 4; i++) {
     for (j = 1, len_flag = 1; j <= 4; j++) {
-      if (board[y][x] != board[y+j*dy[i]][x+j*dx[i]]
-          || !is_inside_board(x+j*dx[i], y+j*dy[i])) {
+      if (!is_inside_board(x+j*dx[i], y+j*dy[i]) ||
+          board[y][x] != board[y+j*dy[i]][x+j*dx[i]]) {
         len_flag = 0;
         break;
       }
