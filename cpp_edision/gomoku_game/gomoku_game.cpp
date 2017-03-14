@@ -179,16 +179,16 @@ task_mode task_judge(board_type& board) {
 }
 
 task_mode task_play_again() {
-  char input[8] = {0};
 
-  printf("プレイアゲイン？？(yes/no)\n"
-         ">");
-  scanf("%7s", input);
-  putchar('\n');
+  std::cout << "プレイアゲイン？？(yes/no)\n > " << std::flush;
+  std::string input;
+  std::cin >> input;
+  std::cout.put('\n');
 
-  if (!std::char_traits<char>::compare("yes", input, 3))     return task_mode::OP;
-  else if (!std::char_traits<char>::compare("no", input, 2)) return task_mode::ED;
-  else printf("不正な入力です\n"); return task_mode::ASK;
+  if (input == "yes") return task_mode::OP;
+  if (input == "no")  return task_mode::ED;
+  std::cout << "不正な入力です" << std::endl;
+  return task_mode::ASK;
 }
 
 void init_board(board_type& board) {
