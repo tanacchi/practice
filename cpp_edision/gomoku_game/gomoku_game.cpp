@@ -50,7 +50,7 @@ const char* convert_full_into_half_byte(int);
 
 int main(int argc, char** argv) {
 
-  task_mode mode = task_mode::OP;
+  task_mode mode {task_mode::OP};
   board_type board;
   usr_status status;
 
@@ -58,7 +58,7 @@ int main(int argc, char** argv) {
   else if (!std::char_traits<char>::compare(argv[1], "--auto", 6)) status.game_mode = game::AUTO;
   else status.game_mode = game::PERSONAL;
 
-  while (1) {
+  while (true) {
     switch (mode) {
     case task_mode::OP:
       mode = task_op(board, status);
