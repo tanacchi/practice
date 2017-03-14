@@ -45,7 +45,7 @@ task_mode task_switch(usr_status&);
 const char* convert_num_into_char(stone);  // HACK: 要らなさそう
 bool is_inside_board(int, int);
 bool check_length(const board_type&, int, int);
-task_mode task_judge(board_type&);
+task_mode task_judge(const board_type&);
 task_mode task_play_again();
 task_mode task_rand(board_type&, const usr_status&);
 const char* convert_full_into_half_byte(int);
@@ -165,7 +165,7 @@ task_mode task_switch(usr_status& status) {
   return (status.game_mode == game::AUTO) ? task_mode::RAND : task_mode::INPUT;
 }
 
-task_mode task_judge(board_type& board) {
+task_mode task_judge(const board_type& board) {
   for (std::size_t i {}; i < board.size(); i++) {
     for (std::size_t j {}; j < board.size(); j++) {
       if (board[i][j] == stone::SPACE) continue;
