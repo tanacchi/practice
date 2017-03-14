@@ -101,11 +101,10 @@ task_mode task_op(board_type& board, usr_status& status) {
 
 task_mode task_disp(const board_type& board, usr_status& status) {
   std::cout.put('\f');
-  if (status.round) std::cout << status.round <<  "番手\n";  // TODO: 表示に五目並べ感を出したい
-  ++status.round; // FIXME: wrong update timing.
+  std::cout << status.round + 1 <<  "番手\n  ";  // TODO: 表示に五目並べ感を出したい
 
-  std::cout << "  ";
-  for (std::size_t i {}; i < board.size(); ++i) std::cout << convert_full_into_half_byte(i);
+  for (std::size_t i {}; i < board.size(); ++i)
+    std::cout << convert_full_into_half_byte(i);
   std::cout.put('\n');
 
   for (auto it {board.begin()}; it != board.end(); ++it) {
@@ -136,9 +135,9 @@ const char* convert_full_into_half_byte(int i) {
 task_mode task_input(board_type& board, const usr_status& status) {  // TODO: task_randと統合, 入力をもうちょい工夫
   std::cout << convert_num_into_char(status.active_player) <<  "の番です。どこに置きますか？\n > " << std::flush;
 
-  std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
   std::size_t pos_x, pos_y;
   std::cin >> pos_x >> pos_y;
+  std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
 
   if (!is_inside_board(pos_x, pos_y) || board[pos_y][pos_x] != stone::SPACE) {
     std::cout << "\n不正な入力です。" << std::endl;
@@ -162,6 +161,7 @@ task_mode task_rand(board_type& board, const usr_status& status) {
 }
 
 task_mode task_switch(usr_status& status) {
+  ++status.round;
   status.active_player = (status.active_player == stone::BLACK) ? stone::WHITE : stone::BLACK;
   return (status.game_mode == game::AUTO) ? task_mode::RAND : task_mode::INPUT;
 }
