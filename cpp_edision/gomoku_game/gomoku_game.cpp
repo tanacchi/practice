@@ -44,7 +44,7 @@ task_mode task_op(board_type&, usr_status&);
 task_mode task_switch(usr_status&);
 const char* convert_num_into_char(stone);  // HACK: 要らなさそう
 bool is_inside_board(int, int);
-bool check_length(board_type&, int, int);
+bool check_length(const board_type&, int, int);
 task_mode task_judge(board_type&);
 task_mode task_play_again();
 task_mode task_rand(board_type&, const usr_status&);
@@ -207,7 +207,7 @@ bool is_inside_board(int input_x, int input_y) {
   return (0 <= input_x && input_x < board_size) && (0 <= input_y && input_y < board_size);
 }
 
-bool check_length(board_type& board, int x, int y) { // FIXME: まれに判定ミスが生じる
+bool check_length(const board_type& board, int x, int y) { // FIXME: まれに判定ミスが生じる
                                                      // XXX: 右上方向の判定をしていない
   constexpr std::array<int, 4> dx {0, 1, 1, 1};
   constexpr std::array<int, 4> dy {1, 0, 1,-1};
