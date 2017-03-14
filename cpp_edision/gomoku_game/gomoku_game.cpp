@@ -1,6 +1,7 @@
 #include <algorithm>
 #include <array>
 #include <iostream>
+#include <numeric>
 #include <random>
 #include <string>
 
@@ -133,21 +134,19 @@ const char* convert_full_into_half_byte(int i) {
 }
 
 task_mode task_input(board_type& board, const usr_status& status) {  // TODO: task_randと統合, 入力をもうちょい工夫
-  int pos_x, pos_y;
+  std::cout << convert_num_into_char(status.active_player) <<  "の番です。どこに置きますか？\n > " << std::flush;
 
-  printf("%s の番です。どこに置きますか？\n",
-         (status.active_player == stone::BLACK) ? "●" : "○");
-  scanf("%d %d", &pos_x, &pos_y);
-  putchar('\n');
+  std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
+  std::size_t pos_x, pos_y;
+  std::cin >> pos_x >> pos_y;
 
-  if (board[pos_y][pos_x] == stone::SPACE && is_inside_board(pos_x, pos_y)) {
-    board[pos_y][pos_x] = status.active_player;
-    return task_mode::DISP;
-  }
-  else {
-    printf("不正な入力です。\n");
+  if (!is_inside_board(pos_x, pos_y) || board[pos_y][pos_x] != stone::SPACE) {
+    std::cout << "\n不正な入力です。" << std::endl;
     return task_mode::INPUT;
   }
+
+  board[pos_y][pos_x] = status.active_player;
+  return task_mode::DISP;
 }
 
 task_mode task_rand(board_type& board, const usr_status& status) {
