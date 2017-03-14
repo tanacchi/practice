@@ -153,11 +153,10 @@ task_mode task_rand(board_type& board, const usr_status& status) {
   static std::uniform_int_distribution<std::size_t> dist {0, board_size - 1};
   board_row::size_type  pos_x = dist(rand);
   board_type::size_type pos_y = dist(rand);
-  if (board[pos_y][pos_x] == stone::SPACE && is_inside_board(pos_x, pos_y)) {
-    board[pos_y][pos_x] = status.active_player;
-    return task_mode::DISP;
-  }
-  else return task_mode::RAND;
+  if (!is_inside_board(pos_x, pos_y) || !(board[pos_y][pos_x] == stone::SPACE))
+    return task_mode::RAND;
+  board[pos_y][pos_x] = status.active_player;
+  return task_mode::DISP;
 }
 
 task_mode task_switch(usr_status& status) {
