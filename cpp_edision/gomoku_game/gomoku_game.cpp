@@ -101,7 +101,7 @@ task_mode task_op(board_type& board, usr_status& status) {
 
 task_mode task_disp(const board_type& board, usr_status& status) {
   std::cout.put('\f');
-  std::cout << status.round + 1 <<  "番手\n  ";  // TODO: 表示に五目並べ感を出したい
+  std::cout << status.round + 1 << "番手\n  ";  // TODO: 表示に五目並べ感を出したい
 
   for (std::size_t i {}; i < board.size(); ++i)
     std::cout << convert_full_into_half_byte(i);
@@ -179,7 +179,6 @@ task_mode task_judge(board_type& board) {
 }
 
 task_mode task_play_again() {
-
   std::cout << "プレイアゲイン？？(yes/no)\n > " << std::flush;
   std::string input;
   std::cin >> input;
