@@ -1,3 +1,4 @@
+#include <algorithm>
 #include <array>
 #include <iostream>
 #include <random>
@@ -194,10 +195,7 @@ task_mode task_play_again() {
 }
 
 void init_board(board_type& board) {
-  int i, j;
-  for (i = 0; i < board_size; i++)
-    for (j = 0; j < board_size; j++)
-      board[i][j] = stone::SPACE;
+  std::for_each(board.begin(), board.end(), [](auto& e){e.fill(stone::SPACE);});
 }
 
 
