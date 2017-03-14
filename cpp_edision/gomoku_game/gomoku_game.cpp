@@ -35,7 +35,7 @@ constexpr std::size_t board_size {10};
 using board_row  = std::array<stone, board_size>;
 using board_type = std::array<board_row, board_size>;
 
-task_mode task_disp(board_type&, usr_status&); //CAUTION: want to int[size][size], but it mean int[][size] (a.k.a int*[size])
+task_mode task_disp(board_type&, usr_status&);
 void init_board(board_type&);
 task_mode task_input(board_type&, const usr_status&);
 task_mode task_op(board_type&, usr_status&);
