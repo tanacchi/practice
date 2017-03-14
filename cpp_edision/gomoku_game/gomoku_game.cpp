@@ -36,7 +36,7 @@ constexpr std::size_t board_size {10};
 using board_row  = std::array<stone, board_size>;
 using board_type = std::array<board_row, board_size>;
 
-task_mode task_disp(board_type&, usr_status&);
+task_mode task_disp(const board_type&, usr_status&);
 void init_board(board_type&);
 task_mode task_input(board_type&, const usr_status&);
 task_mode task_op(board_type&, usr_status&);
@@ -98,21 +98,20 @@ task_mode task_op(board_type& board, usr_status& status) {
   return (status.game_mode == game::AUTO) ? task_mode::RAND : task_mode::INPUT;
 }
 
-task_mode task_disp(board_type& board, usr_status& status) {
-  int i, j;
-  putchar('\f');
-  if (status.round) printf("%d番手\n", status.round);  // TODO: 表示に五目並べ感を出したい
-  status.round++;
-  printf("　");
-  for (i = 0; i < board_size; i++) printf("%s", convert_full_into_half_byte(i));
-  putchar('\n');
+task_mode task_disp(const board_type& board, usr_status& status) {
+  std::cout.put('\f');
+  if (status.round) std::cout << status.round <<  "番手\n  ";  // TODO: 表示に五目並べ感を出したい
+  ++status.round; // FIXME: wrong update timing.
 
-  for (i = 0; i < board_size; i++) {
-    printf("%s", convert_full_into_half_byte(i));
-    for (j = 0; j < board_size; j++) printf("%s ", convert_num_into_char(board[i][j]));
-    putchar('\n');
+  for (std::size_t i {}; i < board.size(); ++i) std::cout << convert_full_into_half_byte(i);
+  std::cout.put('\n');
+
+  for (auto it {board.begin()}; it != board.end(); ++it) {
+    std::cout << convert_full_into_half_byte(it - board.begin());
+    std::for_each(it->begin(), it->end(), [](const auto& value){std::cout << convert_num_into_char(value);});
+    std::cout.put('\n');
   }
-  putchar('\n');
+  std::cout << std::endl;
 
   return task_mode::JUDGE;
 }
@@ -201,9 +200,9 @@ void init_board(board_type& board) {
 
 const char* convert_num_into_char(stone value) {
   switch (value) {
-  case stone::SPACE: return " ";
-  case stone::BLACK: return "●";
-  case stone::WHITE: return "○";
+  case stone::SPACE: return "  ";
+  case stone::BLACK: return "● ";
+  case stone::WHITE: return "○ ";
   }
 }
 
