@@ -1,121 +1,125 @@
-#include <stdio.h>
-#include <string.h>
-#include <stdlib.h>
-#include <time.h>
+#include <cstdio>
+#include <cstdlib>
+#include <cstring>
+#include <ctime>
 
-#define BOARD_SIZE  10
+constexpr std::size_t board_size {10};
 
-enum TASK_MODE {
-  MODE_OP,
-  MODE_DISP,
-  MODE_INPUT,
-  MODE_RAND,
-  MODE_SWITCH,
-  MODE_JUDGE,
-  MODE_ASK,
-  MODE_ED
+enum class task_mode {
+  OP,
+  DISP,
+  INPUT,
+  RAND,
+  SWITCH,
+  JUDGE,
+  ASK,
+  ED
 };
 
-enum GAME {
+enum class game {
   PERSONAL,
   AUTO
 };
 
-enum STONE {
-  STONE_SPACE,
-  STONE_BLACK, 
-  STONE_WHITE,
+enum class stone {
+  SPACE,
+  BLACK,
+  WHITE,
 };
 
-typedef struct {
-  int GAME_MODE;
-  int active_player;
+struct usr_status_t {
+  game game_mode;
+  stone active_player;
   int round;  
-} usr_status_t;
+};
 
-int task_disp(int board[BOARD_SIZE][BOARD_SIZE], usr_status_t* usr_status);
-void init_board(int board[BOARD_SIZE][BOARD_SIZE]);
-int task_input(int board[BOARD_SIZE][BOARD_SIZE], usr_status_t usr_status);
-int task_op(int board[BOARD_SIZE][BOARD_SIZE], usr_status_t* usr_status);
-int task_switch(usr_status_t* usr_status);
-char* convert_num_into_char(int stone);  // HACK: 要らなさそう
-int is_inside_board(int input_x, int input_y);
-int check_length(int board[BOARD_SIZE][BOARD_SIZE], int x, int y);
-int task_judge(int board[BOARD_SIZE][BOARD_SIZE]);
-int task_play_again();
-int task_rand(int board[BOARD_SIZE][BOARD_SIZE], usr_status_t usr_status);
-char* convert_full_into_half_byte(int i);
+task_mode task_disp(stone[][board_size], usr_status_t*); //CAUTION: want to int[size][size], but it mean int[][size] (a.k.a int*[size])
+void init_board(stone[][board_size]);
+task_mode task_input(stone[][board_size], usr_status_t);
+task_mode task_op(stone[][board_size], usr_status_t*);
+task_mode task_switch(usr_status_t*);
+const char* convert_num_into_char(stone);  // HACK: 要らなさそう
+bool is_inside_board(int, int);
+bool check_length(stone[][board_size], int, int);
+task_mode task_judge(stone[][board_size]);
+task_mode task_play_again();
+task_mode task_rand(stone[][board_size], usr_status_t);
+const char* convert_full_into_half_byte(int);
 
 int main(int argc, char** argv) {
 
-  int mode = MODE_OP;
-  int board[BOARD_SIZE][BOARD_SIZE];
+  task_mode mode = task_mode::OP;
+  stone board[board_size][board_size];
   usr_status_t usr_status;
 
-  if (argc < 2) usr_status.GAME_MODE = PERSONAL;  // HACK: switch内で処理したい
-  else if (!strcmp(argv[1], "--auto")) usr_status.GAME_MODE = AUTO;
-  else usr_status.GAME_MODE = PERSONAL;
+  if (argc < 2) usr_status.game_mode = game::PERSONAL;  // HACK: switch内で処理したい
+  else if (!strcmp(argv[1], "--auto")) usr_status.game_mode = game::AUTO;
+  else usr_status.game_mode = game::PERSONAL;
        
   while (1) {
     switch (mode) {
-    case MODE_OP:
+    case task_mode::OP:
       mode = task_op(board, &usr_status);
       break;
-    case MODE_DISP:
+    case task_mode::DISP:
       mode = task_disp(board, &usr_status);
       break;
-    case MODE_INPUT:
+    case task_mode::INPUT:
       mode = task_input(board, usr_status);
       break;
-    case MODE_RAND:
+    case task_mode::RAND:
       mode = task_rand(board, usr_status);
       break;
-    case MODE_SWITCH:
+    case task_mode::SWITCH:
       mode = task_switch(&usr_status);
       break;
-    case MODE_JUDGE:
+    case task_mode::JUDGE:
       mode = task_judge(board);
       break;
-    case MODE_ASK:
+    case task_mode::ASK:
       mode = task_play_again();
       break;
-    case MODE_ED:
+    case task_mode::ED:
       printf("See you~~\n");
       return 0;
     }
   }
 } 
 
-int task_op(int board[BOARD_SIZE][BOARD_SIZE], usr_status_t* usr_status) {
-  usr_status->active_player = STONE_BLACK;
+task_mode task_op(stone board[][board_size], usr_status_t* usr_status) {
+  usr_status->active_player = stone::BLACK;
   usr_status->round = 0;
   srand((unsigned)time(NULL));
   init_board(board);
-  task_disp(board, usr_status);  // HACK: ここにtaskシリーズはどうかと
+  task_disp(board, usr_status); // HACK: ここにtaskシリーズはどうかと
+                                // NOTE: こっちのほうが処理がわかりやすくなるならこれもこれでありですよ。
+                                //       そのために返り値でmode変更してるってところもあります。
+                                //       つまり、戻り値を利用せずに単体で利用できるのも魅力です。
+                                //       NOTE by @FORNO.
 
-  return (usr_status->GAME_MODE == AUTO) ? MODE_RAND : MODE_INPUT;
+  return (usr_status->game_mode == game::AUTO) ? task_mode::RAND : task_mode::INPUT;
 }
 
-int task_disp(int board[BOARD_SIZE][BOARD_SIZE], usr_status_t* usr_status) {
+task_mode task_disp(stone board[][board_size], usr_status_t* usr_status) {
   int i, j;
   putchar('\f');
   if (usr_status->round) printf("%d番手\n", usr_status->round);  // TODO: 表示に五目並べ感を出したい
   usr_status->round++;
   printf("　");  
-  for (i = 0; i < BOARD_SIZE; i++) printf("%s", convert_full_into_half_byte(i));
+  for (i = 0; i < board_size; i++) printf("%s", convert_full_into_half_byte(i));
   putchar('\n');
 
-  for (i = 0; i < BOARD_SIZE; i++) {
+  for (i = 0; i < board_size; i++) {
     printf("%s", convert_full_into_half_byte(i));
-    for (j = 0; j < BOARD_SIZE; j++) printf("%s ", convert_num_into_char(board[i][j]));
+    for (j = 0; j < board_size; j++) printf("%s ", convert_num_into_char(board[i][j]));
     putchar('\n');
   }
   putchar('\n');
   
-  return MODE_JUDGE;
+  return task_mode::JUDGE;
 }
 
-char* convert_full_into_half_byte(int i) {
+const char* convert_full_into_half_byte(int i) {
   switch (i) {
   case 0: return "０";
   case 1: return "１";
@@ -130,56 +134,56 @@ char* convert_full_into_half_byte(int i) {
   }
 }
 
-int task_input(int board[BOARD_SIZE][BOARD_SIZE], usr_status_t usr_status) {  // TODO: task_randと統合, 入力をもうちょい工夫
+task_mode task_input(stone board[][board_size], usr_status_t usr_status) {  // TODO: task_randと統合, 入力をもうちょい工夫
   int pos_x, pos_y;
   
   printf("%s の番です。どこに置きますか？\n",
-         (usr_status.active_player == STONE_BLACK) ? "●" : "○");
+         (usr_status.active_player == stone::BLACK) ? "●" : "○");
   scanf("%d %d", &pos_x, &pos_y);
   putchar('\n');
   
-  if (board[pos_y][pos_x] == STONE_SPACE && is_inside_board(pos_x, pos_y)) {
+  if (board[pos_y][pos_x] == stone::SPACE && is_inside_board(pos_x, pos_y)) {
     board[pos_y][pos_x] = usr_status.active_player;
-    return MODE_DISP;
+    return task_mode::DISP;
   }
   else {
     printf("不正な入力です。\n");
-    return MODE_INPUT;
+    return task_mode::INPUT;
   }
 }
 
-int task_rand(int board[BOARD_SIZE][BOARD_SIZE], usr_status_t usr_status) {
+task_mode task_rand(stone board[][board_size], usr_status_t usr_status) {
   int pos_x = rand() % 10;
   int pos_y = rand() % 10;
   int i;
-  if (board[pos_y][pos_x] == STONE_SPACE && is_inside_board(pos_x, pos_y)) {
+  if (board[pos_y][pos_x] == stone::SPACE && is_inside_board(pos_x, pos_y)) {
     board[pos_y][pos_x] = usr_status.active_player;
     for (i = 0; i < 100000000; i++) ;
-    return MODE_DISP;
+    return task_mode::DISP;
   }
-  else return MODE_RAND;
+  else return task_mode::RAND;
 }
 
-int task_switch(usr_status_t* usr_status) {
-  usr_status->active_player = (usr_status->active_player == STONE_BLACK) ? STONE_WHITE : STONE_BLACK;
-  return (usr_status->GAME_MODE == AUTO) ? MODE_RAND : MODE_INPUT;
+task_mode task_switch(usr_status_t* usr_status) {
+  usr_status->active_player = (usr_status->active_player == stone::BLACK) ? stone::WHITE : stone::BLACK;
+  return (usr_status->game_mode == game::AUTO) ? task_mode::RAND : task_mode::INPUT;
 }
 
-int task_judge(int board[BOARD_SIZE][BOARD_SIZE]) {
+task_mode task_judge(stone board[][board_size]) {
   int i, j, len_flag;
-  for (i = 0; i <= BOARD_SIZE; i++) {
-    for (j = 0; j <= BOARD_SIZE; j++) {
-      if (board[i][j] == STONE_SPACE) continue;
+  for (i = 0; i <= board_size; i++) {
+    for (j = 0; j <= board_size; j++) {
+      if (board[i][j] == stone::SPACE) continue;
       if (check_length(board, j, i)) {
-        printf("%s の勝ちです。\n", (board[i][j] == STONE_BLACK) ? "●" : "○"); // HACK: covert_num... ベタ書きのほうが綺麗かも
-        return MODE_ASK;
+        printf("%s の勝ちです。\n", (board[i][j] == stone::BLACK) ? "●" : "○"); // HACK: covert_num... ベタ書きのほうが綺麗かも
+        return task_mode::ASK;
       }
     }
   }
-  return MODE_SWITCH;
+  return task_mode::SWITCH;
 }
 
-int task_play_again() {
+task_mode task_play_again() {
   char input[8] = {0};
   
   printf("プレイアゲイン？？(yes/no)\n"
@@ -187,32 +191,32 @@ int task_play_again() {
   scanf("%7s", input);
   putchar('\n');
   
-  if (!strcmp("yes", input))       return MODE_OP;
-  else if (!strcmp("no", input))   return MODE_ED;
-  else printf("不正な入力です\n"); return MODE_ASK;
+  if (!strcmp("yes", input))       return task_mode::OP;
+  else if (!strcmp("no", input))   return task_mode::ED;
+  else printf("不正な入力です\n"); return task_mode::ASK;
 }
 
-void init_board(int board[BOARD_SIZE][BOARD_SIZE]) {
+void init_board(stone board[][board_size]) {
   int i, j;
-  for (i = 0; i < BOARD_SIZE; i++)
-    for (j = 0; j < BOARD_SIZE; j++)
-      board[i][j] = STONE_SPACE;
+  for (i = 0; i < board_size; i++)
+    for (j = 0; j < board_size; j++)
+      board[i][j] = stone::SPACE;
 }
 
 
-char* convert_num_into_char(int stone) {
-  switch (stone) {
-  case STONE_SPACE: return " ";
-  case STONE_BLACK: return "●";
-  case STONE_WHITE: return "○";
+const char* convert_num_into_char(stone value) {
+  switch (value) {
+  case stone::SPACE: return " ";
+  case stone::BLACK: return "●";
+  case stone::WHITE: return "○";
   }
 }
 
-int is_inside_board(int input_x, int input_y) {
-  return ((0 <= input_x && input_x < BOARD_SIZE) && (0 <= input_y && input_y < BOARD_SIZE));
+bool is_inside_board(int input_x, int input_y) {
+  return (0 <= input_x && input_x < board_size) && (0 <= input_y && input_y < board_size);
 }
 
-int check_length(int board[BOARD_SIZE][BOARD_SIZE], int x, int y) {  // FIXME: まれに判定ミスが生じる
+bool check_length(stone board[][board_size], int x, int y) {  // FIXME: まれに判定ミスが生じる
   int i, j, len_flag;                                                // XXX: 右上方向の判定をしていない
   int dx[] = { 0, 1, 1, 1 };
   int dy[] = { 1, 0, 1,-1 };
@@ -225,7 +229,7 @@ int check_length(int board[BOARD_SIZE][BOARD_SIZE], int x, int y) {  // FIXME: �
         break;
       }
     }
-    if (len_flag == 1) return 1;
+    if (len_flag == 1) return true;
   }
-  return 0;
+  return false;
 }
