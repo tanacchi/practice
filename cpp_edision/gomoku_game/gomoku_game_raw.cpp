@@ -33,7 +33,7 @@ struct usr_status_t {
   int round;  
 };
 
-task_mode task_disp(stone[][board_size], usr_status_t*); //CAUTION: want to int[size][size], but it mean int[][size] (a.k.a int*[size])
+task_mode task_disp(stone[][board_size], usr_status_t*); //CAUTION: want to int[size][size], but it mean int[][size]. by @FORNO.
 void init_board(stone[][board_size]);
 task_mode task_input(stone[][board_size], usr_status_t);
 task_mode task_op(stone[][board_size], usr_status_t*);
