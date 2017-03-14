@@ -150,7 +150,7 @@ task_mode task_input(board_type& board, const usr_status& status) {  // TODO: ta
 
 task_mode task_rand(board_type& board, const usr_status& status) {
   static std::default_random_engine rand {std::random_device{}()};
-  static std::uniform_int_distribution<std::size_t> dist {0, board_size - 1};
+  std::uniform_int_distribution<std::size_t> dist {0, board.size() - 1};
   board_row::size_type  pos_x = dist(rand);
   board_type::size_type pos_y = dist(rand);
   if (!is_inside_board(pos_x, pos_y) || !(board[pos_y][pos_x] == stone::SPACE))
@@ -166,8 +166,8 @@ task_mode task_switch(usr_status& status) {
 }
 
 task_mode task_judge(board_type& board) {
-  for (std::size_t i {}; i < board_size; i++) {
-    for (std::size_t j {}; j < board_size; j++) {
+  for (std::size_t i {}; i < board.size(); i++) {
+    for (std::size_t j {}; j < board.size(); j++) {
       if (board[i][j] == stone::SPACE) continue;
       if (check_length(board, j, i)) {
         std::cout << convert_num_into_char(board[i][j]) << "の勝ちです。" << std::endl;
