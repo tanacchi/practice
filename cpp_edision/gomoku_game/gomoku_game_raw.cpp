@@ -158,7 +158,6 @@ task_mode task_rand(stone board[][board_size], usr_status_t usr_status) {
   int i;
   if (board[pos_y][pos_x] == stone::SPACE && is_inside_board(pos_x, pos_y)) {
     board[pos_y][pos_x] = usr_status.active_player;
-    for (i = 0; i < 100000000; i++) ;
     return task_mode::DISP;
   }
   else return task_mode::RAND;
