@@ -208,20 +208,20 @@ bool is_inside_board(int input_x, int input_y) {
   return (0 <= input_x && input_x < board_size) && (0 <= input_y && input_y < board_size);
 }
 
-bool check_length(board_type& board, int x, int y) {  // FIXME: まれに判定ミスが生じる
-  int i, j, len_flag;                                                // XXX: 右上方向の判定をしていない
-  int dx[] = { 0, 1, 1, 1 };
-  int dy[] = { 1, 0, 1,-1 };
+bool check_length(board_type& board, int x, int y) { // FIXME: まれに判定ミスが生じる
+                                                     // XXX: 右上方向の判定をしていない
+  constexpr std::array<int, 4> dx {0, 1, 1, 1};
+  constexpr std::array<int, 4> dy {1, 0, 1,-1};
 
-  for (i = 0; i < 4; i++) {
-    for (j = 1, len_flag = 1; j <= 4; j++) {
-      if (board[y][x] != board[y+j*dy[i]][x+j*dx[i]]
-          || !is_inside_board(x+j*dx[i], y+j*dy[i])) {
-        len_flag = 0;
+  for (std::size_t i {}; i < 4; i++) {
+    bool len_flag {true};
+    for (std::size_t j {1}; j <= 4; j++)
+      if (!is_inside_board(x+j*dx[i], y+j*dy[i]) ||
+          board[y][x] != board[y+j*dy[i]][x+j*dx[i]]) {
+        len_flag = false;
         break;
       }
-    }
-    if (len_flag == 1) return true;
+    if (len_flag == true) return true;
   }
   return false;
 }
