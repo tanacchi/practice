@@ -100,9 +100,10 @@ task_mode task_op(board_type& board, usr_status& status) {
 
 task_mode task_disp(const board_type& board, usr_status& status) {
   std::cout.put('\f');
-  if (status.round) std::cout << status.round <<  "番手\n  ";  // TODO: 表示に五目並べ感を出したい
+  if (status.round) std::cout << status.round <<  "番手\n";  // TODO: 表示に五目並べ感を出したい
   ++status.round; // FIXME: wrong update timing.
 
+  std::cout << "  ";
   for (std::size_t i {}; i < board.size(); ++i) std::cout << convert_full_into_half_byte(i);
   std::cout.put('\n');
 
