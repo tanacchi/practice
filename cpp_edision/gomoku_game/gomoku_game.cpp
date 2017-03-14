@@ -84,7 +84,7 @@ int main(int argc, char** argv) {
       mode = task_play_again();
       break;
     case task_mode::ED:
-      printf("See you~~\n");
+      std::cout << "See you~~" << std::endl;
       return 0;
     }
   }
