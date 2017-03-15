@@ -192,6 +192,7 @@ public:
       std::for_each(std::begin(line), std::end(line), [](auto e){std::cout << to_string(e);});
       std::cout << '\n';
     }
+    std::cout << std::endl;
   }
 
   void update()
@@ -218,13 +219,34 @@ private:
 
   bool is_game_finish() const noexcept
   {
-    const point::first_type horizon_limit {board_.width() - 5};
+    const auto active_kind {get_active_kind()};
+    const point::first_type horizon_limit {board_.width() - finish_length_};
     // horizon search
     for (point::second_type y {0}; y < board_.height(); ++y)
       for (point::first_type x {0}; x < horizon_limit; ++x) {
-        auto line {board_.get_data(std::slice{board_.get_access_number(x, y), 5, 1})};
+        auto line {board_.get_data(std::slice{board_.get_access_number(x, y), finish_length_, 1})};
+        if (std::all_of(std::begin(line), std::end(line), [active_kind](auto e){return e == active_kind;})) return true;
       }
-    const point::second_type vertical_limit {board_.height() - 5};
+    // vertical search
+    const point::second_type vertical_limit {board_.height() - finish_length_};
+    for (point::first_type x {0}; x < board_.width(); ++x)
+      for (point::second_type y {0}; y < vertical_limit; ++y) {
+        auto line {board_.get_data(std::slice{board_.get_access_number(x, y), finish_length_, board_.width()})};
+        if (std::all_of(std::begin(line), std::end(line), [active_kind](auto e){return e == active_kind;})) return true;
+      }
+    // falling search
+    for (point::second_type y {0}; y < vertical_limit; ++y)
+      for (point::first_type x {0}; x < horizon_limit; ++x) {
+        auto line {board_.get_data(std::slice{board_.get_access_number(x, y), finish_length_, board_.width() + 1})};
+        if (std::all_of(std::begin(line), std::end(line), [active_kind](auto e){return e == active_kind;})) return true;
+      }
+    // soaring search
+    for (point::second_type y {finish_length_}; y < board_.height(); ++y)
+      for (point::first_type x {finish_length_}; x < board_.width(); ++x) {
+        auto line {board_.get_data(std::slice{board_.get_access_number(x, y), finish_length_, board_.width() - 1})};
+        if (std::all_of(std::begin(line), std::end(line), [active_kind](auto e){return e == active_kind;})) return true;
+      }
+    return false;
   }
 
   std::size_t             finish_length_;
