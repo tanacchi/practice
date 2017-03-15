@@ -237,35 +237,17 @@ private:
     const point::first_type horizon_limit {board_.width() - finish_length_ + 1};
     const point::second_type vertical_limit {board_.height() - finish_length_ + 1};
     using search_data = std::tuple<point, point, std::size_t>;
-    std::array<search_data, 4> search_datas {
-      search_data{{0, horizon_limit}, {0, board_.height()}, 1},
-      search_data{{0, board_.width()}, {0, vertical_limit}, board_.width()},
-      search_data{{0, horizon_limit}, {0, vertical_limit}, board_.width() + 1},
-      search_data{{finish_length_ - 1, board_.width()}, {0, vertical_limit}, board_.width() - 1}};
-    // horizon search
-    for (point::second_type y {0}; y < board_.height(); ++y)
-      for (point::first_type x {0}; x < horizon_limit; ++x) {
-        auto line {board_.get_data(std::slice{board_.get_access_number(x, y), finish_length_, 1})};
-        if (std::all_of(std::begin(line), std::end(line), [active_kind](auto e){return e == active_kind;})) return true;
-      }
-    // vertical search
-    for (point::first_type x {0}; x < board_.width(); ++x)
-      for (point::second_type y {0}; y < vertical_limit; ++y) {
-        auto line {board_.get_data(std::slice{board_.get_access_number(x, y), finish_length_, board_.width()})};
-        if (std::all_of(std::begin(line), std::end(line), [active_kind](auto e){return e == active_kind;})) return true;
-      }
-    // falling search
-    for (point::second_type y {0}; y < vertical_limit; ++y)
-      for (point::first_type x {0}; x < horizon_limit; ++x) {
-        auto line {board_.get_data(std::slice{board_.get_access_number(x, y), finish_length_, board_.width() + 1})};
-        if (std::all_of(std::begin(line), std::end(line), [active_kind](auto e){return e == active_kind;})) return true;
-      }
-    // soaring search
-    for (point::second_type y {0}; y < vertical_limit; ++y)
-      for (point::first_type x {finish_length_ - 1}; x < board_.width(); ++x) {
-        auto line {board_.get_data(std::slice{board_.get_access_number(x, y), finish_length_, board_.width() - 1})};
-        if (std::all_of(std::begin(line), std::end(line), [active_kind](auto e){return e == active_kind;})) return true;
-      }
+    const std::array<const search_data, 4> search_datas {
+      search_data{{0, horizon_limit}, {0, board_.height()}, 1}, // horizon
+      search_data{{0, board_.width()}, {0, vertical_limit}, board_.width()}, // vertical
+      search_data{{0, horizon_limit}, {0, vertical_limit}, board_.width() + 1}, // falling
+      search_data{{finish_length_ - 1, board_.width()}, {0, vertical_limit}, board_.width() - 1}}; // soaring
+    for (const auto& e : search_datas)
+      for (point::second_type y {std::get<1>(e).first}; y < std::get<1>(e).second; ++y)
+        for (point::first_type x {std::get<0>(e).first}; x < std::get<0>(e).second; ++x) {
+          auto line {board_.get_data(std::slice{board_.get_access_number(x, y), finish_length_, std::get<2>(e)})};
+          if (std::all_of(std::begin(line), std::end(line), [active_kind](auto e){return e == active_kind;})) return true;
+        }
     const auto& all_area {board_.get_data()};
     if (std::none_of(std::begin(all_area), std::end(all_area), [](auto e){return e == field::kind::space;})) return true;
     return false;
