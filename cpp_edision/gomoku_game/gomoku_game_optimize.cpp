@@ -64,6 +64,12 @@ public:
   }
 
   template<typename T>
+  data_type get_col(T x) const noexcept
+  {
+    return data_[std::slice(get_access_number(x, 0), height(), width())];
+  }
+
+  template<typename T>
   data_type get_row(T y) const noexcept
   {
     return data_[std::slice(get_access_number(0, y), width(), 1)];
