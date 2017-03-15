@@ -38,7 +38,7 @@ public:
 
   bool is_valid(point p) const noexcept
   {
-    if (p.first >= width(), p.second >= height()) return false; // out range
+    if (p.first >= width() || p.second >= height()) return false; // out range
     return kind::space == access(std::move(p)); // if exist value, false.
   }
 
