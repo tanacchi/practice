@@ -106,7 +106,7 @@ private:
   data_type data_;
 };
 
-static char to_string(field::kind k) noexcept
+char to_string(field::kind k) noexcept
 {
   return k == field::kind::space ? ' ' :
          k == field::kind::white ? 'O' :
@@ -189,6 +189,7 @@ public:
     std::cout << "winner " << (is_first_player() ? "player 1" : "player 2") << std::endl;
   }
 
+private:
   void init()
   {
     active_player_ = player1_.get();
@@ -207,7 +208,7 @@ public:
       std::for_each(std::begin(line), std::end(line), [](auto e){std::cout << to_string(e);});
       std::cout << '\n';
     }
-    std::cout << std::endl;
+    std::cout << "\nThe turn of player " << get_player_number() << '.' << std::endl;
   }
 
   void update()
@@ -215,7 +216,6 @@ public:
     board_.put(active_player_->get_point(board_), get_active_kind());
   }
 
-private:
   bool is_first_player() const noexcept
   {
     return player1_.get() == active_player_;
@@ -229,6 +229,11 @@ private:
   field::kind get_active_kind() const noexcept
   {
     return is_first_player() ? field::kind::black : field::kind::white;
+  }
+
+  std::size_t get_player_number() const noexcept
+  {
+    return is_first_player() ? 1 : 2;
   }
 
   bool is_game_finish() const noexcept
