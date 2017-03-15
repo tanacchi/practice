@@ -6,7 +6,7 @@
 #include <utility>
 #include <valarray>
 
-//! The point class. But I implement it.
+//! The point class. But I don't implement it.
 using point = std::pair<std::size_t, std::size_t>;
 
 //! The game field class.
