@@ -235,6 +235,13 @@ private:
   {
     const auto active_kind {get_active_kind()};
     const point::first_type horizon_limit {board_.width() - finish_length_ + 1};
+    const point::second_type vertical_limit {board_.height() - finish_length_ + 1};
+    using search_point = std::pair<point, point>;
+    std::array<search_point, 4> search_points {
+      search_point{point{0, horizon_limit}, point{0, board_.height()}},
+      search_point{point{0, board_.width()}, point{0, vertical_limit}},
+      search_point{point{0, horizon_limit}, point{0, vertical_limit}},
+      search_point{point{finish_length_ - 1, board_.width()}, point{0, vertical_limit}}};
     // horizon search
     for (point::second_type y {0}; y < board_.height(); ++y)
       for (point::first_type x {0}; x < horizon_limit; ++x) {
@@ -242,7 +249,6 @@ private:
         if (std::all_of(std::begin(line), std::end(line), [active_kind](auto e){return e == active_kind;})) return true;
       }
     // vertical search
-    const point::second_type vertical_limit {board_.height() - finish_length_ + 1};
     for (point::first_type x {0}; x < board_.width(); ++x)
       for (point::second_type y {0}; y < vertical_limit; ++y) {
         auto line {board_.get_data(std::slice{board_.get_access_number(x, y), finish_length_, board_.width()})};
