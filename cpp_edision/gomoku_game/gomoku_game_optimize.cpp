@@ -176,7 +176,6 @@ public:
       draw();
       update();
     }
-    draw();
     std::cout << is_first_player();
   }
 
@@ -241,8 +240,8 @@ private:
         if (std::all_of(std::begin(line), std::end(line), [active_kind](auto e){return e == active_kind;})) return true;
       }
     // soaring search
-    for (point::second_type y {finish_length_}; y < board_.height(); ++y)
-      for (point::first_type x {finish_length_}; x < board_.width(); ++x) {
+    for (point::second_type y {0}; y < vertical_limit; ++y)
+      for (point::first_type x {finish_length_ - 1}; x < board_.width(); ++x) {
         auto line {board_.get_data(std::slice{board_.get_access_number(x, y), finish_length_, board_.width() - 1})};
         if (std::all_of(std::begin(line), std::end(line), [active_kind](auto e){return e == active_kind;})) return true;
       }
@@ -259,6 +258,6 @@ private:
 int main(int argc, char** argv)
 {
   std::ios_base::sync_with_stdio(false);
-  game_master master {std::make_unique<computer_player>(), std::make_unique<computer_player>(), point{9, 9}};
+  game_master master {std::make_unique<human_player>(), std::make_unique<computer_player>(), point{9, 9}};
   master.run();
 }
