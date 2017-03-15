@@ -234,7 +234,7 @@ private:
   bool is_game_finish() const noexcept
   {
     const auto active_kind {get_active_kind()};
-    const point::first_type horizon_limit {board_.width() - finish_length_};
+    const point::first_type horizon_limit {board_.width() - finish_length_ + 1};
     // horizon search
     for (point::second_type y {0}; y < board_.height(); ++y)
       for (point::first_type x {0}; x < horizon_limit; ++x) {
@@ -242,7 +242,7 @@ private:
         if (std::all_of(std::begin(line), std::end(line), [active_kind](auto e){return e == active_kind;})) return true;
       }
     // vertical search
-    const point::second_type vertical_limit {board_.height() - finish_length_};
+    const point::second_type vertical_limit {board_.height() - finish_length_ + 1};
     for (point::first_type x {0}; x < board_.width(); ++x)
       for (point::second_type y {0}; y < vertical_limit; ++y) {
         auto line {board_.get_data(std::slice{board_.get_access_number(x, y), finish_length_, board_.width()})};
@@ -260,6 +260,8 @@ private:
         auto line {board_.get_data(std::slice{board_.get_access_number(x, y), finish_length_, board_.width() - 1})};
         if (std::all_of(std::begin(line), std::end(line), [active_kind](auto e){return e == active_kind;})) return true;
       }
+    const auto& all_area {board_.get_data()};
+    if (std::none_of(std::begin(all_area), std::end(all_area), [](auto e){return e == field::kind::space;})) return true;
     return false;
   }
 
