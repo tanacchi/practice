@@ -2,6 +2,7 @@
 #include <iostream>
 #include <memory>
 #include <numeric>
+#include <stdexcept>
 #include <utility>
 #include <valarray>
 
@@ -29,11 +30,14 @@ public:
 
   void put(point p, kind k)
   {
+    if (!is_valid(p)) throw std::out_of_range {"field: fail access on put the stone"};
+    access(p) = k;
   }
 
   bool is_valid(point p) const noexcept
   {
-    return kind::space == data_[width() * p.second + p.first];
+    if (p.first >= width(), p.second >= height()) return false; // out range
+    return kind::space == access(p); // if exist value, false.
   }
 
   point::first_type width() const noexcept
@@ -47,8 +51,20 @@ public:
   }
 
 private:
-  point      size_;
-  value_type data_;
+  using data_type = std::valarray<kind>;
+
+  data_type::value_type& access(point p) noexcept
+  {
+    return data_[width() * p.second + p.first];
+  }
+
+  const data_type::value_type& access(point p) const noexcept
+  {
+    return data_[width() * p.second + p.first];
+  }
+
+  point     size_;
+  data_type data_;
 };
 
 class player
