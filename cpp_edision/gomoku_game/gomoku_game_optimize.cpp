@@ -275,6 +275,24 @@ private:
 int main(int argc, char** argv)
 {
   std::ios_base::sync_with_stdio(false);
-  game_master master {std::make_unique<human_player>(), std::make_unique<computer_player>(), point{9, 9}};
+  std::unique_ptr<player> player1 {new human_player};
+  std::unique_ptr<player> player2 {new computer_player};
+  if (argc > 1) {
+    using namespace std::literals::string_literals;
+    if (argv[1] == "--auto"s)
+      player1.reset(new computer_player);
+    if (argv[1] == "--player"s)
+      player2.reset(new human_player);
+    if (argv[1] == "--com"s)
+      ; // not working
+  }
+  std::size_t board_size {9};
+  if (argc > 2)
+    board_size = std::stoul(argv[2]);
+  std::size_t finish_size {5};
+  if (argc > 3)
+    finish_size = std::stoul(argv[3]);
+
+  game_master master {std::move(player1), std::move(player2), point{board_size, board_size}, finish_size};
   master.run();
 }
