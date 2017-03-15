@@ -86,6 +86,11 @@ public:
     return data_;
   }
 
+  void init()
+  {
+    data_ = kind::space;
+  }
+
 private:
   data_type::value_type& access(point p) noexcept
   {
@@ -172,11 +177,22 @@ public:
 
   void run()
   {
-    while (!is_game_finish()) {
+    init();
+    while (true) { // when is_game_finish to break to end.
       draw();
       update();
+      if (is_game_finish())
+        break;
+      switch_player();
     }
-    std::cout << is_first_player();
+    draw();
+    std::cout << "winner " << (is_first_player() ? "player 1" : "player 2") << std::endl;
+  }
+
+  void init()
+  {
+    active_player_ = player1_.get();
+    board_.init();
   }
 
   void draw()
@@ -197,7 +213,6 @@ public:
   void update()
   {
     board_.put(active_player_->get_point(board_), get_active_kind());
-    switch_player();
   }
 
 private:
