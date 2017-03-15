@@ -238,10 +238,10 @@ private:
     const point::second_type vertical_limit {board_.height() - finish_length_ + 1};
     using search_point = std::pair<point, point>;
     std::array<search_point, 4> search_points {
-      search_point{point{0, horizon_limit}, point{0, board_.height()}},
-      search_point{point{0, board_.width()}, point{0, vertical_limit}},
-      search_point{point{0, horizon_limit}, point{0, vertical_limit}},
-      search_point{point{finish_length_ - 1, board_.width()}, point{0, vertical_limit}}};
+      search_point{{0, horizon_limit}, {0, board_.height()}},
+      search_point{{0, board_.width()}, {0, vertical_limit}},
+      search_point{{0, horizon_limit}, {0, vertical_limit}},
+      search_point{{finish_length_ - 1, board_.width()}, {0, vertical_limit}}};
     // horizon search
     for (point::second_type y {0}; y < board_.height(); ++y)
       for (point::first_type x {0}; x < horizon_limit; ++x) {
