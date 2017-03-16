@@ -218,12 +218,12 @@ public:
     fp(' ');
     for (std::size_t i {}; i < value.width(); ++i)
       fp(i + 1);
-    std::cout << '\n';
+    std::cout.put('\n');
     for (std::size_t y {}; y < value.height(); ++y) {
       fp(y + 1);
       auto line {value.get_row(y)};
       std::for_each(std::begin(line), std::end(line), [fp](auto e){fp(to_string(e));});
-      std::cout << '\n';
+      std::cout.put('\n');
     }
   }
 
