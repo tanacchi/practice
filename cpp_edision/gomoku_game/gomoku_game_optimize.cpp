@@ -136,10 +136,16 @@ public:
       std::cout << "where set to? [x y]\n > " << std::flush;
       point p;
       std::cin >> p.first >> p.second;
+      if (std::cin.fail()) {
+        std::cin.clear();
+        std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
+        std::cout << "please input double numbers.\n"; // wrong input.
+        continue;
+      }
       std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
       if (valid_area.is_valid(p))
         return p;
-      std::cout << "wrong input.\n"; // out range
+      std::cout << "wrong input..\n"; // out range or exist value.
     }
   }
 };
