@@ -146,6 +146,8 @@ public:
         continue;
       }
       std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
+      --p.first;
+      --p.second;
       if (valid_area.is_valid(p))
         return p;
       std::cout << "wrong input..\n"; // out range or exist value.
@@ -197,13 +199,13 @@ public:
 
   void draw(const field& value) const noexcept
   {
-    auto fp {[digit = std::log10(value.width() - 1) + 1](const auto& e){std::cout << std::setw(digit) << e;}}; // format print
+    auto fp {[digit = std::log10(value.width()) + 1](const auto& e){std::cout << std::setw(digit) << e;}}; // format print
     fp(' ');
     for (std::size_t i {}; i < value.width(); ++i)
-      fp(i);
+      fp(i + 1);
     std::cout << '\n';
     for (std::size_t y {}; y < value.height(); ++y) {
-      fp(y);
+      fp(y + 1);
       auto line {value.get_row(y)};
       std::for_each(std::begin(line), std::end(line), [fp](auto e){fp(to_string(e));});
       std::cout << '\n';
@@ -332,7 +334,7 @@ int main(int argc, char** argv)
   std::size_t finish_size {5};
   if (argc > 2)
     finish_size = std::stoul(argv[2]);
-  std::size_t board_size {10};
+  std::size_t board_size {9};
   if (argc > 3)
     board_size = std::stoul(argv[3]);
 
