@@ -82,10 +82,11 @@ public:
     return data_[std::slice(get_access_number(std::move(x), 0), height(), width())];
   }
 
-  data_type get_falling(point p) const noexcept
+  data_type get_falling(const point p) const noexcept
   {
-    const point first {p.first < p.second ? point{0, p.second - p.first} : point{p.second - p.first, 0}};
-    return data_type{}; // TODO: implement me.
+    const point head {p.first < p.second ? point{0, p.second - p.first} : point{p.first - p.second, 0}};
+    const std::size_t length {std::min(width() - head.first, height() - head.second)};
+    return data_[std::slice(get_access_number(std::move(head)), length, width() + 1)];
   }
 
   data_type get_soaring(point p) const noexcept
