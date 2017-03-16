@@ -181,6 +181,7 @@ class cout_renderer
 {
 public:
   struct turn {bool b;};
+  struct winner {bool b;};
 
   void operator()() const noexcept
   {
@@ -213,6 +214,11 @@ public:
   {
     std::cout << "\nThe turn of player " << (t.b ? 1 : 2) << ".\n";
   }
+
+  void draw(winner w) const noexcept
+  {
+    std::cout << "winner player " << (w.b ? 1 : 2) << ".\n";
+  }
 };
 
 class game_master
@@ -240,8 +246,7 @@ public:
         break;
       switch_player();
     }
-    cout_renderer{}(board_);
-    std::cout << "winner " << (is_first_player() ? "player 1" : "player 2") << std::endl;
+    cout_renderer{}(board_, cout_renderer::winner{is_first_player()});
   }
 
 private:
