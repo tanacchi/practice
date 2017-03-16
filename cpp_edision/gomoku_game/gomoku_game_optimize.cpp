@@ -84,14 +84,19 @@ public:
 
   data_type get_falling(const point p) const noexcept
   {
-    const point head {p.first < p.second ? point{0, p.second - p.first} : point{p.first - p.second, 0}};
+    point head {p.first < p.second ? point{0, p.second - p.first} : point{p.first - p.second, 0}};
     const std::size_t length {std::min(width() - head.first, height() - head.second)};
     return data_[std::slice(get_access_number(std::move(head)), length, width() + 1)];
   }
 
-  data_type get_soaring(point p) const noexcept
+  data_type get_soaring(const point p) const noexcept
   {
-    return data_type{}; // TODO: implement me.
+    const point::first_type diff_right_side {width() - 1 - p.first};
+    point head {diff_right_side < p.second ?
+                point{width() - 1, p.second - diff_right_side} :
+                point{p.first + p.second, 0}};
+    const std::size_t length {std::min(p.first + 1, height() - head.second)};
+    return data_[std::slice(get_access_number(std::move(head)), length, width() - 1)];
   }
 
   template<typename T>
