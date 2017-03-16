@@ -150,7 +150,7 @@ public:
       --p.second;
       if (valid_area.is_valid(p))
         return p;
-      std::cout << "wrong input..\n"; // out range or exist value.
+      std::cout << "wrong input.\n"; // out range or exist value.
     }
   }
 };
