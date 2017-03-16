@@ -72,14 +72,12 @@ public:
     return get_access_number(p.first, p.second);
   }
 
-  template<typename T>
-  data_type get_col(T x) const noexcept
+  data_type get_col(point::first_type x) const noexcept
   {
     return data_[std::slice(get_access_number(x, 0), height(), width())];
   }
 
-  template<typename T>
-  data_type get_row(T y) const noexcept
+  data_type get_row(point::second_type y) const noexcept
   {
     return data_[std::slice(get_access_number(0, y), width(), 1)];
   }
