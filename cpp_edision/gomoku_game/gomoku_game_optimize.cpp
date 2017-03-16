@@ -180,8 +180,8 @@ private:
 class cout_renderer
 {
 public:
-  struct turn {bool b;};
-  struct winner {bool b;};
+  struct turn {std::size_t player_number; std::size_t turn_number;};
+  struct winner {std::size_t player_number;};
 
   void operator()() const noexcept
   {
@@ -212,12 +212,12 @@ public:
 
   void draw(turn t) const noexcept
   {
-    std::cout << "\nThe turn of player " << (t.b ? 1 : 2) << ".\n";
+    std::cout << "\nThe turn of player " << t.player_number << ".\n";
   }
 
   void draw(winner w) const noexcept
   {
-    std::cout << "winner player " << (w.b ? 1 : 2) << ".\n";
+    std::cout << "winner player " << w.player_number << ".\n";
   }
 };
 
@@ -240,13 +240,13 @@ public:
   {
     init();
     while (true) { // when is_game_finish to break to end.
-      cout_renderer{}(board_, cout_renderer::turn{is_first_player()});
+      cout_renderer{}(board_, cout_renderer::turn{get_player_number()});
       update();
       if (is_game_finish())
         break;
       switch_player();
     }
-    cout_renderer{}(board_, cout_renderer::winner{is_first_player()});
+    cout_renderer{}(board_, cout_renderer::winner{get_player_number()});
   }
 
 private:
