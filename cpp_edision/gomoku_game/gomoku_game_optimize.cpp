@@ -38,7 +38,7 @@ public:
   void put(point p, kind k)
   {
     if (!is_valid(p)) throw std::out_of_range {"field: fail access on put the stone"};
-    access(std::move(p)) = k;
+    access(std::move(p)) = std::move(k);
   }
 
   bool is_valid(point p) const noexcept
@@ -49,7 +49,7 @@ public:
 
   bool is_valid(point::first_type x, point::second_type y) const noexcept
   {
-    return is_valid({x, y});
+    return is_valid({std::move(x), std::move(y)});
   }
 
   point::first_type width() const noexcept
@@ -62,7 +62,7 @@ public:
     return size_.second;
   }
 
-  std::size_t get_access_number(point::first_type x, point::second_type y) const noexcept
+  std::size_t get_access_number(const point::first_type x, const point::second_type y) const noexcept
   {
     return width() * y + x;
   }
@@ -74,12 +74,12 @@ public:
 
   data_type get_col(point::first_type x) const noexcept
   {
-    return data_[std::slice(get_access_number(x, 0), height(), width())];
+    return data_[std::slice(get_access_number(std::move(x), 0), height(), width())];
   }
 
   data_type get_row(point::second_type y) const noexcept
   {
-    return data_[std::slice(get_access_number(0, y), width(), 1)];
+    return data_[std::slice(get_access_number(0, std::move(y)), width(), 1)];
   }
 
   template<typename T>
@@ -113,7 +113,7 @@ private:
   data_type data_;
 };
 
-char to_string(field::kind k) noexcept
+char to_string(const field::kind k) noexcept
 {
   return k == field::kind::space ? ' ' :
          k == field::kind::white ? 'O' :
@@ -210,12 +210,12 @@ public:
     }
   }
 
-  void draw(turn t) const noexcept
+  void draw(const turn t) const noexcept
   {
     std::cout << "\nThe turn of player " << t.player_number << ".\n";
   }
 
-  void draw(winner w) const noexcept
+  void draw(const winner w) const noexcept
   {
     std::cout << "winner player " << w.player_number << ".\n";
   }
