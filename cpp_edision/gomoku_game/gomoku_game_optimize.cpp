@@ -73,19 +73,19 @@ public:
   }
 
   template<typename T>
-  const data_type get_col(T x) const noexcept
+  data_type get_col(T x) const noexcept
   {
     return data_[std::slice(get_access_number(x, 0), height(), width())];
   }
 
   template<typename T>
-  const data_type get_row(T y) const noexcept
+  data_type get_row(T y) const noexcept
   {
     return data_[std::slice(get_access_number(0, y), width(), 1)];
   }
 
   template<typename T>
-  const data_type get_data(const T& specify) const
+  data_type get_data(const T& specify) const
   {
     return data_[specify];
   }
