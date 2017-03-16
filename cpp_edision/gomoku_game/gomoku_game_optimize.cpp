@@ -57,8 +57,7 @@ public:
     return size_.second;
   }
 
-  template<typename T1, typename T2>
-  std::size_t get_access_number(T1 x, T2 y) const noexcept
+  std::size_t get_access_number(point::first_type x, point::second_type y) const noexcept
   {
     return width() * y + x;
   }
