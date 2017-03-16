@@ -231,13 +231,13 @@ public:
   {
     init();
     while (true) { // when is_game_finish to break to end.
-      draw();
+      cout_renderer{}(board_, cout_renderer::turn{is_first_player()});
       update();
       if (is_game_finish())
         break;
       switch_player();
     }
-    draw();
+    cout_renderer{}(board_);
     std::cout << "winner " << (is_first_player() ? "player 1" : "player 2") << std::endl;
   }
 
@@ -246,11 +246,6 @@ private:
   {
     active_player_ = player1_.get();
     board_.init();
-  }
-
-  void draw()
-  {
-    cout_renderer{}(board_, cout_renderer::turn{is_first_player()});
   }
 
   void update()
