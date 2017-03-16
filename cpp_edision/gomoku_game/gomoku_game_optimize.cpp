@@ -241,12 +241,9 @@ public:
   void run()
   {
     init();
-    while (true) { // when is_game_finish to break to end.
+    cout_renderer{}(board_, cout_renderer::turn{get_player_number()});
+    while (update()) {
       cout_renderer{}(board_, cout_renderer::turn{get_player_number()});
-      update();
-      if (is_game_finish())
-        break;
-      switch_player();
     }
     cout_renderer{}(board_, cout_renderer::winner{get_player_number()});
   }
@@ -259,10 +256,18 @@ private:
     board_.init();
   }
 
-  void update()
+  bool update()
   {
     current_put_ = active_player_->get_point(board_);
     board_.put(current_put_, get_active_kind());
+    if (is_invalid_put()) {
+      switch_player(); // winner is enemy.
+      return false; // game over.
+    }
+    if (is_game_finish())
+      return false; // game over.
+    switch_player();
+    return true; // continue.
   }
 
   bool is_first_player() const noexcept
@@ -307,6 +312,11 @@ private:
     const auto& all_area {board_.get_data()};
     if (std::none_of(std::begin(all_area), std::end(all_area), [](auto e){return e == field::kind::space;})) return true;
     return false;
+  }
+
+  bool is_invalid_put() const noexcept
+  {
+    return false; // TODO: implement me.
   }
 
   field                   board_;
