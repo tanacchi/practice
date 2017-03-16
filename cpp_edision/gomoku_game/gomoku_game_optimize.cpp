@@ -219,11 +219,13 @@ class game_master
 public:
   template<typename Player1, typename Player2>
   game_master(std::unique_ptr<Player1> player1, std::unique_ptr<Player2> player2, point size, std::size_t finish_length = 5)
-    : player1_       {player1.release()},
+    : board_         {std::move(size)},
+      finish_length_ {board_.is_valid(finish_length - 1, finish_length - 1) ? 
+                      finish_length :
+                      throw std::out_of_range{"game_master: cannot clear with finish_length > board_size"}},
+      player1_       {player1.release()},
       player2_       {player2.release()},
-      active_player_ {player1_.get()},
-      board_         {std::move(size)},
-      finish_length_ {board_.is_valid(finish_length - 1, finish_length - 1) ? finish_length : throw std::out_of_range{"game_master: cannot clear/ finish_length > board_size"}}
+      active_player_ {player1_.get()}
   {
   }
 
@@ -297,11 +299,11 @@ private:
     return false;
   }
 
+  field                   board_;
+  std::size_t             finish_length_;
   std::unique_ptr<player> player1_;
   std::unique_ptr<player> player2_;
   player*                 active_player_;
-  field                   board_;
-  std::size_t             finish_length_;
 };
 
 int main(int argc, char** argv)
@@ -321,7 +323,7 @@ int main(int argc, char** argv)
   std::size_t finish_size {5};
   if (argc > 2)
     finish_size = std::stoul(argv[2]);
-  std::size_t board_size {9};
+  std::size_t board_size {10};
   if (argc > 3)
     board_size = std::stoul(argv[3]);
 
