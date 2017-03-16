@@ -12,6 +12,7 @@
 
 //! The point class. But I don't implement it.
 using point = std::pair<std::size_t, std::size_t>;
+constexpr point invalid_point {-1, -1};
 
 //! The game field class.
 class field
@@ -247,12 +248,14 @@ private:
   void init()
   {
     active_player_ = player1_.get();
+    current_put_ = invalid_point;
     board_.init();
   }
 
   void update()
   {
-    board_.put(active_player_->get_point(board_), get_active_kind());
+    current_put_ = active_player_->get_point(board_);
+    board_.put(current_put_, get_active_kind());
   }
 
   bool is_first_player() const noexcept
@@ -301,6 +304,7 @@ private:
 
   field                   board_;
   std::size_t             finish_length_;
+  point                   current_put_ {invalid_point};
   std::unique_ptr<player> player1_;
   std::unique_ptr<player> player2_;
   player*                 active_player_;
