@@ -197,7 +197,7 @@ public:
 
   void draw(const field& value) const noexcept
   {
-    auto fp {[digit = std::log10(value.width()) + 1](const auto& e){std::cout << std::setw(digit) << e;}}; // format print
+    auto fp {[digit = std::log10(value.width() - 1) + 1](const auto& e){std::cout << std::setw(digit) << e;}}; // format print
     fp(' ');
     for (std::size_t i {}; i < value.width(); ++i)
       fp(i);
