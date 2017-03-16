@@ -1,5 +1,7 @@
 #include <array>
+#include <cmath>
 #include <cstddef>
+#include <iomanip>
 #include <iostream>
 #include <memory>
 #include <numeric>
@@ -174,6 +176,44 @@ private:
   std::default_random_engine rand_;
 };
 
+class cout_renderer
+{
+public:
+  struct turn {bool b;};
+
+  void operator()() const noexcept
+  {
+    std::cout << std::endl;
+  }
+
+  template<typename T, typename... Rest>
+  void operator()(const T& head, const Rest&... rest) const
+  {
+    draw(head);
+    operator()(rest...);
+  }
+
+  void draw(const field& value) const noexcept
+  {
+    auto fp {[digit = std::log10(value.width()) + 1](const auto& e){std::cout << std::setw(digit) << e;}}; // format print
+    fp(' ');
+    for (std::size_t i {}; i < value.width(); ++i)
+      fp(i);
+    std::cout << '\n';
+    for (std::size_t y {}; y < value.height(); ++y) {
+      fp(y);
+      auto line {value.get_row(y)};
+      std::for_each(std::begin(line), std::end(line), [fp](auto e){fp(to_string(e));});
+      std::cout << '\n';
+    }
+  }
+
+  void draw(turn t) const noexcept
+  {
+    std::cout << "\nThe turn of player " << (t.b ? 1 : 2) << ".\n";
+  }
+};
+
 class game_master
 {
 public:
@@ -210,17 +250,7 @@ private:
 
   void draw()
   {
-    std::cout << " ";
-    for (std::size_t i {}; i < board_.width(); ++i)
-      std::cout << i;
-    std::cout << '\n';
-    for (std::size_t y {}; y < board_.height(); ++y) {
-      auto line {board_.get_row(y)};
-      std::cout << y;
-      std::for_each(std::begin(line), std::end(line), [](auto e){std::cout << to_string(e);});
-      std::cout << '\n';
-    }
-    std::cout << "\nThe turn of player " << get_player_number() << '.' << std::endl;
+    cout_renderer{}(board_, cout_renderer::turn{is_first_player()});
   }
 
   void update()
