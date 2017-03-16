@@ -64,19 +64,19 @@ public:
   }
 
   template<typename T>
-  data_type get_col(T x) const noexcept
+  const data_type get_col(T x) const noexcept
   {
     return data_[std::slice(get_access_number(x, 0), height(), width())];
   }
 
   template<typename T>
-  data_type get_row(T y) const noexcept
+  const data_type get_row(T y) const noexcept
   {
     return data_[std::slice(get_access_number(0, y), width(), 1)];
   }
 
   template<typename T>
-  data_type get_data(const T& specify) const
+  const data_type get_data(const T& specify) const
   {
     return data_[specify];
   }
@@ -238,19 +238,21 @@ private:
 
   bool is_game_finish() const noexcept
   {
-    const auto active_kind {get_active_kind()};
     const point::first_type horizon_limit {board_.width() - finish_length_ + 1};
     const point::second_type vertical_limit {board_.height() - finish_length_ + 1};
+
     using search_data = std::tuple<point, point, std::size_t>;
     const std::array<const search_data, 4> search_datas {
       search_data{{0, horizon_limit}, {0, board_.height()}, 1}, // horizon
       search_data{{0, board_.width()}, {0, vertical_limit}, board_.width()}, // vertical
       search_data{{0, horizon_limit}, {0, vertical_limit}, board_.width() + 1}, // falling
       search_data{{finish_length_ - 1, board_.width()}, {0, vertical_limit}, board_.width() - 1}}; // soaring
+
+    const auto active_kind {get_active_kind()};
     for (const auto& e : search_datas)
       for (point::second_type y {std::get<1>(e).first}; y < std::get<1>(e).second; ++y)
         for (point::first_type x {std::get<0>(e).first}; x < std::get<0>(e).second; ++x) {
-          auto line {board_.get_data(std::slice{board_.get_access_number(x, y), finish_length_, std::get<2>(e)})};
+          const auto line {board_.get_data(std::slice{board_.get_access_number(x, y), finish_length_, std::get<2>(e)})};
           if (std::all_of(std::begin(line), std::end(line), [active_kind](auto e){return e == active_kind;})) return true;
         }
     const auto& all_area {board_.get_data()};
@@ -281,10 +283,10 @@ int main(int argc, char** argv)
   }
   std::size_t finish_size {5};
   if (argc > 2)
-    finish_size = std::stoul(argv[3]);
+    finish_size = std::stoul(argv[2]);
   std::size_t board_size {9};
   if (argc > 3)
-    board_size = std::stoul(argv[2]);
+    board_size = std::stoul(argv[3]);
 
   game_master master {std::move(player1), std::move(player2), point{board_size, board_size}, finish_size};
   master.run();
