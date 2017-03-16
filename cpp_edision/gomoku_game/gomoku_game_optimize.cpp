@@ -307,9 +307,6 @@ private:
 
   bool is_game_finish() const noexcept
   {
-    const point::first_type horizon_limit {board_.width() - finish_length_ + 1};
-    const point::second_type vertical_limit {board_.height() - finish_length_ + 1};
-
     using search_data = std::tuple<point, point, std::size_t>;
     const std::array<const field::data_type, 4> search_datas {
       board_.get_row(current_put_.second), // horizon
