@@ -1,8 +1,10 @@
+#include <array>
 #include <cstddef>
 #include <iostream>
 #include <memory>
 #include <numeric>
 #include <stdexcept>
+#include <tuple>
 #include <utility>
 #include <valarray>
 
