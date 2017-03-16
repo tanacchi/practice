@@ -311,21 +311,23 @@ private:
     const point::second_type vertical_limit {board_.height() - finish_length_ + 1};
 
     using search_data = std::tuple<point, point, std::size_t>;
-    std::array<field::data_type, 4> search_datas {
-      board_.get_row(current_put_.first), // horizon
-      board_.get_col(current_put_.second), // vertical
+    const std::array<const field::data_type, 4> search_datas {
+      board_.get_row(current_put_.second), // horizon
+      board_.get_col(current_put_.first), // vertical
       board_.get_falling(current_put_), // falling
       board_.get_soaring(current_put_)}; // soaring
 
-//    const auto active_kind {get_active_kind()};
-//    for (const auto& e : search_datas)
-//      for (point::second_type y {std::get<1>(e).first}; y < std::get<1>(e).second; ++y)
-//        for (point::first_type x {std::get<0>(e).first}; x < std::get<0>(e).second; ++x) {
-//          const auto line {board_.get_data(std::slice{board_.get_access_number(x, y), finish_length_, std::get<2>(e)})};
-//          if (std::all_of(std::begin(line), std::end(line), [active_kind](auto e){return e == active_kind;})) return true;
-//        }
-//    const auto& all_area {board_.get_data()};
-//    if (std::none_of(std::begin(all_area), std::end(all_area), [](auto e){return e == field::kind::space;})) return true;
+    for (const auto& e : search_datas) {
+      if (e.size() < finish_length_) continue; // too short.
+      for (std::size_t i {0}; i < e.size() - finish_length_ + 1; ++i) {
+        field::data_type line {e[std::slice(i, finish_length_, 1)]};
+        if (std::all_of(std::begin(line), std::end(line), [active_kind = get_active_kind()](auto e){return e == active_kind;}))
+          return true;
+      }
+    }
+
+    const auto& all_area {board_.get_data()};
+    if (std::none_of(std::begin(all_area), std::end(all_area), [](auto e){return e == field::kind::space;})) return true;
     return false;
   }
 
