@@ -42,6 +42,11 @@ public:
     return kind::space == access(std::move(p)); // if exist value, false.
   }
 
+  bool is_valid(point::first_type x, point::second_type y) const noexcept
+  {
+    return is_valid({x, y});
+  }
+
   point::first_type width() const noexcept
   {
     return size_.first;
@@ -167,11 +172,11 @@ class game_master
 public:
   template<typename Player1, typename Player2>
   game_master(std::unique_ptr<Player1> player1, std::unique_ptr<Player2> player2, point size, std::size_t finish_length = 5)
-    : finish_length_ {finish_length},
-      player1_       {player1.release()},
+    : player1_       {player1.release()},
       player2_       {player2.release()},
       active_player_ {player1_.get()},
-      board_         {std::move(size)}
+      board_         {std::move(size)},
+      finish_length_ {board_.is_valid(finish_length - 1, finish_length - 1) ? finish_length : throw std::out_of_range{"game_master: cannot clear/ finish_length > board_size"}}
   {
   }
 
@@ -260,11 +265,11 @@ private:
     return false;
   }
 
-  std::size_t             finish_length_;
   std::unique_ptr<player> player1_;
   std::unique_ptr<player> player2_;
   player*                 active_player_;
   field                   board_;
+  std::size_t             finish_length_;
 };
 
 int main(int argc, char** argv)
