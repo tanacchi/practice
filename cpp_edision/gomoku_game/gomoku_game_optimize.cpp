@@ -358,7 +358,7 @@ int main(int argc, char** argv)
   std::size_t finish_size {5};
   if (argc > 2)
     finish_size = std::stoul(argv[2]);
-  std::size_t board_size {9};
+  std::size_t board_size {15};
   if (argc > 3)
     board_size = std::stoul(argv[3]);
 
