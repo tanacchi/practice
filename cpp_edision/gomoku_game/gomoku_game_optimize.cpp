@@ -6,7 +6,6 @@
 #include <memory>
 #include <numeric>
 #include <stdexcept>
-#include <tuple>
 #include <utility>
 #include <valarray>
 
@@ -307,7 +306,6 @@ private:
 
   bool is_game_finish() const noexcept
   {
-    using search_data = std::tuple<point, point, std::size_t>;
     const std::array<const field::data_type, 4> search_datas {
       board_.get_row(current_put_.second), // horizon
       board_.get_col(current_put_.first), // vertical
