@@ -1,4 +1,7 @@
+#include <array>
+#include <cmath>
 #include <cstddef>
+#include <iomanip>
 #include <iostream>
 #include <memory>
 #include <numeric>
@@ -8,6 +11,7 @@
 
 //! The point class. But I don't implement it.
 using point = std::pair<std::size_t, std::size_t>;
+constexpr point invalid_point {-1, -1};
 
 //! The game field class.
 class field
@@ -33,7 +37,7 @@ public:
   void put(point p, kind k)
   {
     if (!is_valid(p)) throw std::out_of_range {"field: fail access on put the stone"};
-    access(std::move(p)) = k;
+    access(std::move(p)) = std::move(k);
   }
 
   bool is_valid(point p) const noexcept
@@ -44,7 +48,7 @@ public:
 
   bool is_valid(point::first_type x, point::second_type y) const noexcept
   {
-    return is_valid({x, y});
+    return is_valid({std::move(x), std::move(y)});
   }
 
   point::first_type width() const noexcept
@@ -57,8 +61,7 @@ public:
     return size_.second;
   }
 
-  template<typename T1, typename T2>
-  std::size_t get_access_number(T1 x, T2 y) const noexcept
+  std::size_t get_access_number(const point::first_type x, const point::second_type y) const noexcept
   {
     return width() * y + x;
   }
@@ -68,20 +71,35 @@ public:
     return get_access_number(p.first, p.second);
   }
 
-  template<typename T>
-  const data_type get_col(T x) const noexcept
+  data_type get_row(point::second_type y) const noexcept
   {
-    return data_[std::slice(get_access_number(x, 0), height(), width())];
+    return data_[std::slice(get_access_number(0, std::move(y)), width(), 1)];
+  }
+
+  data_type get_col(point::first_type x) const noexcept
+  {
+    return data_[std::slice(get_access_number(std::move(x), 0), height(), width())];
+  }
+
+  data_type get_falling(const point p) const noexcept
+  {
+    point head {p.first < p.second ? point{0, p.second - p.first} : point{p.first - p.second, 0}};
+    const std::size_t length {std::min(width() - head.first, height() - head.second)};
+    return data_[std::slice(get_access_number(std::move(head)), length, width() + 1)];
+  }
+
+  data_type get_soaring(const point p) const noexcept
+  {
+    const point::first_type diff_right_side {width() - 1 - p.first};
+    point head {diff_right_side < p.second ?
+                point{width() - 1, p.second - diff_right_side} :
+                point{p.first + p.second, 0}};
+    const std::size_t length {std::min(head.first + 1, height() - head.second)};
+    return data_[std::slice(get_access_number(std::move(head)), length, width() - 1)];
   }
 
   template<typename T>
-  const data_type get_row(T y) const noexcept
-  {
-    return data_[std::slice(get_access_number(0, y), width(), 1)];
-  }
-
-  template<typename T>
-  const data_type get_data(const T& specify) const
+  data_type get_data(const T& specify) const
   {
     return data_[specify];
   }
@@ -111,7 +129,7 @@ private:
   data_type data_;
 };
 
-char to_string(field::kind k) noexcept
+char to_string(const field::kind k) noexcept
 {
   return k == field::kind::space ? ' ' :
          k == field::kind::white ? 'O' :
@@ -135,10 +153,18 @@ public:
       std::cout << "where set to? [x y]\n > " << std::flush;
       point p;
       std::cin >> p.first >> p.second;
+      if (std::cin.fail()) {
+        std::cin.clear();
+        std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
+        std::cout << "please input double numbers.\n"; // wrong input.
+        continue;
+      }
       std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
+      --p.first;
+      --p.second;
       if (valid_area.is_valid(p))
         return p;
-      std::cout << "wrong input.\n"; // out range
+      std::cout << "wrong input.\n"; // out range or exist value.
     }
   }
 };
@@ -167,58 +193,111 @@ private:
   std::default_random_engine rand_;
 };
 
+class cout_renderer
+{
+public:
+  struct turn {std::size_t player_number; std::size_t turn_number;};
+  struct winner {std::size_t player_number;};
+
+  void operator()() const noexcept
+  {
+    std::cout << std::endl;
+  }
+
+  template<typename T, typename... Rest>
+  void operator()(const T& head, const Rest&... rest) const
+  {
+    draw(head);
+    operator()(rest...);
+  }
+
+  void draw(const field& value) const noexcept
+  {
+    auto fp {[digit = std::log10(value.width()) + 1](auto e){std::cout << std::setw(digit) << e;}}; // format print
+    // header print
+    fp(' ');
+    for (std::size_t i {}; i < value.width(); ++i)
+      fp(i + 1);
+    std::cout.put('\n');
+    // board print
+    for (std::size_t y {}; y < value.height(); ++y) {
+      fp(y + 1);
+      field::data_type line {value.get_row(y)};
+      std::for_each(std::begin(line), std::end(line), [fp](auto e){fp(to_string(e));});
+      std::cout.put('\n');
+    }
+  }
+
+  void draw(const turn t) const noexcept
+  {
+    std::cout << "\nThe turn of player " << t.player_number << ".\n";
+  }
+
+  void draw(const winner w) const noexcept
+  {
+    std::cout << "winner player " << w.player_number << ".\n";
+  }
+
+  template<std::size_t N>
+  void draw(const char (&s)[N]) const noexcept
+  {
+    std::cout.write(s, N);
+    std::cout.put('\n');
+  }
+
+  template<typename traits, typename Allocator>
+  void draw(const std::basic_string<char, traits, Allocator>& s) const noexcept
+  {
+    std::cout << s << '\n';
+  }
+};
+
 class game_master
 {
 public:
   template<typename Player1, typename Player2>
   game_master(std::unique_ptr<Player1> player1, std::unique_ptr<Player2> player2, point size, std::size_t finish_length = 5)
-    : player1_       {player1.release()},
+    : board_         {std::move(size)},
+      finish_length_ {board_.is_valid(finish_length - 1, finish_length - 1) ? 
+                      finish_length :
+                      throw std::out_of_range{"game_master: cannot clear with finish_length > board_size"}},
+      player1_       {player1.release()},
       player2_       {player2.release()},
-      active_player_ {player1_.get()},
-      board_         {std::move(size)},
-      finish_length_ {board_.is_valid(finish_length - 1, finish_length - 1) ? finish_length : throw std::out_of_range{"game_master: cannot clear/ finish_length > board_size"}}
+      active_player_ {player1_.get()}
   {
   }
 
-  void run()
+  template<typename Renderer>
+  void run(Renderer rend)
   {
     init();
-    while (true) { // when is_game_finish to break to end.
-      draw();
-      update();
-      if (is_game_finish())
-        break;
-      switch_player();
-    }
-    draw();
-    std::cout << "winner " << (is_first_player() ? "player 1" : "player 2") << std::endl;
+    rend("The start of game.");
+    do {
+      rend(board_, cout_renderer::turn{get_player_number()});
+    } while (update());
+    rend(board_, "Game clear.", cout_renderer::winner{get_player_number()});
   }
 
 private:
   void init()
   {
     active_player_ = player1_.get();
+    current_put_ = invalid_point;
     board_.init();
   }
 
-  void draw()
+  bool update()
   {
-    std::cout << " ";
-    for (std::size_t i {}; i < board_.width(); ++i)
-      std::cout << i;
-    std::cout << '\n';
-    for (std::size_t y {}; y < board_.height(); ++y) {
-      auto line {board_.get_row(y)};
-      std::cout << y;
-      std::for_each(std::begin(line), std::end(line), [](auto e){std::cout << to_string(e);});
-      std::cout << '\n';
+    current_put_ = active_player_->get_point(board_);
+    board_.put(current_put_, get_active_kind());
+    if (is_invalid_put()) {
+      switch_player(); // winner is enemy.
+      return false; // game over.
     }
-    std::cout << "\nThe turn of player " << get_player_number() << '.' << std::endl;
-  }
-
-  void update()
-  {
-    board_.put(active_player_->get_point(board_), get_active_kind());
+    if (is_game_finish())
+      return false; // game over.
+    switch_player();
+    return true; // continue.
   }
 
   bool is_first_player() const noexcept
@@ -243,33 +322,37 @@ private:
 
   bool is_game_finish() const noexcept
   {
-    const point::first_type horizon_limit {board_.width() - finish_length_ + 1};
-    const point::second_type vertical_limit {board_.height() - finish_length_ + 1};
+    const std::array<const field::data_type, 4> search_datas {
+      board_.get_row(current_put_.second), // horizon
+      board_.get_col(current_put_.first), // vertical
+      board_.get_falling(current_put_), // falling
+      board_.get_soaring(current_put_)}; // soaring
 
-    using search_data = std::tuple<point, point, std::size_t>;
-    const std::array<const search_data, 4> search_datas {
-      search_data{{0, horizon_limit}, {0, board_.height()}, 1}, // horizon
-      search_data{{0, board_.width()}, {0, vertical_limit}, board_.width()}, // vertical
-      search_data{{0, horizon_limit}, {0, vertical_limit}, board_.width() + 1}, // falling
-      search_data{{finish_length_ - 1, board_.width()}, {0, vertical_limit}, board_.width() - 1}}; // soaring
+    for (const auto& e : search_datas) {
+      if (e.size() < finish_length_) continue; // too short.
+      for (std::size_t i {0}; i < e.size() - finish_length_ + 1; ++i) {
+        field::data_type line {e[std::slice(i, finish_length_, 1)]};
+        if (std::all_of(std::begin(line), std::end(line), [active_kind = get_active_kind()](auto e){return e == active_kind;}))
+          return true;
+      }
+    }
 
-    const auto active_kind {get_active_kind()};
-    for (const auto& e : search_datas)
-      for (point::second_type y {std::get<1>(e).first}; y < std::get<1>(e).second; ++y)
-        for (point::first_type x {std::get<0>(e).first}; x < std::get<0>(e).second; ++x) {
-          const auto line {board_.get_data(std::slice{board_.get_access_number(x, y), finish_length_, std::get<2>(e)})};
-          if (std::all_of(std::begin(line), std::end(line), [active_kind](auto e){return e == active_kind;})) return true;
-        }
     const auto& all_area {board_.get_data()};
     if (std::none_of(std::begin(all_area), std::end(all_area), [](auto e){return e == field::kind::space;})) return true;
     return false;
   }
 
+  bool is_invalid_put() const noexcept
+  {
+    return false; // TODO: implement me.
+  }
+
+  field                   board_;
+  std::size_t             finish_length_;
+  point                   current_put_ {invalid_point};
   std::unique_ptr<player> player1_;
   std::unique_ptr<player> player2_;
   player*                 active_player_;
-  field                   board_;
-  std::size_t             finish_length_;
 };
 
 int main(int argc, char** argv)
@@ -289,10 +372,10 @@ int main(int argc, char** argv)
   std::size_t finish_size {5};
   if (argc > 2)
     finish_size = std::stoul(argv[2]);
-  std::size_t board_size {9};
+  std::size_t board_size {15};
   if (argc > 3)
     board_size = std::stoul(argv[3]);
 
   game_master master {std::move(player1), std::move(player2), point{board_size, board_size}, finish_size};
-  master.run();
+  master.run(cout_renderer{});
 }
