@@ -94,7 +94,7 @@ public:
     point head {diff_right_side < p.second ?
                 point{width() - 1, p.second - diff_right_side} :
                 point{p.first + p.second, 0}};
-    const std::size_t length {std::min(p.first + 1, height() - head.second)};
+    const std::size_t length {std::min(head.first + 1, height() - head.second)};
     return data_[std::slice(get_access_number(std::move(head)), length, width() - 1)];
   }
 
