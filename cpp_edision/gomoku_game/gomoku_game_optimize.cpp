@@ -214,10 +214,12 @@ public:
   void draw(const field& value) const noexcept
   {
     auto fp {[digit = std::log10(value.width()) + 1](auto e){std::cout << std::setw(digit) << e;}}; // format print
+    // header print
     fp(' ');
     for (std::size_t i {}; i < value.width(); ++i)
       fp(i + 1);
     std::cout.put('\n');
+    // board print
     for (std::size_t y {}; y < value.height(); ++y) {
       fp(y + 1);
       field::data_type line {value.get_row(y)};
@@ -234,6 +236,19 @@ public:
   void draw(const winner w) const noexcept
   {
     std::cout << "winner player " << w.player_number << ".\n";
+  }
+
+  template<std::size_t N>
+  void draw(const char (&s)[N]) const noexcept
+  {
+    std::cout.write(s, N);
+    std::cout.put('\n');
+  }
+
+  template<typename traits, typename Allocator>
+  void draw(const std::basic_string<char, traits, Allocator>& s) const noexcept
+  {
+    std::cout << s << '\n';
   }
 };
 
@@ -256,11 +271,11 @@ public:
   void run(Renderer rend)
   {
     init();
-    rend(board_, cout_renderer::turn{get_player_number()});
+    rend("The start of game.", board_, cout_renderer::turn{get_player_number()});
     while (update()) {
       rend(board_, cout_renderer::turn{get_player_number()});
     }
-    rend(board_, cout_renderer::winner{get_player_number()});
+    rend(board_, "Game clear.", cout_renderer::winner{get_player_number()});
   }
 
 private:
