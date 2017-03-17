@@ -252,14 +252,15 @@ public:
   {
   }
 
-  void run()
+  template<typename Renderer>
+  void run(Renderer rend)
   {
     init();
-    cout_renderer{}(board_, cout_renderer::turn{get_player_number()});
+    rend(board_, cout_renderer::turn{get_player_number()});
     while (update()) {
-      cout_renderer{}(board_, cout_renderer::turn{get_player_number()});
+      rend(board_, cout_renderer::turn{get_player_number()});
     }
-    cout_renderer{}(board_, cout_renderer::winner{get_player_number()});
+    rend(board_, cout_renderer::winner{get_player_number()});
   }
 
 private:
@@ -361,5 +362,5 @@ int main(int argc, char** argv)
     board_size = std::stoul(argv[3]);
 
   game_master master {std::move(player1), std::move(player2), point{board_size, board_size}, finish_size};
-  master.run();
+  master.run(cout_renderer{});
 }
