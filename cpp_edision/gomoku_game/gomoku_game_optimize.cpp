@@ -271,10 +271,10 @@ public:
   void run(Renderer rend)
   {
     init();
-    rend("The start of game.", board_, cout_renderer::turn{get_player_number()});
-    while (update()) {
+    rend("The start of game.");
+    do {
       rend(board_, cout_renderer::turn{get_player_number()});
-    }
+    } while (update());
     rend(board_, "Game clear.", cout_renderer::winner{get_player_number()});
   }
 
