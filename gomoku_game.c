@@ -38,13 +38,13 @@ void init_board(int board[BOARD_SIZE][BOARD_SIZE]);
 int task_input(int board[BOARD_SIZE][BOARD_SIZE], usr_status_t usr_status);
 int task_op(int board[BOARD_SIZE][BOARD_SIZE], usr_status_t* usr_status);
 int task_switch(usr_status_t* usr_status);
-char* convert_num_into_char(int stone);  // HACK: 要らなさそう
+const char* convert_num_into_char(int stone);  // HACK: 要らなさそう
 int is_inside_board(int input_x, int input_y);
 int check_length(int board[BOARD_SIZE][BOARD_SIZE], int x, int y);
 int task_judge(int board[BOARD_SIZE][BOARD_SIZE]);
 int task_play_again();
 int task_rand(int board[BOARD_SIZE][BOARD_SIZE], usr_status_t usr_status);
-char* convert_full_into_half_byte(int i);
+const char* convert_full_into_half_byte(int i);
 
 int main(int argc, char** argv) {
 
@@ -115,7 +115,7 @@ int task_disp(int board[BOARD_SIZE][BOARD_SIZE], usr_status_t* usr_status) {
   return MODE_JUDGE;
 }
 
-char* convert_full_into_half_byte(int i) {
+const char* convert_full_into_half_byte(int i) {
   switch (i) {
   case 0: return "０";
   case 1: return "１";
@@ -200,7 +200,7 @@ void init_board(int board[BOARD_SIZE][BOARD_SIZE]) {
 }
 
 
-char* convert_num_into_char(int stone) {
+const char* convert_num_into_char(int stone) {
   switch (stone) {
   case STONE_SPACE: return " ";
   case STONE_BLACK: return "●";
