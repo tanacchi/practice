@@ -145,7 +145,7 @@ int task_op() {
   return (!getSW()) ? MODE_OP : MODE_READ;
 }
 
-int task_read(int* run_order, int* position) {
+int task_read(const int *run_order, int* position) {
   *position = get_position();
   return (*position != order_preset[*run_order]) ? MODE_RUN : MODE_SHIFT;
 }
