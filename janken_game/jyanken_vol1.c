@@ -40,7 +40,7 @@ int main(void){
     }while(!plr);
 
     srand((unsigned)time(NULL));
-    cpu = (int)(rand() / (RAND_MAX+1.0)*3.0);
+    cpu = (int)rand() % 3 + 1;
     cpu++;
 
     int judge = (plr - cpu + 3) % 3;
