@@ -15,19 +15,18 @@ int main() {
   int board[8][8];
 
   init_board(board);
-
+  
   show_board(board);
 
-  
-  
   return 0;
 }
 
 char convert_stone_to_char(int stone) {
-  return
-    (stone == WHITE) ? 'O' :
-    (stone == BLACK) ? 'X' :
-    ' ';
+  switch (stone) {
+  case WHITE: return 'O';
+  case BLACK: return 'X';
+  case SPACE: return ' ';
+  }
 }
 
 void init_board(int board[][8]) {
