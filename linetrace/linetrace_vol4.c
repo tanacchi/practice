@@ -6,16 +6,14 @@
 typedef struct  script_t {
   unsigned short position;
   int next_sign;
-  
+  // func-pointer
 } Script;
 
 /*
 
-INIT
+INIT (threshold, order->script)
 
-READ
-
-UPDATE
+UPDATE (sensor, func)
 
 RUN
 
@@ -24,10 +22,15 @@ RUN
 
 /*
 
-INPUT : sesor
+INPUT : sesor(avarage)
 
 JUDGE : WW, WB, BW, BB, W*, B*, *W, *B, **
 
 OUTPUT : motor
 
 */
+
+int main(int argc, char** argv) {
+
+Init(60);
+}
