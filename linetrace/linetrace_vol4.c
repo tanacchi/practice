@@ -3,11 +3,16 @@
 #include "vs-wrc103.h"
 #include "ixbus.h"
 
-typedef struct  script_t {
-  unsigned short position;
+typedef struct run_script_t {
   int next_sign;
   // func-pointer
 } Script;
+
+
+typedef struct machine_status_t {
+  int position;
+  // func-pointer
+} Status;
 
 /*
 
