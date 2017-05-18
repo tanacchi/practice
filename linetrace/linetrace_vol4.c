@@ -42,6 +42,22 @@ typedef struct machine_status_t {
 
 */
 
+/*
+
+WW : 0001 (0x1)
+
+WB : 0010 (0x2)
+
+BW : 0100 (0x4)
+
+BB : 1000 (0x8)
+
+WB|WW = 0011 (0x3)
+
+BW|WB|WW = 0111 (0x7) = ~BB
+
+*/
+
 void run_motor(short left, short right);
 
 void run_motor(short left, short right) {
