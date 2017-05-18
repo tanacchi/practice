@@ -6,36 +6,58 @@
 typedef struct run_script_t {
   int next_sign;
   // func-pointer
+  const enum Sign {
+  }; 
 } Script;
 
-
 typedef struct machine_status_t {
+  int run_order;
   int position;
   // func-pointer
 } Status;
 
 /*
 
-INIT (threshold, order->script)
+  init (threshold, order->script)
 
-UPDATE (sensor, func)
+  write
 
-RUN
+  check position
+
+  compare
+
+  set 
+
+  run
 
 */
-
 
 /*
 
-INPUT : sesor(avarage)
+  INPUT : sesor(avarage)
 
-JUDGE : WW, WB, BW, BB, W*, B*, *W, *B, **
+  JUDGE : WW, WB, BW, BB, W*, B*, *W, *B, **
 
-OUTPUT : motor
+  OUTPUT : motor
 
 */
 
+void run_motor(short left, short right);
+
+void run_motor(short left, short right) {
+  Mtr_Run_lv(right, -left, 0, 0, 0, 0);
+}
+
 int main(int argc, char** argv) {
 
-Init(60);
+  const unsigned short main_circle = 60;
+  Init(main_circle);
+
+  Script script;
+  Status status;
+  
+  while (1) {
+    status = update();
+    status.run();
+  }
 }
