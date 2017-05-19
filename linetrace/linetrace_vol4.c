@@ -59,9 +59,34 @@ BW|WB|WW = 0111 (0x7) = ~BB
 */
 
 void run_motor(short left, short right);
+/* const int get_threshold(); */
+int get_position();
+
+Status update(Status);
 
 void run_motor(short left, short right) {
   Mtr_Run_lv(right, -left, 0, 0, 0, 0);
+}
+
+/* const int get_threshold() { */
+/*   int buff[2]; */
+/*   int i, j; */
+/*   for (i = 0; i < 2; i++) { */
+/*     LED(i+1); */
+/*     while (!getSW()) ; */
+/*     for (j = 0; j < 10; j++) buff[i] += ADRead(i); */
+/*     while (getSW()) ; */
+/*   } */
+/*   return (buff[0]/10 + buff[1]/10) / 2; */
+/* } */
+
+/* int get_position() { */
+/*   return (ADReas(0)) */
+/* } */
+
+Status update(Status status) {
+  status.position = get_position(status.threshold);
+  if ((0x1 << status.position)&(status.script[status.order].condition)&000f) order++;
 }
 
 int main(int argc, char** argv) {
@@ -73,7 +98,8 @@ int main(int argc, char** argv) {
   Status status;
   
   while (1) {
-    status = update();
+    status = update(stauts);
     status.run();
+    // status.script[status.order].run(status.position);
   }
 }
