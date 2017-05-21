@@ -25,7 +25,7 @@ typedef struct machine_status_t {
 } Status;
 
 void run_motor(short left, short right);
-const int* set_threshold();
+const int* get_threshold();
 int get_position(const int* const threshold);
 void update(Status* status);
 
@@ -33,23 +33,25 @@ void run_motor(short left, short right) {
   Mtr_Run_lv(right, -left, 0, 0, 0, 0);
 }
 
-const int* set_threshold() {
+const int* get_threshold() {
   int buff[2][2] = { {0, 0}, {0, 0} };
   for (int i = 0; i < 2; i++) {
     LED(i+1);
     while (!getSW()) ;
-    for (int j = 0; j < 20; j++) buff[i][j%2] += ADRead(j%2);
+    for (int j = 0; j < 10; j++) buff[i][j%2] += ADRead(j%2);
     while (getSW()) ;
     Wait(100);
   }
-  int dist[2];
+  static int dist[2];
   for (int i = 0; i < 2; i++) dist[i] = (buff[0][i] + buff[1][i]) / 2;
   return dist;
 }
 
 void wait_start_switch() {
+  LED(3);
   while (!getSW()) ;
-  while (!getSW()) ;
+  LED(0);
+  while (getSW()) ;
   Wait(100);
 }
 
@@ -123,7 +125,7 @@ int main(int argc, char** argv) {
   Status status = {
     0,
     0x0,
-    set_threshold(),
+    get_threshold(),
     script_list
   };
 
