@@ -24,12 +24,7 @@ typedef struct machine_status_t {
   const Script* const script;
 } Status;
 
-void run_motor(short left, short right);
-const int* get_threshold();
-int get_position(const int* const threshold);
-void update(Status* status);
-
-void run_motor(short left, short right) {
+static inline void run_motor(short left, short right) {
   Mtr_Run_lv(right, -left, 0, 0, 0, 0);
 }
 
@@ -55,8 +50,14 @@ void wait_start_switch() {
   Wait(100);
 }
 
-int get_position(const int* threshold) {
-  return (((ADRead(0) > threshold[0]) << 1)|(ADRead(1) > threshold[1]));
+int get_sensor(unsigned char ch) {
+	int sum = 0;
+	for (int i = 0; i < 3; i++) sum += ADRead(ch);
+	return sum / 3;
+}
+
+static inline int get_position(const int* threshold) {
+  return (((get_sensor(0) > threshold[0]) << 1)|(get_sensor(1) > threshold[1]));
 }
 
 void update(Status* status) {
@@ -110,7 +111,7 @@ int main(int argc, char** argv) {
 
   Init(MAIN_CYCLE);
 
-  const Script const script_list[] = {
+  const Script script[] = {
     {~BB, go_straight },
     { BB, go_straight },
     {~BB, twin_trace  },
@@ -126,14 +127,14 @@ int main(int argc, char** argv) {
     0,
     0x0,
     get_threshold(),
-    script_list
+    script
   };
 
   wait_start_switch();
   while (1) {
     LED(status.order%4);
     update(&status);
-    status.script_list[status.order].run(status.position);
+    status.script[status.order].run(status.position);
   }
 
   return 0;
