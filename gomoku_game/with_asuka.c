@@ -100,10 +100,12 @@ int check_length(int x, int y, const int (*board)[BOARD_SIZE]) {
   const int dy[] = {-1, 0, 1, 1 };
   int i, j;
   int mystone = board[y][x];
+  putchar(convert_stone_to_char(mystone));
+  putchar('\n');
   for (i = 0; i < 4; i++) {
     for (j = 1; is_inside_board(x+dx[i]*j, y+dy[i]*j); j++) {
+      if (j > 4) return 1;
       if (mystone == board[y+dy[i]*j][x+dx[i]*j]) continue;
-      else if (j > 5) return 1;
       else break;
     }
   }
@@ -111,11 +113,9 @@ int check_length(int x, int y, const int (*board)[BOARD_SIZE]) {
 }
 
 int is_game_finish(const int (*board)[BOARD_SIZE]) {
-  int i, j;
-  for (i = 0; i < BOARD_SIZE; i++) {
-    for (j = 0; j < BOARD_SIZE; j++) {
-      if (check_length(i, j, board)) return 1;
-    }
-  }
+  int x, y;
+  for (y = 0; y < BOARD_SIZE; y++)
+    for (x = 0; x < BOARD_SIZE; x++)
+      if (check_length(x, y, board)) return 1;
   return 0;
 }
