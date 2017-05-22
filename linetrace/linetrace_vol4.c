@@ -12,12 +12,12 @@ enum Sign {
   BB = 0x1 << 3
 };
 
-typedef struct run_script_t {
+typedef struct {
   int condition;
   void (*run)(int);
 } Script;
 
-typedef struct machine_status_t {
+typedef struct {
   int order;
   int position;
   const int* const threshold;
@@ -38,7 +38,7 @@ const int* get_threshold() {
     Wait(100);
   }
   static int dist[2];
-  for (int i = 0; i < 2; i++) dist[i] = (buff[0][i] + buff[1][i]) / 2;
+  for (int i = 0; i < 2; i++) dist[i] = (buff[0][i]/5 + buff[1][i]/5) / 2;
   return dist;
 }
 
@@ -51,9 +51,9 @@ void wait_start_switch() {
 }
 
 int get_sensor(unsigned char ch) {
-	int sum = 0;
-	for (int i = 0; i < 3; i++) sum += ADRead(ch);
-	return sum / 3;
+  int sum = 0;
+  for (int i = 0; i < 3; i++) sum += ADRead(ch);
+  return sum / 3;
 }
 
 static inline int get_position(const int* threshold) {
@@ -62,7 +62,7 @@ static inline int get_position(const int* threshold) {
 
 void update(Status* status) {
   status->position = get_position(status->threshold);
-  if (!((0x1 << status->position)&(status->script[status->order].condition))) status->order++;
+  if (!((0x1 << status->position)&(status->script[status->order].condition))&0xf) status->order++;
 }
 
 // ==================== Running pattern =========================================
@@ -96,13 +96,41 @@ void go_straight(int position) {
 }
 
 void twist(int position) {
- static const  short param[][2] = {
+  static const  short param[][2] = {
     { 10000, 10000 },
     { 0,    -10000 },
     {-10000, 0     },
     { 10000, 10000 }
   };
   run_motor(param[position][0], param[position][1]);
+}
+
+void edge_right(int position) {
+  static const  short param[][2] = {
+    { 0,     10000 },
+    { 10000, 0     },
+    { 0,     10000 },
+    { 10000, 0     }
+  };
+  run_motor(param[position][0], param[position][1]);
+}
+
+void edge_left(int position) {
+  static const  short param[][2] = {
+    { 10000, 0     },
+    { 10000, 0     },
+    { 0,     10000 },
+    { 0,     10000 }
+  };
+  run_motor(param[position][0], param[position][1]);
+}
+
+void tward_left(int position) {
+  run_motor(-10000, 10000);
+}
+
+void tward_right(int position) {
+  run_motor(10000,-10000);
 }
 
 // =============================================================================
@@ -112,15 +140,22 @@ int main(int argc, char** argv) {
   Init(MAIN_CYCLE);
 
   const Script script[] = {
-    {~BB, go_straight },
-    { BB, go_straight },
-    {~BB, twin_trace  },
-    {~WW, go_straight },
-    { WW, go_straight },
-    {~BB, twist       },
-    { BB, go_straight },
-    {~BB, twin_tight  },
-    {~WW, no_motion   }
+    {~BB, go_straight },  // 0 0 : box
+    { BB, go_straight },  // 0 1 : start line
+    {~BB, twin_trace  },  // 1 0 : S road
+    {~WW, go_straight },  // 1 1 : enter 1st condenser
+    { WW, go_straight },  // 0 0 : between 1st condenser
+    {~BB, twist       },  // 0 1 : on line of 1st condenser
+    { BB, go_straight },  // 1 0 : exit 1st condenser
+    {~BB, twin_tight  },  // 1 1 : road to diode
+    { BB, tward_left  },  // 0 0 : in diode
+    {~WW, go_straight },  // 0 1 : escape center
+    { WW, tward_right },  // 1 0 : turn right
+    {~WW, edge_left   },  // 1 1 : exit diode
+    {~BB, edge_right  },  // 0 0 : road to 2nd condenser
+    { BB, go_straight },  // 0 1 : enter 2nd condenser
+    { WW, go_straight },  // 1 0 : between 2nd condenser
+    {0x0, no_motion   }
   };
 
   Status status = {
