@@ -16,6 +16,18 @@ enum Judge {
   WIN
 };
 
+int set_hand(const char* src) {
+  static  const char* check_list[][7] = {
+    { "rock",     "Rock",     "ROCK",     "goo",   "1" , "Goo"   , NULL },
+    { "scissors", "Scissors", "SCISSORS", "CHOKI", "2" , "Choki" , NULL },
+    { "paper",    "Paper",    "PAPER",    "PAA",   "3" , "Paa"   , NULL },
+  };
+  for (int i = 0; i < 3; i++)
+    for (int j = 0; check_list[i][j] != NULL; j++)
+      if (!strcmp(src, check_list[i][j])) return i+1;
+  return HAND_FALSE;
+}
+
 int main() {
   
   srand((unsigned int)time(NULL));
@@ -29,9 +41,10 @@ int main() {
   while (user_hand == HAND_FALSE) {
     printf("Input your hand!!\n> ");
     scanf("%s", input_hand);
-    if (!strcmp(input_hand, "rock")) user_hand = ROCK;
-    else if (!strcmp(input_hand, "scissors")) user_hand = SCISSORS;
-    else if (!strcmp(input_hand, "paper")) user_hand = PAPER;
+    /* if (!strcmp(input_hand, "rock")) user_hand = ROCK; */
+    /* else if (!strcmp(input_hand, "scissors")) user_hand = SCISSORS; */
+    /* else if (!strcmp(input_hand, "paper")) user_hand = PAPER; */
+    user_hand = set_hand(input_hand);
   }
 
   int cpu_hand = (int)rand() % 3 + 1;
