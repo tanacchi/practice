@@ -22,6 +22,8 @@ public:
   std::size_t get_access_num(point x, point y) const;
   bool is_inside(point x, point y) const;
   bool is_inside(position pos) const;
+  void open(point x, point y);
+  void open(position pos);
 private:
   std::valarray<std::pair<short, State>> board_;
   const position size_;
@@ -70,6 +72,15 @@ bool GameBoard::is_inside(position pos) const
   return is_inside(pos.first, pos.second);
 }
 
+void open(point x, point y)
+{
+  board_[get_access_num(x, y)].second = State::Show;;
+}
+
+void open(position pos)
+{
+  board_[get_access_num(pos)].second = State::Show;
+}
 
 class MineSweeper {
 public:
