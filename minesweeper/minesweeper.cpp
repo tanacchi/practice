@@ -32,7 +32,7 @@ private:
 };
 
 GameBoard::GameBoard(Position size)
-  : board_{Element{0, State::Hide}, (std::size_t)size.first*size.second},
+  : board_{Element{0, State::Hide}, static_cast<std::size_t>(size.first*size.second)},
     size_{size}
 {
 }
@@ -55,7 +55,7 @@ inline Point GameBoard::height() const
 
 inline Point GameBoard::get_access_num(Point x, Point y) const
 {
-  return (std::size_t)(x + width()*y);
+  return x + width()*y;
 }
 
 inline Point GameBoard::get_access_num(Position pos) const
