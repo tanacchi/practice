@@ -3,8 +3,8 @@
 
 #define STATE_BOM -1
 
-using point = unsigned char;
-using position = std::pair<point, point>;
+using Point = unsigned char;
+using Position = std::pair<point, point>;
 
 class GameBoard {
 public:
