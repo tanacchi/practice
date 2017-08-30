@@ -13,6 +13,7 @@ public:
     Flag,
     Show
   };
+  using Element = std::pair<short, State>;
   GameBoard(Position size = std::make_pair(8, 8));
   GameBoard(const GameBoard& src);
   ~GameBoard() = default;
