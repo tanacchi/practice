@@ -1,7 +1,7 @@
 #include <iostream>
 #include <valarray>
 
-#define STATE_BOM -1
+constexpr auto state_bom{-1};
 
 using Point = unsigned char;
 using Position = std::pair<Point, Point>;
