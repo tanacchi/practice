@@ -4,7 +4,7 @@
 #define STATE_BOM -1
 
 using Point = unsigned char;
-using Position = std::pair<point, point>;
+using Position = std::pair<Point, Point>;
 
 class GameBoard {
 public:
@@ -13,24 +13,24 @@ public:
     Flag,
     Show
   };
-  GameBoard(position size = std::make_pair(8, 8));
+  GameBoard(Position size = std::make_pair(8, 8));
   GameBoard(const GameBoard& src);
   ~GameBoard() = default;
-  position::first_type width() const;
-  position::second_type height() const;
-  std::size_t get_access_num(position pos) const;
-  std::size_t get_access_num(point x, point y) const;
-  bool is_inside(point x, point y) const;
-  bool is_inside(position pos) const;
-  void open(point x, point y);
-  void open(position pos);
+  Point width() const;
+  Point height() const;
+  Point get_access_num(Position pos) const;
+  Point get_access_num(Point x, Point y) const;
+  bool is_inside(Point x, Point y) const;
+  bool is_inside(Position pos) const;
+  void open(Point x, Point y);
+  void open(Position pos);
 private:
   std::valarray<std::pair<short, State>> board_;
-  const position size_;
+  const Position size_;
   const GameBoard& operator=(const GameBoard& src);
 };
 
-GameBoard::GameBoard(position size)
+GameBoard::GameBoard(Position size)
   : board_{std::make_pair(0, State::Hide), (std::size_t)size.first*size.second},
     size_{size}
 {
@@ -42,42 +42,42 @@ GameBoard::GameBoard(const GameBoard& src)
 {
 }
 
-inline position::first_type GameBoard::width() const
+inline Point GameBoard::width() const
 {
   return size_.first;
 }
 
-inline position::second_type GameBoard::height() const
+inline Point GameBoard::height() const
 {
   return size_.second;
 }
 
-inline std::size_t GameBoard::get_access_num(point x, point y) const
+inline Point GameBoard::get_access_num(Point x, Point y) const
 {
   return (std::size_t)(x + width()*y);
 }
 
-inline std::size_t GameBoard::get_access_num(position pos) const
+inline Point GameBoard::get_access_num(Position pos) const
 {
   return get_access_num(pos.first, pos.second);
 }
 
-bool GameBoard::is_inside(point x, point y) const
+bool GameBoard::is_inside(Point x, Point y) const
 {
   return x < width() && y < height();
 }
 
-bool GameBoard::is_inside(position pos) const
+bool GameBoard::is_inside(Position pos) const
 {
   return is_inside(pos.first, pos.second);
 }
 
-void open(point x, point y)
+void open(Point x, Point y)
 {
   board_[get_access_num(x, y)].second = State::Show;;
 }
 
-void open(position pos)
+void open(Position pos)
 {
   board_[get_access_num(pos)].second = State::Show;
 }
