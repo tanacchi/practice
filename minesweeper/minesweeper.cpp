@@ -1,4 +1,5 @@
 #include <iostream>
+#include <random>
 #include <valarray>
 
 constexpr auto state_bom{-1};
@@ -25,21 +26,25 @@ public:
   bool is_inside(Position pos) const;
   void open(Point x, Point y);
   void open(Position pos);
+  void set_bom(int boms_num);
 private:
   std::valarray<std::pair<short, State>> board_;
   const Position size_;
+  std::mt19937 rand_engine;
   const GameBoard& operator=(const GameBoard& src);
 };
 
 GameBoard::GameBoard(Position size)
   : board_{Element{0, State::Hide}, static_cast<std::size_t>(size.first*size.second)},
-    size_{size}
+    size_{size},
+    rand_engine{std::random_device}
 {
 }
 
 GameBoard::GameBoard(const GameBoard& src)
   : board_{src.board_},
-    size_{src.size_}
+    size_{src.size_},
+    rand_engine{src.rand_engine}
 {
 }
 
@@ -75,12 +80,17 @@ bool GameBoard::is_inside(Position pos) const
 
 void GameBoard::open(Point x, Point y)
 {
-  board_[get_access_num(x, y)].second = State::Show;;
+  board_[get_access_num(x, y)].second = State::Show;
 }
 
 void GameBoard::open(Position pos)
 {
   board_[get_access_num(pos)].second = State::Show;
+}
+
+void GameBoard::set_bom(int boms_num)
+{
+  std::uniform_int_distribution<Point> rand_pos(board_size());
 }
 
 class MineSweeper {
