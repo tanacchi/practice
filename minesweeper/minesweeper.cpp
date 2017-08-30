@@ -73,12 +73,12 @@ bool GameBoard::is_inside(Position pos) const
   return is_inside(pos.first, pos.second);
 }
 
-void open(Point x, Point y)
+void GameBoard::open(Point x, Point y)
 {
   board_[get_access_num(x, y)].second = State::Show;;
 }
 
-void open(Position pos)
+void GameBoard::open(Position pos)
 {
   board_[get_access_num(pos)].second = State::Show;
 }
