@@ -14,7 +14,7 @@ public:
     Show
   };
   using Element = std::pair<short, State>;
-  GameBoard(Position size = std::make_pair(8, 8));
+  GameBoard(Position size = Position{8, 8});
   GameBoard(const GameBoard& src);
   ~GameBoard() = default;
   Point width() const;
@@ -32,7 +32,7 @@ private:
 };
 
 GameBoard::GameBoard(Position size)
-  : board_{std::make_pair(0, State::Hide), (std::size_t)size.first*size.second},
+  : board_{Element{0, State::Hide}, (std::size_t)size.first*size.second},
     size_{size}
 {
 }
