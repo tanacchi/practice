@@ -16,7 +16,7 @@ public:
   };
   using Element = std::pair<short, State>;
   GameBoard(Position size);
-  GameBoard(const GameBoard& src);
+  GameBoard(const GameBoard& src) = default;
   ~GameBoard() = default;
   Point width() const;
   Point height() const;
@@ -37,12 +37,6 @@ private:
 GameBoard::GameBoard(Position size)
   : board_{Element{0, State::Hide}, static_cast<std::size_t>(size.first*size.second)},
     size_{size}
-{
-}
-
-GameBoard::GameBoard(const GameBoard& src)
-  : board_{src.board_},
-    size_{src.size_}
 {
 }
 
@@ -91,8 +85,9 @@ void GameBoard::open(Position pos)
   board_[get_access_num(pos)].second = State::Show;
 }
 
-void GameBoard::set_bom(int boms_num)
+void GameBoard::set_bom(Point boms_point)
 {
+  board_[boms_point].first = state_bom;
 }
 
 class MineSweeper {
