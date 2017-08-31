@@ -30,14 +30,12 @@ public:
 private:
   std::valarray<std::pair<short, State>> board_;
   const Position size_;
-  std::mt19937 rand_engine;
   const GameBoard& operator=(const GameBoard& src);
 };
 
 GameBoard::GameBoard(Position size)
   : board_{Element{0, State::Hide}, static_cast<std::size_t>(size.first*size.second)},
     size_{size},
-    rand_engine{std::random_device}
 {
 }
 
@@ -100,7 +98,15 @@ public:
   const MineSweeper& operator=(const MineSweeper& src);
   ~MineSweeper();
 private:
+  GameBoard board_;
+  std::mt19937 rand_engine;
 };
+
+MineSweeper::MineSweeper()
+  : board{},
+    rand_engine{std::random_device{}()};
+{
+}
 
 int main(int argc, char** argv)
 {
