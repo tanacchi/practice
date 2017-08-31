@@ -27,9 +27,11 @@ public:
   bool is_inside(Position pos) const;
   void open(Point x, Point y);
   void open(Position pos);
-  void set_bom(int boms_num);
+  void set_bom(Point boms_point);
+  void disp_element(Element element) const;
+  void show() const;
 private:
-  std::valarray<std::pair<short, State>> board_;
+  std::valarray<Element> board_;
   const Position size_;
   const GameBoard& operator=(const GameBoard& src);
 };
@@ -90,6 +92,34 @@ void GameBoard::set_bom(Point boms_point)
   board_[boms_point].first = state_bom;
 }
 
+void GameBoard::disp_element(Element element) const
+{
+  switch (element.second) {
+  case State::Hide: std::cout << '#' << std::flush; break;
+  case State::Flag: std::cout << 'P' << std::flush; break;
+  case State::Show: std::cout << element.first << std::flush; break;
+  }
+}
+
+void GameBoard::show() const
+{
+  std::cout << "   " << std::flush;
+  for (int i{0}; i < width(); std::cout.put(' '), i++) std::cout << i+1 << std::flush;
+  std::cout << std::endl;
+  std::cout << "  " << std::flush;
+  for (int i{0}; i < width()*2+1; i++) std::cout.put('-');
+  std::cout << std::endl;
+  for (int y{0}; y < height(); std::cout.put('\n'), y++) {
+    std::cout << y+1 << "| " << std::flush;
+    for (int x{0}; x < width(); std::cout.put(' '), x++)
+      disp_element(board_[get_access_num(x, y)]);
+    std::cout.put('|');
+  }
+  std::cout << "  " << std::flush;
+  for (int i{0}; i < width()*2+1; i++) std::cout.put('-');
+  std::cout << std::endl;
+}
+
 class MineSweeper {
 public:
   MineSweeper(Position size = Position{8, 8});
@@ -111,6 +141,9 @@ MineSweeper::MineSweeper(Position size)
 
 int main(int argc, char** argv)
 {
-
+  GameBoard board{Position{8, 8}};
+  board.show_board();
+  board.open(3, 5);
+  board.show_board();
   return 0;
 }
