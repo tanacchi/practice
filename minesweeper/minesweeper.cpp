@@ -97,7 +97,10 @@ void GameBoard::disp_element(Element element) const
   switch (element.second) {
   case State::Hide: std::cout << '#' << std::flush; break;
   case State::Flag: std::cout << 'P' << std::flush; break;
-  case State::Show: std::cout << element.first << std::flush; break;
+  case State::Show:
+    if (element.first == 0) std::cout << ' ' << std::flush;
+    else std::cout << element.first << std::flush;
+    break;
   }
 }
 
@@ -142,8 +145,8 @@ MineSweeper::MineSweeper(Position size)
 int main(int argc, char** argv)
 {
   GameBoard board{Position{8, 8}};
-  board.show_board();
+  board.show();
   board.open(3, 5);
-  board.show_board();
+  board.show();
   return 0;
 }
