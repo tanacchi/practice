@@ -15,11 +15,12 @@ public:
     Show
   };
   using Element = std::pair<short, State>;
-  GameBoard(Position size = Position{8, 8});
+  GameBoard(Position size);
   GameBoard(const GameBoard& src);
   ~GameBoard() = default;
   Point width() const;
   Point height() const;
+  Point size() const;
   Point get_access_num(Position pos) const;
   Point get_access_num(Point x, Point y) const;
   bool is_inside(Point x, Point y) const;
@@ -35,14 +36,13 @@ private:
 
 GameBoard::GameBoard(Position size)
   : board_{Element{0, State::Hide}, static_cast<std::size_t>(size.first*size.second)},
-    size_{size},
+    size_{size}
 {
 }
 
 GameBoard::GameBoard(const GameBoard& src)
   : board_{src.board_},
-    size_{src.size_},
-    rand_engine{src.rand_engine}
+    size_{src.size_}
 {
 }
 
@@ -54,6 +54,11 @@ inline Point GameBoard::width() const
 inline Point GameBoard::height() const
 {
   return size_.second;
+}
+
+Point GameBoard::size() const
+{
+  return width() * height();
 }
 
 inline Point GameBoard::get_access_num(Point x, Point y) const
@@ -88,23 +93,24 @@ void GameBoard::open(Position pos)
 
 void GameBoard::set_bom(int boms_num)
 {
-  std::uniform_int_distribution<Point> rand_pos(board_size());
 }
 
 class MineSweeper {
 public:
-  MineSweeper();
+  MineSweeper(Position size = Position{8, 8});
   MineSweeper(const MineSweeper& src);
   const MineSweeper& operator=(const MineSweeper& src);
   ~MineSweeper();
 private:
   GameBoard board_;
   std::mt19937 rand_engine;
+  std::uniform_int_distribution<Point> rand_pos;
 };
 
-MineSweeper::MineSweeper()
-  : board{},
-    rand_engine{std::random_device{}()};
+MineSweeper::MineSweeper(Position size)
+  : board_{size},
+    rand_engine{std::random_device{}()},
+    rand_pos{board_.size()}
 {
 }
 
