@@ -84,7 +84,7 @@ void GameBoard::open(Point x, Point y)
 
 void GameBoard::open(Position pos)
 {
-  board_[get_access_num(pos)].second = State::Show;
+  open(pos.first, pos.second);
 }
 
 void GameBoard::set_bom(Point boms_point)
