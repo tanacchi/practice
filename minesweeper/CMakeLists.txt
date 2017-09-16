@@ -5,4 +5,5 @@ include_directories(include)
 add_executable(minesweeper.out
   src/main.cpp
   src/PlaneVector.cpp
+  src/GameBoard.cpp
 )
