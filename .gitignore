@@ -7,3 +7,9 @@
 *.sh
 
 *tmp*
+
+*CMake*
+*cmake*
+Makefile*
+
+!CMakeList*s*.txt
