@@ -1,6 +1,6 @@
 #include "../include/GameBoard.hpp"
 
-GameBoard::GameBoard(GameBoard::Position size)
+GameBoard::GameBoard(const GameBoard::Position& size)
   : board_{GameBoard::Element{0, State::Hide}, static_cast<std::size_t>(size.x*size.y)},
     size_{size}
 {
@@ -26,7 +26,7 @@ inline GameBoard::Point GameBoard::get_access_num(GameBoard::Point x, GameBoard:
   return x + width()*y;
 }
 
-inline GameBoard::Point GameBoard::get_access_num(GameBoard::Position pos) const
+inline GameBoard::Point GameBoard::get_access_num(const GameBoard::Position& pos) const
 {
   return get_access_num(pos.x, pos.y);
 }
@@ -36,7 +36,7 @@ bool GameBoard::is_inside(GameBoard::Point x, GameBoard::Point y) const
   return x < width() && y < height();
 }
 
-bool GameBoard::is_inside(GameBoard::Position pos) const
+bool GameBoard::is_inside(const GameBoard::Position& pos) const
 {
   return is_inside(pos.x, pos.y);
 }
@@ -46,7 +46,7 @@ void GameBoard::open(GameBoard::Point x, GameBoard::Point y)
   board_[get_access_num(x, y)].second = State::Show;
 }
 
-void GameBoard::open(GameBoard::Position pos)
+void GameBoard::open(const GameBoard::Position& pos)
 {
   open(pos.x, pos.y);
 }
