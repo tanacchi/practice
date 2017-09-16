@@ -96,7 +96,7 @@ void GameBoard::set_bom(Point boms_point)
 void GameBoard::disp_element(Element element) const
 {
   switch (element.second) {
-  case State::Hide: std::cout << '#' << std::flush; break;
+  case State::Hide: std::cout << '"' << std::flush; break;
   case State::Flag: std::cout << 'P' << std::flush; break;
   case State::Show:
     if (element.first == 0) std::cout << ' ' << std::flush;
