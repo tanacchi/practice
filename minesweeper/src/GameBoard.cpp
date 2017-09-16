@@ -31,7 +31,7 @@ inline GameBoard::Point GameBoard::get_access_num(const GameBoard::Position& pos
   return get_access_num(pos.x, pos.y);
 }
 
-bool GameBoard::is_inside(GameBoard::Point x, GameBoard::Point y) const
+inline bool GameBoard::is_inside(GameBoard::Point x, GameBoard::Point y) const
 {
   return x < width() && y < height();
 }
@@ -43,6 +43,7 @@ bool GameBoard::is_inside(const GameBoard::Position& pos) const
 
 void GameBoard::open(GameBoard::Point x, GameBoard::Point y)
 {
+  if (!is_inside(x, y)) return;
   board_[get_access_num(x, y)].second = State::Show;
 }
 
