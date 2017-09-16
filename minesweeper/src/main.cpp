@@ -1,11 +1,12 @@
 #include <iostream>
 #include <random>
 #include <valarray>
+#include "../include/PlaneVector.hpp"
 
 constexpr auto state_bom{-1};
 
 using Point = unsigned char;
-using Position = std::pair<Point, Point>;
+using Position = PlaneVector;
 
 class GameBoard {
 public:
@@ -37,19 +38,19 @@ private:
 };
 
 GameBoard::GameBoard(Position size)
-  : board_{Element{0, State::Hide}, static_cast<std::size_t>(size.first*size.second)},
+  : board_{Element{0, State::Hide}, static_cast<std::size_t>(size.x*size.y)},
     size_{size}
 {
 }
 
 inline Point GameBoard::width() const
 {
-  return size_.first;
+  return size_.x;
 }
 
 inline Point GameBoard::height() const
 {
-  return size_.second;
+  return size_.y;
 }
 
 Point GameBoard::size() const
@@ -64,7 +65,7 @@ inline Point GameBoard::get_access_num(Point x, Point y) const
 
 inline Point GameBoard::get_access_num(Position pos) const
 {
-  return get_access_num(pos.first, pos.second);
+  return get_access_num(pos.x, pos.y);
 }
 
 bool GameBoard::is_inside(Point x, Point y) const
@@ -74,7 +75,7 @@ bool GameBoard::is_inside(Point x, Point y) const
 
 bool GameBoard::is_inside(Position pos) const
 {
-  return is_inside(pos.first, pos.second);
+  return is_inside(pos.x, pos.y);
 }
 
 void GameBoard::open(Point x, Point y)
@@ -84,7 +85,7 @@ void GameBoard::open(Point x, Point y)
 
 void GameBoard::open(Position pos)
 {
-  open(pos.first, pos.second);
+  open(pos.x, pos.y);
 }
 
 void GameBoard::set_bom(Point boms_point)
