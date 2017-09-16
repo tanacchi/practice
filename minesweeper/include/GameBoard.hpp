@@ -1,7 +1,9 @@
 #ifndef GAME_BOARD_H_
 #define GAME_BOARD_H_
 
-#include "include/PlaneVector.hpp"
+#include <iostream>
+#include <valarray>
+#include "PlaneVector.hpp"
 
 constexpr auto state_bom{-1};
 

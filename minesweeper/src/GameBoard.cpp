@@ -1,62 +1,62 @@
 #include "../include/GameBoard.hpp"
 
-GameBoard::GameBoard(Position size)
-  : board_{Element{0, State::Hide}, static_cast<std::size_t>(size.x*size.y)},
+GameBoard::GameBoard(GameBoard::Position size)
+  : board_{GameBoard::Element{0, State::Hide}, static_cast<std::size_t>(size.x*size.y)},
     size_{size}
 {
 }
 
-inline Point GameBoard::width() const
+inline GameBoard::Point GameBoard::width() const
 {
   return size_.x;
 }
 
-inline Point GameBoard::height() const
+inline GameBoard::Point GameBoard::height() const
 {
   return size_.y;
 }
 
-Point GameBoard::size() const
+GameBoard::Point GameBoard::size() const
 {
   return width() * height();
 }
 
-inline Point GameBoard::get_access_num(Point x, Point y) const
+inline GameBoard::Point GameBoard::get_access_num(GameBoard::Point x, GameBoard::Point y) const
 {
   return x + width()*y;
 }
 
-inline Point GameBoard::get_access_num(Position pos) const
+inline GameBoard::Point GameBoard::get_access_num(GameBoard::Position pos) const
 {
   return get_access_num(pos.x, pos.y);
 }
 
-bool GameBoard::is_inside(Point x, Point y) const
+bool GameBoard::is_inside(GameBoard::Point x, GameBoard::Point y) const
 {
   return x < width() && y < height();
 }
 
-bool GameBoard::is_inside(Position pos) const
+bool GameBoard::is_inside(GameBoard::Position pos) const
 {
   return is_inside(pos.x, pos.y);
 }
 
-void GameBoard::open(Point x, Point y)
+void GameBoard::open(GameBoard::Point x, GameBoard::Point y)
 {
   board_[get_access_num(x, y)].second = State::Show;
 }
 
-void GameBoard::open(Position pos)
+void GameBoard::open(GameBoard::Position pos)
 {
   open(pos.x, pos.y);
 }
 
-void GameBoard::set_bom(Point boms_point)
+void GameBoard::set_bom(GameBoard::Point boms_point)
 {
   board_[boms_point].first = state_bom;
 }
 
-void GameBoard::disp_element(Element element) const
+void GameBoard::disp_element(GameBoard::Element element) const
 {
   switch (element.second) {
   case State::Hide: std::cout << '"' << std::flush; break;
