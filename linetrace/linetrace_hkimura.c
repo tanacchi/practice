@@ -3,7 +3,7 @@
 #include "vs-wrc103.h"
 #include "ixbus.h"
 
-static const short MaxPower = 0x7FFF;
+const short maxPower = 0x7fff;
 
 enum Condition {
   WW = 0x1 << 0,
@@ -17,35 +17,53 @@ typedef struct {
   void (*run)(int);
 } Script;
 
-typedef struct {
-  unsigned int sequence;
-  unsigned int position;
-  const unsigned int* const threshold;
-  const Script* const script;
-} Status;
+static inline void run_motor(short left, short right)
+{
+  Mtr_Run_lv(right, -left, 0, 0, 0, 0);
+}
+
+unsigned int get_sensor(unsigned char ch)
+{
+  unsigned int sum = 0;
+  for (int i = 0; i < 4; ++i) sum += ADRead(ch);
+  return sum * 0.25;
+}
+
+unsigned int get_position(const unsigned int* const threshold)
+{
+  return ((get_sensor(0) > threshold[0]) << 1) | (get_sensor(1) > threshold[1]);
+}
+
+// =========================== Run functions ===================================
+
+static void no_action(int position)
+{
+  run_motor(0, 0);
+}
+
+// =============================================================================
 
 int main(int argc, char** argv)
 {
-  Init(60);
+  unsigned int sequence = 0;
+  unsigned int position = 0x0;
+  const unsigned int* const threshold = {200, 200};
+  const Script script[] = {
+    {0xf, no_motion}
+  };
+  
+  const unsigned short mainCycle = 60;
+  Init(mainCycle);
+  
+  while (1) {
+    position = get_position(threshold);
+    if (0x1 << position & status.script[sequence].condition) ++sequence;
+    status.script[sequence].run(position);
+  }
   return 0;
 }
 
 /* 
-   =========================================================
-
-   void Mtr_Run_lv(short mt1, short mt2, 0, 0, 0, 0);
-   free    : 0 or 0x8000(-32768)
-   cw_max  : 0x7FFF(32767)
-   ccw_max : 0x8001(-32767)
-
-   =========================================================
-
-   void LED(unsigned char LedOn);
-   0 -> 0 0
-   1 -> 0 1
-   2 -> 1 0
-   3 -> 1 1
-
    =========================================================
 
    void BuzzerSet(unsigned char pitch, unsigned char vol);
@@ -60,12 +78,6 @@ int main(int argc, char** argv)
    unsigned char getSW();
    0 -> off
    1 -> on
-
-   =========================================================
-
-   unsigned int AdRead(unsigned char ch);
-   ch     : 0 ~ 7
-   return : 0 ~ 1023
 
    =========================================================
 */
