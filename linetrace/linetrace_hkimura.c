@@ -3,6 +3,27 @@
 #include "vs-wrc103.h"
 #include "ixbus.h"
 
+static const short MaxPower = 0x7FFF;
+
+enum Condition {
+  WW = 0x1 << 0,
+  WB = 0x1 << 1,
+  BW = 0x1 << 2,
+  BB = 0x1 << 3
+};
+
+typedef struct {
+  unsigned int condition;
+  void (*run)(int);
+} Script;
+
+typedef struct {
+  unsigned int sequence;
+  unsigned int position;
+  const unsigned int* const threshold;
+  const Script* const script;
+} Status;
+
 int main(int argc, char** argv)
 {
   Init(60);
@@ -42,7 +63,7 @@ int main(int argc, char** argv)
 
    =========================================================
 
-   unsigned AdRead(unsigned char ch);
+   unsigned int AdRead(unsigned char ch);
    ch     : 0 ~ 7
    return : 0 ~ 1023
 
