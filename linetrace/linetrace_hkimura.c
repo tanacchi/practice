@@ -38,7 +38,13 @@ unsigned int get_position(const unsigned int* const threshold)
 
 static void no_action(int position)
 {
+  LED(3);
   run_motor(0, 0);
+}
+
+static void ge_straight(int position)
+{
+  run_motor(maxPower, maxPower);
 }
 
 // =============================================================================
