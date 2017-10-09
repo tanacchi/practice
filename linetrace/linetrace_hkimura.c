@@ -42,7 +42,7 @@ static void no_action(int position)
   run_motor(0, 0);
 }
 
-static void ge_straight(int position)
+static void go_straight(int position)
 {
   run_motor(maxPower, maxPower);
 }
@@ -63,8 +63,8 @@ int main(int argc, char** argv)
   
   while (1) {
     position = get_position(threshold);
-    if (0x1 << position & status.script[sequence].condition) ++sequence;
-    status.script[sequence].run(position);
+    if (0x1 << position & script[sequence].condition) ++sequence;
+    script[sequence].run(position);
   }
   return 0;
 }
