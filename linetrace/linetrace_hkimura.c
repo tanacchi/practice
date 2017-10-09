@@ -5,6 +5,11 @@
 
 const short maxPower = 0x7fff;
 
+enum {
+  Left,
+  Right
+};
+
 enum Condition {
   WW = 0x1 << 0,
   WB = 0x1 << 1,
@@ -13,7 +18,7 @@ enum Condition {
 };
 
 typedef struct {
-  unsigned int condition;
+  enum Condition condition;
   void (*run)(int);
 } Script;
 
@@ -31,20 +36,31 @@ unsigned int get_sensor(unsigned char ch)
 
 unsigned int get_position(const unsigned int* const threshold)
 {
-  return ((get_sensor(0) > threshold[0]) << 1) | (get_sensor(1) > threshold[1]);
+  return ((get_sensor(Left) > threshold[Left]) << 1) | (get_sensor(Right) > threshold[Right]);
 }
 
 // =========================== Run functions ===================================
 
-static void no_action(int position)
+void no_action(int position)
 {
   LED(3);
   run_motor(0, 0);
 }
 
-static void go_straight(int position)
+void go_straight(int position)
 {
   run_motor(maxPower, maxPower);
+}
+
+void traceLR(int position)
+{
+  static const short param[][2] = {
+    { maxPower, maxPower},
+    { maxPower,        0},
+    {        0, maxPower},
+    { maxPower, maxPower}
+  };
+  rum_motor(param[position][Left], param[position][Right]);
 }
 
 // =============================================================================
