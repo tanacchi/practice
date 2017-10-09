@@ -5,10 +5,7 @@
 
 const short maxPower = 0x7fff;
 
-enum {
-  Left,
-  Right
-};
+enum {Left, Right};
 
 enum Condition {
   WW = 0x1 << 0,
@@ -37,6 +34,13 @@ unsigned int get_sensor(unsigned char ch)
 unsigned int get_position(const unsigned int* const threshold)
 {
   return ((get_sensor(Left) > threshold[Left]) << 1) | (get_sensor(Right) > threshold[Right]);
+}
+
+void wait_switch()
+{
+  LED(3); while (!getSW()) ;
+  LED(0); while (getSW()) ;
+  Wait(100);
 }
 
 // =========================== Run functions ===================================
@@ -72,11 +76,11 @@ int main(int argc, char** argv)
   const unsigned int* const threshold = {200, 200};
   const Script script[] = {
     {0xf, no_motion}
-  };
-  
+  };  
   const unsigned short mainCycle = 60;
   Init(mainCycle);
-  
+
+  wait_switch();
   while (1) {
     position = get_position(threshold);
     if (0x1 << position & script[sequence].condition) ++sequence;
@@ -84,22 +88,3 @@ int main(int argc, char** argv)
   }
   return 0;
 }
-
-/* 
-   =========================================================
-
-   void BuzzerSet(unsigned char pitch, unsigned char vol);
-   pitch : 0 ~ 255 (255 is most low-sound)
-   vol   : 0 ~ 128
-
-   void BuzzerStart();
-   void BuzzerStop();
-
-   =========================================================
-
-   unsigned char getSW();
-   0 -> off
-   1 -> on
-
-   =========================================================
-*/
