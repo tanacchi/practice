@@ -5,7 +5,7 @@
 
 const short maxPower = 0x7fff;
 
-enum {Left, Right};
+enum {Left = 0, Right = 1};
 
 enum Condition {
   WW = 0x1 << 0,
@@ -34,13 +34,6 @@ unsigned int get_sensor(unsigned char ch)
 unsigned int get_position(const unsigned int* const threshold)
 {
   return ((get_sensor(Left) > threshold[Left]) << 1) | (get_sensor(Right) > threshold[Right]);
-}
-
-void wait_switch()
-{
-  LED(3); while (!getSW()) ;
-  LED(0); while (getSW()) ;
-  Wait(100);
 }
 
 // =========================== Run functions ===================================
@@ -80,8 +73,7 @@ int main(int argc, char** argv)
   const unsigned short mainCycle = 60;
   Init(mainCycle);
 
-  wait_switch();
-  while (1) {
+  while (1) {    // Loop of Recognition, Determinaiton, and Operation.
     position = get_position(threshold);
     if (0x1 << position & script[sequence].condition) ++sequence;
     script[sequence].run(position);
