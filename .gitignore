@@ -4,8 +4,6 @@
 *.exe*
 *.out*
 
-*.sh
-
 *tmp*
 
 *CMake*
