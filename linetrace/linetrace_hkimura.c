@@ -68,15 +68,16 @@ int main(int argc, char** argv)
   unsigned int position = 0x0;
   const unsigned int* const threshold = {200, 200};
   const Script script[] = {
-    {0xf, no_motion}
+    {0xf, no_motion},
+    NULL
   };  
   const unsigned short mainCycle = 60;
   Init(mainCycle);
 
-  while (1) {    // Loop of Recognition, Determinaiton, and Operation.
+  while (script[sequence] != NULL) { // Loop of Recognition, Operation, and Determinaiton,.
     position = get_position(threshold);
-    if (0x1 << position & script[sequence].condition) ++sequence;
     script[sequence].run(position);
+    if (!(0x1 << position & script[sequence].condition)) ++sequence;
   }
   return 0;
 }
