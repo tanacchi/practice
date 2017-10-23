@@ -3,6 +3,8 @@
 #include "vs-wrc103.h"
 #include "ixbus.h"
 
+#define MAIN_CYCLE 60
+
 const short maxPower = 0x7fff;
 
 enum {Left = 0, Right = 1};
@@ -70,10 +72,9 @@ int main(int argc, char** argv)
   const Script script[] = {
     {0xf, no_motion},
     NULL
-  };  
-  const unsigned short mainCycle = 60;
-  Init(mainCycle);
-
+  };
+  
+  Init(MAIN_CYCLE);
   while (script[sequence] != NULL) { // Loop of Recognition, Operation, and Determinaiton,.
     position = get_position(threshold);
     script[sequence].run(position);
