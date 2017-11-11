@@ -3,6 +3,7 @@
 #include "vs-wrc103.h"
 #include "ixbus.h"
 
+#define _countof(array) sizeof(array) / sizeof(*array)
 #define MAIN_CYCLE 60
 
 const short maxPower = 0x7fff;
@@ -66,7 +67,6 @@ void traceLR(int position)
 
 int main(int argc, char** argv)
 {
-  unsigned int sequence = 0;
   unsigned int position = 0x0;
   const unsigned int* const threshold = {200, 200};
   const Script script[] = {
@@ -75,10 +75,10 @@ int main(int argc, char** argv)
   };
   
   Init(MAIN_CYCLE);
-  while (script[sequence] != NULL) { // Loop of Recognition, Operation, and Determinaiton,.
+  for (int i = 0; i < _countof(script); ++i) { // Loop of Recognition, Operation, and Determinaiton,.
     position = get_position(threshold);
-    script[sequence].run(position);
-    if (!(0x1 << position & script[sequence].condition)) ++sequence;
+    script[i].run(position);
+    if (!(0x1 << position & script[i].condition)) ++sequence;
   }
   return 0;
 }
