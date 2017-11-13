@@ -1,45 +1,46 @@
 #include <stdio.h>
 #include <math.h>
 
-typedef long double (*resist_calculator)(long double, long double);
+typedef long double data_type;
+typedef data_type (*resist_calculator)(data_type, data_type);
 
 typedef struct {
-  long double radian; // [mm]
-  long double mass;  // [mg]
-  long double proportional_const;
+  data_type radian; // [mm]
+  data_type mass;  // [mg]
+  data_type proportional_const;
   resist_calculator calculator;
 } Param;
 
 typedef struct {
-  long double t;
-  long double v;
+  data_type t;
+  data_type v;
 } Pair;
 
-const long double gravity_acc = 0.0098;
-const long double dynamic_viscosity = 0.000018;
-const long double kinetic_viscosity = 0.000015;
+const data_type gravity_acc = 0.0098;
+const data_type dynamic_viscosity = 0.000018;
+const data_type kinetic_viscosity = 0.000015;
 
-long double calc_mass(long double radian)
+data_type calc_mass(data_type radian)
 {
-  return ((4/3) * M_PI * pow(radian, 3));
+  return M_PI * pow(radian, 3) * 4 / 3;
 }
 
-long double resister_method1(long double vel, long double proportional_const)
+data_type resister_method1(data_type vel, data_type proportional_const)
 {
   return proportional_const * vel;
 }
 
-long double resister_method2(long double vel, long double proportional_const)
+data_type resister_method2(data_type vel, data_type proportional_const)
 {
   return proportional_const * pow(vel, 2);
 }
 
-long double resister_method3(long double vel, long double proportional_const)
+data_type resister_method3(data_type vel, data_type proportional_const)
 {
   return 0,0;
 }
 
-Param init_param(long double radian_mm)
+Param init_param(data_type radian_mm)
 {
   Param param;
   param.radian = radian_mm;
@@ -56,10 +57,10 @@ Param init_param(long double radian_mm)
   return param;
 }
 
-long double get_terminal_vel(Param param, long double time_lim)
+data_type get_terminal_vel(Param param, data_type time_lim)
 {
-  long double vel = 0.0, offset = 0.001;
-  for (long double t = 0.0; t < time_lim; t += offset) {
+  data_type vel = 0.0, offset = 0.001;
+  for (data_type t = 0.0; t < time_lim; t += offset) {
     printf("time = %Lf\t\tvel = %Lf\n", t, vel);
     vel += (gravity_acc - (*param.calculator)(vel, param.proportional_const)/param.mass) * offset;
   }
@@ -74,7 +75,7 @@ int main()
          "const  : %Lf\n"
          "resist : %Lf\n"
          , param.radian, param.mass, param.proportional_const, (*param.calculator)(1, param.proportional_const));
-  printf("%Lu", sizeof(long double));
-  get_terminal_vel(param, 500);
+  printf("%Lu", sizeof(data_type));
+  /* get_terminal_vel(param, 500); */
   return 0;
 }
