@@ -81,9 +81,11 @@ int main()
   fclose(data_filep);
 
   FILE *gplotp = popen("gnuplot -persist", "w");
+  fprintf(gplotp, "set grid\n");
   fprintf(gplotp, "set xrange [0.0:0.01]\n");
   fprintf(gplotp, "set yrange [0.0:0.01]\n");
-  fprintf(gplotp, "plot \"%s\" with lines linetype 1 title \"2\"\n", data_path);
+  fprintf(gplotp, "set palette model HSV functions gray,1,1\n");
+  fprintf(gplotp, "plot \"%s\" w l lw 3 lc palette frac 0.5 title \"2\"\n", data_path);
   pclose(gplotp);
   
   return 0;
