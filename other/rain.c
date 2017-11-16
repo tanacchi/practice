@@ -72,20 +72,28 @@ data_type get_terminal_vel(Param param, data_type time_lim, FILE* fp)
 
 int main()
 {
-  FILE *data_filep;
-  const char* const data_path = "output.dat";
-  if ((data_filep = fopen(data_path, "w")) == NULL) { printf("Could not open %s !!\n", data_path); exit(1);}
+  FILE *data_01_filep, *data_30_filep;
+  const char* const data_01_path = "data_01_output.dat";
+  const char* const data_30_path = "data_30_output.dat";
+  if ((data_01_filep = fopen(data_01_path, "w")) == NULL) { printf("Could not open %s !!\n", data_01_path); exit(1); }
+  if ((data_30_filep = fopen(data_30_path, "w")) == NULL) { printf("Could not open %s !!\n", data_30_path); exit(1); }
   
-  Param param = init_param(2);
-  data_type terminal_vel = get_terminal_vel(param, 0.05, data_filep);
-  fclose(data_filep);
+  Param param1 = init_param(0.1);
+  data_type terminal_vel1 = get_terminal_vel(param1, 0.1, data_01_filep);
+  fclose(data_01_filep);
+
+  Param param2 = init_param(30);
+  data_type terminal_vel2 = get_terminal_vel(param2, 0.1, data_30_filep);
+  fclose(data_30_filep);
 
   FILE *gplotp = popen("gnuplot -persist", "w");
+  fprintf(gplotp, "set multiplot\n");
   fprintf(gplotp, "set grid\n");
-  fprintf(gplotp, "set xrange [0.0:0.01]\n");
-  fprintf(gplotp, "set yrange [0.0:0.01]\n");
+  fprintf(gplotp, "set xrange [0.0:0.02]\n");
+  fprintf(gplotp, "set yrange [0.0:0.04]\n");
   fprintf(gplotp, "set palette model HSV functions gray,1,1\n");
-  fprintf(gplotp, "plot \"%s\" w l lw 3 lc palette frac 0.5 title \"2\"\n", data_path);
+  fprintf(gplotp, "plot \"%s\" w l lw 3 lc palette frac 0.5 title \"2\"\n", data_01_path);
+  fprintf(gplotp, "plot \"%s\" w l lw 3 lc palette frac 0.0 title \"1\"\n", data_30_path);
   pclose(gplotp);
   
   return 0;
