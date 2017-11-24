@@ -53,27 +53,27 @@ Param init_param(data_type radian_mm)
 
 int main()
 {
-  /* FILE *gplotp = popen("gnuplot -persist", "w"); */
-  /* fprintf(gplotp, "set xrange [%f:%f]\n", 0.0, 0.8); */
-  /* fprintf(gplotp, "set yrange [%f:%f]\n", 0.0, 3.0); */
-  /* fprintf(gplotp, "set xlabel \"x\"\n"); */
-  /* fprintf(gplotp, "set ylabel \"y\"\n"); */
-  /* fprintf(gplotp, "plot '-' w p ps 5 pointtype 3\n"); */
-  /* const data_type rad_offset = 0.01; */
-  /* for (int i = 1; i <= 10; ++i) { */
-  /*   Param param = init_param(i*rad_offset); */
-  /*   data_type terminal_vel = get_terminal_vel(param); */
-  /*   printf("%.15Lf\n", terminal_vel); */
-  /*   fprintf(gplotp, "%Lf\t%.15Lf\n", i*rad_offset, terminal_vel); */
-  /* } */
-  /* for (int i = 70; i < 80; ++i) { */
-  /*   Param param = init_param(i*rad_offset); */
-  /*   data_type terminal_vel = param.mass * gravity_acc / param.proportional_const; */
-  /*   printf("%.15Lf\n", terminal_vel); */
-  /*   fprintf(gplotp, "%Lf\t%.15Lf\n", i*rad_offset, terminal_vel); */
-  /* } */
-  /* fprintf(gplotp, "e\n"); */
-  /* fclose(gplotp); */
+  FILE *gplotp = popen("gnuplot -persist", "w");
+  fprintf(gplotp, "set xrange [%f:%f]\n", 0.0, 30.0);
+  fprintf(gplotp, "set yrange [%f:%f]\n", 0.0, 50.0);
+  fprintf(gplotp, "set xlabel \"x\"\n");
+  fprintf(gplotp, "set ylabel \"y\"\n");
+  fprintf(gplotp, "plot '-' w p ps 5 pointtype 3\n");
+  const data_type rad_offset = 0.01;
+  for (int i = 1; i <= 10; ++i) {
+    Param param = init_param(i*rad_offset);
+    data_type terminal_vel = get_terminal_vel(param);
+    printf("r = %Lf\tvel = %.15Lf\n", i*rad_offset, terminal_vel);
+    fprintf(gplotp, "%Lf\t%.15Lf\n", i*rad_offset, terminal_vel);
+  }
+  for (int i = 70; i < 3000; ++i) {
+    Param param = init_param(i*rad_offset);
+    data_type terminal_vel = get_terminal_vel(param);
+    printf("r = %Lf\tvel = %.15Lf\n", i*rad_offset, terminal_vel);
+    fprintf(gplotp, "%Lf\t%.15Lf\n", i*rad_offset, terminal_vel);
+  }
+  fprintf(gplotp, "e\n");
+  fclose(gplotp);
   Param param;
   param = init_param(30);
   printf("%.15Lf\n", get_terminal_vel(param));
