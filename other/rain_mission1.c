@@ -18,7 +18,7 @@ const DataType kinetic_viscosity = 0.000015;
 
 DataType calcMass(DataType radian)
 {
-  return M_PI * pow(radian, 3) * 4 / 3 * pow(10, -3); // [kg]
+  return M_PI * pow(radian, 3) * 4 / 3 * 0.001; // [kg]
 }
 
 DataType terminalVelMethod1(DataType mass, DataType proportional_const)
@@ -39,13 +39,13 @@ DataType getTerminalVel(Param param)
 Param initParam(DataType radian_mm)
 {
   Param param;
-  param.radian_cm = radian_mm * pow(10, -1);
+  param.radian_cm = radian_mm * 0.1;
   param.mass = calcMass(param.radian_cm);
   if (0.0 < radian_mm && radian_mm  <= 0.1) {
-    param.proportional_const = 6 * M_PI * dynamic_viscosity * (param.radian_cm * pow(10, -2));
+    param.proportional_const = 6 * M_PI * dynamic_viscosity * param.radian_cm * 0.01;
     param.calculator = terminalVelMethod1;
   } else if (0.7 <= radian_mm && radian_mm <= 30) {
-    param.proportional_const = 0.235 * M_PI * dynamic_viscosity / kinetic_viscosity * pow(param.radian_cm * pow(10, -2), 2);
+    param.proportional_const = 0.235 * M_PI * dynamic_viscosity / kinetic_viscosity * pow(param.radian_cm * 0.01, 2);
     param.calculator = terminalVelMethod2;
   } else { puts("Invalid argument"); exit(-1); };
   return param;
