@@ -1,7 +1,7 @@
 #include <stdio.h>
 #include <math.h>
 #include <stdlib.h>
-
+/* 0.0019 <= C <= 0.0020*/
 typedef long double DataType;
 typedef DataType (*resist_calculator)(DataType, DataType);
 
@@ -16,9 +16,9 @@ const DataType gravity_acc = 9.8; // [m/s^2]
 const DataType dynamic_viscosity = 0.000018;
 const DataType kinetic_viscosity = 0.000015;
 
-DataType calcMass(DataType radian)
+DataType calcMass(DataType radian_cm)
 {
-  return M_PI * pow(radian, 3) * 4 / 3 * 0.001; // [kg]
+  return M_PI * pow(radian_cm, 3) * 4 / 3 * 0.001; // [kg]
 }
 
 DataType terminalVelMethod1(DataType mass, DataType proportional_const)
@@ -36,10 +36,12 @@ DataType getTerminalVel(Param param)
   return param.calculator(param.mass, param.proportional_const);
 }
 
-DataType getTerminalVel2(DataType radian_mm, DataType d)
+DataType getTerminalVel2(DataType radian_mm, DataType d, DataType C)
 {
-  const DataType radian = radian_mm * 0.001;
-  return powl(radian, 3/2-1);
+  const DataType mass = calcMass(radian_mm * 0.1);
+  const DataType T = powl(mass * gravity_acc / C, 1/d);
+  
+  return powl(radian_mm* 0.01, -1) * T;
 }
 
 Param initParam(DataType radian_mm)
@@ -57,40 +59,34 @@ Param initParam(DataType radian_mm)
   return param;
 }
 
+DataType getDist(DataType a, DataType b)
+{
+  return fabsl(a - b);
+}
+
 int main()
 {
-  FILE *gplotp = popen("gnuplot -persist", "w");
-  fprintf(gplotp, "set xrange [%f:%f]\n", 0.0, 0.8);
-  fprintf(gplotp, "set yrange [%f:%f]\n", 0.0, 7.0);
-  fprintf(gplotp, "set xlabel \"x\"\n");
-  fprintf(gplotp, "set ylabel \"y\"\n");
-  fprintf(gplotp, "plot '-' w p ps 2 pointtype 2\n");
-  const DataType rad_offset = 0.01;
-  for (int i = 1; i <= 10; ++i) {
-    Param param = initParam(i*rad_offset);
-    DataType terminal_vel = getTerminalVel(param);
-    printf("r = %Lf\tvel = %.15Lf\n", i*rad_offset, terminal_vel);
-    fprintf(gplotp, "%Lf\t%.15Lf\n", i*rad_offset, terminal_vel);
-  }
-  for (int i = 70; i <= 80; ++i) {
-    Param param = initParam(i*rad_offset);
-    DataType terminal_vel = getTerminalVel(param);
-    printf("r = %Lf\tvel = %.15Lf\n", i*rad_offset, terminal_vel);
-    fprintf(gplotp, "%Lf\t%.15Lf\n", i*rad_offset, terminal_vel);
-  }
-  /* fprintf(gplotp, "plot '-' w p ps 5 pointtype 3\n"); */
-  for (int i = 10; i < 70; ++i) {
-    DataType terminal_vel = getTerminalVel2(i*rad_offset, 1.6);
-    printf("r = %Lf\tvel = %.15Lf\n", i*rad_offset, terminal_vel);
-    fprintf(gplotp, "%Lf\t%.15Lf\n", i*rad_offset, terminal_vel);    
-  }
-  Param param;
-  param = initParam(0.1);
-  DataType terminal_vel01 = getTerminalVel(param);
-  param = initParam(0.7);
-  DataType terminal_vel07 = getTerminalVel(param);
+  DataType offset = 0.00001;
   
-  fprintf(gplotp, "e\n");
-  fclose(gplotp);
+  Param param = initParam(0.1);
+  DataType sample_vel = getTerminalVel(param);
+  printf("%Lf\n", sample_vel);
+  for (DataType d = 1.5; d <= 1.7; d += offset*1000) {
+    for (DataType C = 0.0019; C <= 0.0020; C += offset) {
+      DataType terminal_vel = getTerminalVel2(0.1l, d, C);
+      if (getDist(sample_vel, terminal_vel) < 0.1) printf("\t\t\t\t\tC = %Lf, d = %Lf, dist = %Lf\n", C, d, getDist(sample_vel, terminal_vel));
+      printf("%Lf\t%.15Lf\t%Lf\n", d, C, terminal_vel);
+    }
+  }
+  param = initParam(0.7);
+  sample_vel = getTerminalVel(param);
+  printf("%Lf\n", sample_vel);
+  for (DataType d = 1.5; d <= 1.7; d += offset*1000) {
+    for (DataType C = 0.0019; C <= 0.0020; C += offset) {
+      DataType terminal_vel = getTerminalVel2(0.7l, d, C);
+      if (getDist(sample_vel, terminal_vel) < 0.1) printf("\t\t\t\t\tC = %Lf, d = %Lf, dist = %Lf\n", C, d, getDist(sample_vel, terminal_vel));
+      printf("%Lf\t%.15Lf\t%Lf\n", d, C, terminal_vel);
+    }
+  }
   return 0;
 }
