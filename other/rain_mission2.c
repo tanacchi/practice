@@ -36,6 +36,12 @@ DataType getTerminalVel(Param param)
   return param.calculator(param.mass, param.proportional_const);
 }
 
+DataType getTerminalVel2(DataType radian_mm, DataType d)
+{
+  const DataType radian = radian_mm * 0.001;
+  return powl(radian, 3/2-1);
+}
+
 Param initParam(DataType radian_mm)
 {
   Param param;
@@ -54,12 +60,36 @@ Param initParam(DataType radian_mm)
 int main()
 {
   FILE *gplotp = popen("gnuplot -persist", "w");
-  fprintf(gplotp, "set xrange [%f:%f]\n", 0.0, 30.0);
-  fprintf(gplotp, "set yrange [%f:%f]\n", 0.0, 50.0);
+  fprintf(gplotp, "set xrange [%f:%f]\n", 0.0, 0.8);
+  fprintf(gplotp, "set yrange [%f:%f]\n", 0.0, 7.0);
   fprintf(gplotp, "set xlabel \"x\"\n");
   fprintf(gplotp, "set ylabel \"y\"\n");
-  fprintf(gplotp, "plot '-' w p ps 5 pointtype 3\n");
-  fprintf(gplotp, "%Lf\t%.15Lf\n", i*rad_offset, terminal_vel);
+  fprintf(gplotp, "plot '-' w p ps 2 pointtype 2\n");
+  const DataType rad_offset = 0.01;
+  for (int i = 1; i <= 10; ++i) {
+    Param param = initParam(i*rad_offset);
+    DataType terminal_vel = getTerminalVel(param);
+    printf("r = %Lf\tvel = %.15Lf\n", i*rad_offset, terminal_vel);
+    fprintf(gplotp, "%Lf\t%.15Lf\n", i*rad_offset, terminal_vel);
+  }
+  for (int i = 70; i <= 80; ++i) {
+    Param param = initParam(i*rad_offset);
+    DataType terminal_vel = getTerminalVel(param);
+    printf("r = %Lf\tvel = %.15Lf\n", i*rad_offset, terminal_vel);
+    fprintf(gplotp, "%Lf\t%.15Lf\n", i*rad_offset, terminal_vel);
+  }
+  /* fprintf(gplotp, "plot '-' w p ps 5 pointtype 3\n"); */
+  for (int i = 10; i < 70; ++i) {
+    DataType terminal_vel = getTerminalVel2(i*rad_offset, 1.6);
+    printf("r = %Lf\tvel = %.15Lf\n", i*rad_offset, terminal_vel);
+    fprintf(gplotp, "%Lf\t%.15Lf\n", i*rad_offset, terminal_vel);    
+  }
+  Param param;
+  param = initParam(0.1);
+  DataType terminal_vel01 = getTerminalVel(param);
+  param = initParam(0.7);
+  DataType terminal_vel07 = getTerminalVel(param);
+  
   fprintf(gplotp, "e\n");
   fclose(gplotp);
   return 0;
