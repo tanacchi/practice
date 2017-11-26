@@ -66,7 +66,7 @@ int main()
     printf("r = %Lf\tvel = %.15Lf\n", i*rad_offset, terminal_vel);
     fprintf(gplotp, "%Lf\t%.15Lf\n", i*rad_offset, terminal_vel);
   }
-  for (int i = 70; i < 3000; ++i) {
+  for (int i = 70; i <= 3000; ++i) {
     Param param = initParam(i*rad_offset);
     DataType terminal_vel = getTerminalVel(param);
     printf("r = %Lf\tvel = %.15Lf\n", i*rad_offset, terminal_vel);
@@ -74,8 +74,5 @@ int main()
   }
   fprintf(gplotp, "e\n");
   fclose(gplotp);
-  Param param;
-  param = initParam(30);
-  printf("%.15Lf\n", getTerminalVel(param));
   return 0;
 }
