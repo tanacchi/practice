@@ -12,6 +12,11 @@ typedef struct {
   resist_calculator calculator;
 } Param;
 
+typedef struct {
+  DataType min;
+  DataType max;
+} Range;
+
 const DataType gravity_acc = 9.8; // [m/s^2]
 const DataType dynamic_viscosity = 0.000018;
 const DataType kinetic_viscosity = 0.000015;
@@ -51,6 +56,17 @@ Param initParam(DataType radian_mm)
   return param;
 }
 
+void plotTerminalVel(Range range, FILE* gplotp)
+{
+  const DataType rad_offset = 0.01;
+  for (DataType r = range.min; r <=range.max; r += rad_offset) {
+    Param param = initParam(r);
+    DataType terminal_vel = getTerminalVel(param);
+    printf("r = %Lf\tvel = %.15Lf\n", r, terminal_vel);
+    fprintf(gplotp, "%Lf\t%.15Lf\n", r, terminal_vel);
+  }
+}
+
 int main()
 {
   FILE *gplotp = popen("gnuplot -persist", "w");
@@ -58,20 +74,10 @@ int main()
   fprintf(gplotp, "set yrange [%f:%f]\n", 0.0, 50.0);
   fprintf(gplotp, "set xlabel \"x\"\n");
   fprintf(gplotp, "set ylabel \"y\"\n");
-  fprintf(gplotp, "plot '-' w p ps 5 pointtype 3\n");
-  const DataType rad_offset = 0.01;
-  for (int i = 1; i <= 10; ++i) {
-    Param param = initParam(i*rad_offset);
-    DataType terminal_vel = getTerminalVel(param);
-    printf("r = %Lf\tvel = %.15Lf\n", i*rad_offset, terminal_vel);
-    fprintf(gplotp, "%Lf\t%.15Lf\n", i*rad_offset, terminal_vel);
-  }
-  for (int i = 70; i <= 3000; ++i) {
-    Param param = initParam(i*rad_offset);
-    DataType terminal_vel = getTerminalVel(param);
-    printf("r = %Lf\tvel = %.15Lf\n", i*rad_offset, terminal_vel);
-    fprintf(gplotp, "%Lf\t%.15Lf\n", i*rad_offset, terminal_vel);
-  }
+  fprintf(gplotp, "plot '-' w p ps 3 pointtype 3\n");
+  Range range1 = {0.01, 0.1}, range2 = {0.7, 30};
+  plotTerminalVel(range1, gplotp);
+  plotTerminalVel(range2, gplotp);
   fprintf(gplotp, "e\n");
   fclose(gplotp);
   return 0;
