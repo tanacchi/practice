@@ -1,7 +1,7 @@
 #include <stdio.h>
 #include <math.h>
 #include <stdlib.h>
-/* 0.0019 <= C <= 0.0020*/
+
 typedef long double DataType;
 typedef DataType (*resist_calculator)(DataType, DataType);
 
@@ -11,6 +11,12 @@ typedef struct {
   DataType proportional_const;
   resist_calculator calculator;
 } Param;
+
+typedef struct {
+  DataType param_C;
+  DataType param_d;
+  DaatType dist;
+} DataSet;
 
 const DataType gravity_acc = 9.8; // [m/s^2]
 const DataType dynamic_viscosity = 0.000018;
@@ -71,22 +77,25 @@ int main()
   Param param = initParam(0.1);
   DataType sample_vel = getTerminalVel(param);
   printf("%Lf\n", sample_vel);
-  for (DataType d = 1.5; d <= 1.7; d += offset*1000) {
+  for (DataType d = 1.5; d <= 1.7; d += offset*100) {
     for (DataType C = 0.0019; C <= 0.0020; C += offset) {
       DataType terminal_vel = getTerminalVel2(0.1l, d, C);
-      if (getDist(sample_vel, terminal_vel) < 0.1) printf("\t\t\t\t\tC = %Lf, d = %Lf, dist = %Lf\n", C, d, getDist(sample_vel, terminal_vel));
-      printf("%Lf\t%.15Lf\t%Lf\n", d, C, terminal_vel);
+      DataType dist = getDist(sample_vel, terminal_vel);
+      if (dist < 1.0) { printf("C = %Lf, d = %Lf, vel = %Lf, dist = %Lf\n", C, d, terminal_vel, dist); global++; } 
     }
   }
+  printf("%d\n", global);
+  global = 0;
   param = initParam(0.7);
   sample_vel = getTerminalVel(param);
   printf("%Lf\n", sample_vel);
-  for (DataType d = 1.5; d <= 1.7; d += offset*1000) {
+  for (DataType d = 1.5; d <= 1.7; d += offset*100) {
     for (DataType C = 0.0019; C <= 0.0020; C += offset) {
       DataType terminal_vel = getTerminalVel2(0.7l, d, C);
-      if (getDist(sample_vel, terminal_vel) < 0.1) printf("\t\t\t\t\tC = %Lf, d = %Lf, dist = %Lf\n", C, d, getDist(sample_vel, terminal_vel));
-      printf("%Lf\t%.15Lf\t%Lf\n", d, C, terminal_vel);
+      DataType dist = getDist(sample_vel, terminal_vel);
+      if (dist < 1.0) { printf("C = %Lf, d = %Lf, vel = %Lf, dist = %Lf\n", C, d, terminal_vel, dist); global++; }
     }
   }
+  printf("%d\n", global);
   return 0;
 }
