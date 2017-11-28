@@ -5,6 +5,8 @@
 typedef long double DataType;
 typedef DataType (*resist_calculator)(DataType, DataType);
 
+int global = 0;
+
 typedef struct {
   DataType radian_cm;
   DataType mass;
@@ -15,7 +17,7 @@ typedef struct {
 typedef struct {
   DataType param_C;
   DataType param_d;
-  DaatType dist;
+  DataType dist;
 } DataSet;
 
 const DataType gravity_acc = 9.8; // [m/s^2]
@@ -72,16 +74,16 @@ DataType getDist(DataType a, DataType b)
 
 int main()
 {
-  DataType offset = 0.00001;
+  DataType offset = 0.000001;
   
   Param param = initParam(0.1);
   DataType sample_vel = getTerminalVel(param);
   printf("%Lf\n", sample_vel);
-  for (DataType d = 1.5; d <= 1.7; d += offset*100) {
-    for (DataType C = 0.0019; C <= 0.0020; C += offset) {
+  for (DataType d = 1.565; d <= 1.566; d += offset*100) {
+    for (DataType C = 0.0018; C <= 0.0021; C += offset) {
       DataType terminal_vel = getTerminalVel2(0.1l, d, C);
       DataType dist = getDist(sample_vel, terminal_vel);
-      if (dist < 1.0) { printf("C = %Lf, d = %Lf, vel = %Lf, dist = %Lf\n", C, d, terminal_vel, dist); global++; } 
+      if (dist < 0.15) { printf("%d\tC = %Lf, d = %Lf, vel = %Lf, dist = %Lf\n", global++, C, d, terminal_vel, dist); } 
     }
   }
   printf("%d\n", global);
@@ -89,11 +91,13 @@ int main()
   param = initParam(0.7);
   sample_vel = getTerminalVel(param);
   printf("%Lf\n", sample_vel);
-  for (DataType d = 1.5; d <= 1.7; d += offset*100) {
-    for (DataType C = 0.0019; C <= 0.0020; C += offset) {
+  /* offset = 0.00001; */
+
+  for (DataType d = 1.565; d <= 1.566; d += offset*100) {
+    for (DataType C = 0.0018; C <= 0.0021; C += offset) {
       DataType terminal_vel = getTerminalVel2(0.7l, d, C);
       DataType dist = getDist(sample_vel, terminal_vel);
-      if (dist < 1.0) { printf("C = %Lf, d = %Lf, vel = %Lf, dist = %Lf\n", C, d, terminal_vel, dist); global++; }
+      if (dist < 0.15) { printf("%d\tC = %Lf, d = %Lf, vel = %Lf, dist = %Lf\n", global++, C, d, terminal_vel, dist); }
     }
   }
   printf("%d\n", global);
