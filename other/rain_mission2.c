@@ -5,8 +5,6 @@
 typedef long double DataType;
 typedef DataType (*resist_calculator)(DataType, DataType);
 
-int global = 0;
-
 typedef struct {
   DataType radian_cm;
   DataType mass;
@@ -63,7 +61,7 @@ Param initParam(DataType radian_mm)
   } else if (0.7 <= radian_mm && radian_mm <= 30) {
     param.proportional_const = 0.235 * M_PI * dynamic_viscosity / kinetic_viscosity * pow(param.radian_cm * 0.01, 2);
     param.calculator = terminalVelMethod2;
-  } else { puts("Invalid argument"); exit(-1); };
+  } else { puts("Invalid argument"); exit(-1); }
   return param;
 }
 
@@ -74,32 +72,29 @@ DataType getDist(DataType a, DataType b)
 
 int main()
 {
-  DataType offset = 0.000001;
-  
+  const DataType offset = 0.000001;
+
   Param param = initParam(0.1);
   DataType sample_vel = getTerminalVel(param);
-  printf("%Lf\n", sample_vel);
   for (DataType d = 1.565; d <= 1.566; d += offset*100) {
     for (DataType C = 0.0018; C <= 0.0021; C += offset) {
       DataType terminal_vel = getTerminalVel2(0.1l, d, C);
       DataType dist = getDist(sample_vel, terminal_vel);
-      if (dist < 0.15) { printf("%d\tC = %Lf, d = %Lf, vel = %Lf, dist = %Lf\n", global++, C, d, terminal_vel, dist); } 
+      if (dist < 0.15) printf("d = %Lf\tC = %Lf\tvel = %Lf\tdist = %Lf\n", d, C, terminal_vel, dist);
     }
   }
-  printf("%d\n", global);
-  global = 0;
+
   param = initParam(0.7);
   sample_vel = getTerminalVel(param);
   printf("%Lf\n", sample_vel);
-  /* offset = 0.00001; */
-
   for (DataType d = 1.565; d <= 1.566; d += offset*100) {
     for (DataType C = 0.0018; C <= 0.0021; C += offset) {
       DataType terminal_vel = getTerminalVel2(0.7l, d, C);
       DataType dist = getDist(sample_vel, terminal_vel);
-      if (dist < 0.15) { printf("%d\tC = %Lf, d = %Lf, vel = %Lf, dist = %Lf\n", global++, C, d, terminal_vel, dist); }
+      if (dist < 0.15) printf("d = %Lf\tC = %Lf\tvel = %Lf\tdist = %Lf\n", d, C, terminal_vel, dist);
     }
   }
-  printf("%d\n", global);
   return 0;
 }
+
+/* C = 0.0019 , d = 1.565*/
