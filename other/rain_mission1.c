@@ -71,10 +71,9 @@ int main()
 {
   FILE *gplotp = popen("gnuplot -persist", "w");
   fprintf(gplotp, "set xrange [%f:%f]\n", 0.0, 30.0);
-  fprintf(gplotp, "set yrange [%f:%f]\n", 0.0, 50.0);
   fprintf(gplotp, "set xlabel \"x\"\n");
   fprintf(gplotp, "set ylabel \"y\"\n");
-  fprintf(gplotp, "plot '-' w p ps 1 pointtype 3\n");
+  fprintf(gplotp, "plot '-' w p ps 3 pointtype 7\n");
   Range range1 = {0.01, 0.1}, range2 = {0.7, 30};
   plotTerminalVel(range1, gplotp);
   plotTerminalVel(range2, gplotp);

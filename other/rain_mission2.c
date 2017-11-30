@@ -47,7 +47,7 @@ DataType getTerminalVel2(DataType radian_mm, DataType d, DataType C)
   const DataType mass = calcMass(radian_mm * 0.1);
   const DataType T = powl(mass * gravity_acc / C, 1/d);
   
-  return powl(radian_mm* 0.01, -1) * T;
+  return powl(radian_mm* 0.001, -1) * T;
 }
 
 Param initParam(DataType radian_mm)
@@ -72,29 +72,19 @@ DataType getDist(DataType a, DataType b)
 
 int main()
 {
-  const DataType offset = 0.000001;
-
-  Param param = initParam(0.1);
-  DataType sample_vel = getTerminalVel(param);
-  for (DataType d = 1.565; d <= 1.566; d += offset*100) {
-    for (DataType C = 0.0018; C <= 0.0021; C += offset) {
-      DataType terminal_vel = getTerminalVel2(0.1l, d, C);
-      DataType dist = getDist(sample_vel, terminal_vel);
-      if (dist < 0.15) printf("d = %Lf\tC = %Lf\tvel = %Lf\tdist = %Lf\n", d, C, terminal_vel, dist);
-    }
-  }
-
-  param = initParam(0.7);
-  sample_vel = getTerminalVel(param);
-  printf("%Lf\n", sample_vel);
-  for (DataType d = 1.565; d <= 1.566; d += offset*100) {
-    for (DataType C = 0.0018; C <= 0.0021; C += offset) {
-      DataType terminal_vel = getTerminalVel2(0.7l, d, C);
-      DataType dist = getDist(sample_vel, terminal_vel);
-      if (dist < 0.15) printf("d = %Lf\tC = %Lf\tvel = %Lf\tdist = %Lf\n", d, C, terminal_vel, dist);
-    }
+  FILE *gplotp = popen("gnuplot -persist", "w");
+  const DataType offset = 0.00001;
+  const DataType r01 = 0.001l, r07 = 0.007l;
+  const DataType v01 = 1.210l, v07 = 5.695l;
+  
+  fprintf(gplotp, "set xrange [%f:%f]\n", 1.0, 2.0);
+  fprintf(gplotp, "set yrange [%f:%f]\n", 0.0, 10000.0);
+  fprintf(gplotp, "set xlabel \"d\"\n");
+  fprintf(gplotp, "set ylabel \"distance\"\n");  
+  fprintf(gplotp, "plot '-' w p ps 1.0 pointtype 7\n");
+  for (DataType d = 1.0l; d <= 2.0l; d+=offset) {
+    DataType distance = fabsl(pow(r01, d-3)*pow(v01, d) - pow(r07, d-3)*pow(v07, d));
+    if (distance < 100) printf("%Lf\t%Lf\n", d, distance);
   }
   return 0;
 }
-
-/* C = 0.0019 , d = 1.565*/
