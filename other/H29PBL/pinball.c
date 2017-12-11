@@ -7,7 +7,7 @@
 static const double left_score  = -1.0;
 static const double right_score =  1.0;
 
-double initThreshold(const double left_ratio, const double right_ratio)
+double initThreshold(const double right_ratio, const double left_ratio)
 {
   return left_ratio / (left_ratio + right_ratio);
 }
@@ -24,7 +24,7 @@ double getScore(const double threshold)
 
 int simPinball(const double threshold, const char* const file_path)
 {
-  const int ball_num = 1000, max_depth = 501;
+  const int ball_num = 1000000, max_depth = 501;
   const double score_unit = 0.5;
   int position_list[max_depth];
   for (int i = 0; i < _widthof(position_list); position_list[i++] = 0);
