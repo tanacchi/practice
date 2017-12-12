@@ -51,17 +51,32 @@ namespace Vector {
   }
 };
 
+void circle()
+{
+  const DataType unit{M_PI/10};
+  for (DataType theta{0}; theta <= M_PI; theta += unit) {
+    std::cout << "-----------------" << std::endl;
+    std::cout << "x = " << std::cos(theta) << '\n'
+              << "y = " << std::sin(theta) << std::endl;
+    std::cout << "-----------------" << std::endl;
+  }
+}
+
+template <typename F>
+void test(F func)
+{
+  for (int x{0}; x < 10; ++x) {
+    int y = func(x);
+    std::cout << "-----------------" << std::endl;
+    std::cout << "x = " << x << '\n'
+              << "y = " << y << std::endl;
+    std::cout << "-----------------" << std::endl;
+  }
+}
+
 int main ()
 {
-  {
-    Vector::Vector v1{3.3, 2.1, 5.9};
-    v1 -= Vector::Vector{1.1, 1.1, 1.1};
-    v1.show();
-  }
-  {
-    Vector::Vector v2{1.0, 0.0, 0.0};
-    Vector::Vector v3{0.0, 1.0, 0.0};
-    (v2*v3).show();
-  }
+  //  test([](int x){ return 2*x; });
+  circle();
   return 0;
 }
