@@ -65,8 +65,8 @@ void circle()
 template <typename F>
 void test(F func)
 {
-  for (int x{0}; x < 10; ++x) {
-    int y = func(x);
+  for (DataType x{-1}; x < 1; x += 0.1) {
+    DataType y = func(x);
     std::cout << "-----------------" << std::endl;
     std::cout << "x = " << x << '\n'
               << "y = " << y << std::endl;
@@ -76,7 +76,7 @@ void test(F func)
 
 int main ()
 {
-  //  test([](int x){ return 2*x; });
+  test([](DataType x){ return std::sqrt(1.0 - x*x); });
   circle();
   return 0;
 }
