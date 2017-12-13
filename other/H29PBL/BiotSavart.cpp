@@ -67,9 +67,7 @@ namespace Vector {
 };
 
 struct ElectricCurrent {
-  ElectricCurrent(Vector::Vector p = {0.0, 0.0, 0.0},
-                  Vector::Vector d = {0.0, 0.0, 0.0},
-                  DataType i = 1.0)
+  ElectricCurrent(Vector::Vector p, Vector::Vector d, DataType i = 1.0)
     : pos{p}, dir{d}, intensity{i}
   {
   }
@@ -78,42 +76,20 @@ struct ElectricCurrent {
   const DataType intensity;
 };
 
-void circle()
-{
-  const DataType unit{M_PI/10};
-  for (DataType theta{0}; theta <= M_PI; theta += unit) {
-    std::cout << "-----------------" << std::endl;
-    std::cout << "x = " << std::cos(theta) << '\n'
-              << "y = " << std::sin(theta) << std::endl;
-    std::cout << "-----------------" << std::endl;
-  }
-}
-
-template <typename F>
-void test(F func)
-{
-  for (DataType x{-1}; x < 1; x += 0.1) {
-    DataType y = func(x);
-    std::cout << "-----------------" << std::endl;
-    std::cout << "x = " << x << '\n'
-              << "y = " << y << std::endl;
-    std::cout << "-----------------" << std::endl;
-  }
-}
-
 Vector::Vector biotSavart(Vector::Vector r, ElectricCurrent I)
 {
   Vector::Vector R{r - I.pos};
-  const DataType k{1/(4 * M_PI * std::pow(size(R), 3))};
+  const DataType k{1/(4 * M_PI * std::pow(Vector::size(R), 3))};
   return k * I.dir * R;
 }
 
 int main ()
 {
-  // test([](DataType x){ return std::sqrt(1.0 - x*x); });
   Vector::Vector r{0, 0, 1};
-  ElectricCurrent I{{1.0, 0.0, 0.0}, {0.0, 1.0, 0.0}, 1};
+  ElectricCurrent I{{1.0, 0.0, 0.0}, {0.0, 1.0, 0.0}};
   Vector::Vector B = biotSavart(r, I);
+  B.show();
+  B += biotSavart(r, {{-1.0, 0.0, 0.0}, {0.0, 1.0, 0.0}});
   B.show();
   return 0;
 }
