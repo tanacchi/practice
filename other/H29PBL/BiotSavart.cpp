@@ -67,8 +67,10 @@ namespace Vector {
 };
 
 struct ElectricCurrent {
-  ElectricCurrent(DataType i)
-    : pos{}, dir{}, intensity{i}
+  ElectricCurrent(Vector::Vector p = {0.0, 0.0, 0.0},
+                  Vector::Vector d = {0.0, 0.0, 0.0},
+                  DataType i = 1.0)
+    : pos{p}, dir{d}, intensity{i}
   {
   }
   Vector::Vector pos;
@@ -99,13 +101,19 @@ void test(F func)
   }
 }
 
-Vector::Vector biotSavart(Vector::Vector R, ElectricCurrent I)
+Vector::Vector biotSavart(Vector::Vector r, ElectricCurrent I)
 {
+  Vector::Vector R{r - I.pos};
+  const DataType k{1/(4 * M_PI * std::pow(size(R), 3))};
+  return k * I.dir * R;
 }
 
 int main ()
 {
   // test([](DataType x){ return std::sqrt(1.0 - x*x); });
-  Vector::Vector r{0, 0, 0}, I{};
+  Vector::Vector r{0, 0, 1};
+  ElectricCurrent I{{1.0, 0.0, 0.0}, {0.0, 1.0, 0.0}, 1};
+  Vector::Vector B = biotSavart(r, I);
+  B.show();
   return 0;
 }
