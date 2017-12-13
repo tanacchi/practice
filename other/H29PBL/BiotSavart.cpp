@@ -66,6 +66,16 @@ namespace Vector {
   }
 };
 
+struct ElectricCurrent {
+  ElectricCurrent(DataType i)
+    : pos{}, dir{}, intensity{i}
+  {
+  }
+  Vector::Vector pos;
+  Vector::Vector dir;
+  const DataType intensity;
+};
+
 void circle()
 {
   const DataType unit{M_PI/10};
@@ -89,15 +99,13 @@ void test(F func)
   }
 }
 
-Vector::Vector biotSavart(Vector::Vector r, Vector::Vector I)
+Vector::Vector biotSavart(Vector::Vector R, ElectricCurrent I)
 {
-  
 }
 
 int main ()
 {
-  test([](DataType x){ return std::sqrt(1.0 - x*x); });
-  circle();
-  std::cout << Vector::myu << std::endl;
+  // test([](DataType x){ return std::sqrt(1.0 - x*x); });
+  Vector::Vector r{0, 0, 0}, I{};
   return 0;
 }
