@@ -6,6 +6,9 @@ using DataType = double;
 
 namespace Vector {
   enum { x = 0, y = 1, z = 2 };
+  
+  constexpr DataType myu = 4 * M_PI * std::pow(10, -7); // [H/m]
+  
   class Vector {
   public:
     Vector(DataType x = 0.0, DataType y = 0.0, DataType z = 0.0)
@@ -49,6 +52,18 @@ namespace Vector {
   {
     return {A[y]*B[z] - A[z]*B[y], A[z]*B[x] - A[x]*B[z], A[x]*B[y] - A[y]*B[x]};
   }
+  Vector operator*(DataType k, const Vector A)
+  {
+    return {k * A[x], k * A[y], k * A[z]};
+  }
+  Vector operator*(const Vector A, DataType k)
+  {
+    return k * A;
+  }
+  DataType size(Vector A)
+  {
+    return std::sqrt(A[x]*A[x] + A[y]*A[y] + A[z]*A[z]);
+  }
 };
 
 void circle()
@@ -74,9 +89,15 @@ void test(F func)
   }
 }
 
+Vector::Vector biotSavart(Vector::Vector r, Vector::Vector I)
+{
+  
+}
+
 int main ()
 {
   test([](DataType x){ return std::sqrt(1.0 - x*x); });
   circle();
+  std::cout << Vector::myu << std::endl;
   return 0;
 }
