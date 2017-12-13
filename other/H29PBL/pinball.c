@@ -24,7 +24,7 @@ double getScore(const double threshold)
 
 int simPinball(const double threshold, const char* const file_path)
 {
-  const int ball_num = 1000000, max_depth = 501;
+  const int ball_num = 1000, max_depth = 501;
   const double score_unit = 0.5;
   int position_list[max_depth];
   for (int i = 0; i < _widthof(position_list); position_list[i++] = 0);
@@ -50,7 +50,7 @@ int main()
     int center_balls = simPinball(threshold, file_path);
     printf("x = 0, y = %d\n", center_balls);
     FILE *gplotp = popen("gnuplot -persist", "w");
-    fprintf(gplotp, "plot \"%s\" w l lw 3 linetype 1 title \"1\"\n", file_path);
+    fprintf(gplotp, "plot \"%s\" w l lw 5 linetype 1 title \"1\"\n", file_path);
     pclose(gplotp);
   }
   {
@@ -59,7 +59,7 @@ int main()
     int center_balls = simPinball(threshold, file_path);
     printf("x = 0, y = %d\n", center_balls);
     FILE *gplotp = popen("gnuplot -persist", "w");
-    fprintf(gplotp, "plot \"%s\" w l lw 3 linetype 1 title \"2\"\n", file_path);
+    fprintf(gplotp, "plot \"%s\" w l lw 5 linetype 1 title \"2\"\n", file_path);
     pclose(gplotp);
   }
   return 0;
