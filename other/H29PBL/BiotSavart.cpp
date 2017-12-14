@@ -4,6 +4,7 @@
 #include <iostream>
 
 using DataType = double;
+constexpr DataType offset{0.01};
 
 namespace Vector {
   enum { x = 0, y = 1, z = 2 };
@@ -84,8 +85,8 @@ struct ElectricCurrent {
     : pos{p}, dir{d}, intensity{i}
   {
   }
-  ElectricCurrent(Route route, DataType i = 1.0)
-    : intensity{i}
+  ElectricCurrent(Route r, DataType i = 1.0)
+    : route{r}, intensity{i}
   {
     pos[0] = route.domain.begin;
     pos[1] = route.func(route.domain.begin);
@@ -93,7 +94,7 @@ struct ElectricCurrent {
   }
   void setDirection()
   {
-    DataType xoffset{(route.domain.end - route.domain.begin) / 10};
+    DataType xoffset{(route.domain.end - route.domain.begin) * offset};
     dir[0] = xoffset;
     dir[1] = route.func(pos[0] + xoffset) - route.func(pos[0]);
   }
@@ -126,9 +127,16 @@ int main ()
     // B.show();
   }
   {
-    Vector::Vector r{0, 0, 0};
+    Vector::Vector r{}, B{};
     Route route1{[](DataType x){ return std::sqrt(1 - x*x); }, {-1.0, 1.0}};
-    std::cout << route1.func(0) << std::endl;
+    ElectricCurrent I{route1};
+    while (I.pos[0] < route1.domain.end) {
+      B += biotSavart(r, I);
+      I.setPosition();
+      I.setDirection();
+      B.show();
+    }
+    B.show();
   }
   return 0;
 }
