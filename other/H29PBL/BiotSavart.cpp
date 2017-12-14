@@ -7,9 +7,7 @@ using DataType = double;
 
 namespace Vector {
   enum { x = 0, y = 1, z = 2 };
-  
-  constexpr DataType myu = 4 * M_PI * std::pow(10, -7); // [H/m]
-  
+
   class Vector {
   public:
     Vector(DataType x = 0.0, DataType y = 0.0, DataType z = 0.0)
