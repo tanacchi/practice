@@ -67,10 +67,24 @@ namespace Vector {
   }
 };
 
+struct Domain {
+  DataType begin{};
+  DataType end{};
+};
+
+struct Route {
+  std::function<Vector::Vector(Vector::Vector)> func;
+  Domain domain;
+};
+
 struct ElectricCurrent {
   ElectricCurrent(Vector::Vector p, Vector::Vector d, DataType i = 1.0)
     : pos{p}, dir{d}, intensity{i}
   {
+  }
+  void setDirection(const Route& route)
+  {
+    DataType offset{};
   }
   Vector::Vector pos;
   Vector::Vector dir;
