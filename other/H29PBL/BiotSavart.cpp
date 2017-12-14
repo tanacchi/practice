@@ -1,6 +1,7 @@
 #include <array>
-#include <iostream>
 #include <cmath>
+#include <functional>
+#include <iostream>
 
 using DataType = double;
 
@@ -87,9 +88,9 @@ int main ()
 {
   Vector::Vector r{0, 0, 1};
   ElectricCurrent I{{1.0, 0.0, 0.0}, {0.0, 1.0, 0.0}};
-  Vector::Vector B = biotSavart(r, I);
+  Vector::Vector B{biotSavart(r, I)};
   B.show();
-  B += biotSavart(r, {{-1.0, 0.0, 0.0}, {0.0, 1.0, 0.0}});
+  B += biotSavart(r, {{-1.0, 0.0, 0.0}, {0.0, -1.0, 0.0}});
   B.show();
   return 0;
 }
