@@ -16,7 +16,11 @@ namespace Vector {
       : elem_{x, y, z}
     {
     }
-    const DataType& operator[](int n) const
+    const DataType& operator[](int n) const 
+    {
+      return elem_[n];
+    }
+    DataType& operator[](int n)
     {
       return elem_[n];
     }
@@ -68,12 +72,12 @@ namespace Vector {
 };
 
 struct Domain {
-  DataType begin{};
-  DataType end{};
+  DataType begin;
+  DataType end;
 };
 
 struct Route {
-  std::function<Vector::Vector(Vector::Vector)> func;
+  std::function<DataType(DataType)> func;
   Domain domain;
 };
 
@@ -82,12 +86,26 @@ struct ElectricCurrent {
     : pos{p}, dir{d}, intensity{i}
   {
   }
-  void setDirection(const Route& route)
+  ElectricCurrent(Route route, DataType i = 1.0)
+    : intensity{i}
   {
-    DataType offset{};
+    pos[0] = route.domain.begin;
+    pos[1] = route.func(route.domain.begin);
+    setDirection();
+  }
+  void setDirection()
+  {
+    DataType xoffset{(route.domain.end - route.domain.begin) / 10};
+    dir[0] = xoffset;
+    dir[1] = route.func(pos[0] + xoffset) - route.func(pos[0]);
+  }
+  void setPosition()
+  {
+    pos += dir;
   }
   Vector::Vector pos;
   Vector::Vector dir;
+  Route route;
   const DataType intensity;
 };
 
@@ -100,11 +118,19 @@ Vector::Vector biotSavart(Vector::Vector r, ElectricCurrent I)
 
 int main ()
 {
-  Vector::Vector r{0, 0, 1};
-  ElectricCurrent I{{1.0, 0.0, 0.0}, {0.0, 1.0, 0.0}};
-  Vector::Vector B{biotSavart(r, I)};
-  B.show();
-  B += biotSavart(r, {{-1.0, 0.0, 0.0}, {0.0, -1.0, 0.0}});
-  B.show();
+  {
+    // Vector::Vector r{0, 0, 0};
+    // ElectricCurrent I{{1.0, 0.0, 0.0}, {0.0, 1.0, 0.0}};
+    // ElectricCurrent I2{{-1.0, 0.0, 0.0}, {0.0, 1.0, 0.0}};
+    // Vector::Vector B{biotSavart(r, I1)};
+    // B.show();
+    // B += biotSavart(r, I2);
+    // B.show();
+  }
+  {
+    Vector::Vector r{0, 0, 0};
+    Route route1{[](DataType x){ return std::sqrt(1 - x*x); }, {-1.0, 1.0}};
+    std::cout << route1.func(0) << std::endl;
+  }
   return 0;
 }
