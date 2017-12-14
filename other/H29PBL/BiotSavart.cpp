@@ -24,12 +24,17 @@ namespace Vector {
     }
     Vector& operator+=(const Vector& rhs)
     {
-      for (auto i{0}; i < elem_.size(); ++i) elem_[i] += rhs.elem_[i];
+      for (auto i{0u}; i < elem_.size(); ++i) elem_[i] += rhs.elem_[i];
       return *this;
     }
     Vector& operator-=(const Vector& rhs)
     {
-      for (auto i{0}; i < elem_.size(); ++i) elem_[i] -= rhs.elem_[i];
+      for (auto i{0u}; i < elem_.size(); ++i) elem_[i] -= rhs.elem_[i];
+      return *this;
+    }
+    Vector& operator*=(const Vector& rhs)
+    {
+      for (auto i{0u}; i < elem_.size(); ++i) elem_[i] *= rhs.elem_[i];
       return *this;
     }
     void show()
