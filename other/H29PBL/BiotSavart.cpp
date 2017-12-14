@@ -50,18 +50,15 @@ namespace Vector {
   };
   Vector operator+(Vector A, const Vector& B)
   {
-    A += B;
-    return A;
+    return A += B;
   }
   Vector operator-(Vector A, const Vector& B)
   {
-    A -= B;
-    return A;
+    return A -= B;
   }
   Vector operator*(Vector A, const Vector& B)
   {
-    A *= B;
-    return A;
+    return A *= B;
   }
   Vector operator*(DataType k, const Vector& A)
   {
