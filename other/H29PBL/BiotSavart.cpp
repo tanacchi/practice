@@ -7,11 +7,11 @@ using DataType = double;
 constexpr DataType offset{0.01};
 
 namespace Vector {
-  enum { x = 0, y = 1, z = 2 };
+  enum class index { x = 0, y = 1, z = 2 };
 
   class Vector {
   public:
-    Vector(DataType x = 0.0, DataType y = 0.0, DataType z = 0.0)
+    Vector(DataType x = {}, DataType y = {}, DataType z = {})
       : elem_{x, y, z}
     {
     }
@@ -23,50 +23,55 @@ namespace Vector {
     {
       return elem_[n];
     }
-    const Vector& operator+=(const Vector rhs)
+    Vector& operator+=(const Vector& rhs)
     {
-      for (auto i{0}; i < elem_.size(); ++i) elem_[i] += rhs.elem_[i];
+      for (auto i{0u}; i < elem_.size(); ++i) elem_[i] += rhs.elem_[i];
       return *this;
     }
-    const Vector& operator-=(const Vector rhs)
+    Vector& operator-=(const Vector& rhs)
     {
-      for (auto i{0}; i < elem_.size(); ++i) elem_[i] -= rhs.elem_[i];
+      for (auto i{0u}; i < elem_.size(); ++i) elem_[i] -= rhs.elem_[i];
+      return *this;
+    }
+    Vector& operator*=(const Vector& rhs)
+    {
+      for (auto i{0u}; i < elem_.size(); ++i) elem_[i] *= rhs.elem_[i];
       return *this;
     }
     void show()
     {
       std::cout << "========================" << std::endl;
-      std::cout << "x = " << elem_[x] << '\n'
-                << "y = " << elem_[y] << '\n'
-                << "z = " << elem_[z] << '\n' << std::flush;
+      std::cout << "x = " << elem_[index::x] << '\n'
+                << "y = " << elem_[index::y] << '\n'
+                << "z = " << elem_[index::z] << '\n' << std::flush;
       std::cout << "========================" << std::endl;
     }
   private:
     std::array<DataType, 3> elem_;
   };
-  Vector operator+(const Vector A, const Vector B)
+  Vector operator+(Vector A, const Vector& B)
   {
-    return {A[x] + B[x],  A[y] + B[y], A[z] + B[z]};
+    return A += B;
   }
-  Vector operator-(const Vector A, const Vector B)
+  Vector operator-(Vector A, const Vector& B)
   {
-    return {A[x] - B[x],  A[y] - B[y], A[z] - B[z]};
+    return A -= B;
   }
-  Vector operator*(const Vector A, const Vector B)
+  Vector operator*(Vector A, const Vector& B)
   {
-    return {A[y]*B[z] - A[z]*B[y], A[z]*B[x] - A[x]*B[z], A[x]*B[y] - A[y]*B[x]};
+    return A *= B;
   }
-  Vector operator*(DataType k, const Vector A)
+  Vector operator*(DataType k, const Vector& A)
   {
-    return {k * A[x], k * A[y], k * A[z]};
+    return {k * A[index::x], k * A[index::y], k * A[index::z]};
   }
-  Vector operator*(const Vector A, DataType k)
+  Vector operator*(const Vector& A, DataType k)
   {
     return k * A;
   }
-  DataType size(Vector A)
+  DataType size(const Vector& A)
   {
-    return std::sqrt(A[x]*A[x] + A[y]*A[y] + A[z]*A[z]);
+    return std::sqrt(A * A);
   }
 };
 
