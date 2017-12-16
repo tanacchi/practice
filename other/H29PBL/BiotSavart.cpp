@@ -38,6 +38,12 @@ namespace Vector {
       for (auto i{0u}; i < elem_.size(); ++i) elem_[i] *= rhs.elem_[i];
       return *this;
     }
+    DataType size()
+    {
+      DataType size{0};
+      for (cosnt auto& e : elem_) size += e;
+      return size;
+    }
     void show()
     {
       std::cout << "========================" << std::endl;
@@ -69,9 +75,13 @@ namespace Vector {
   {
     return k * A;
   }
-  DataType size(const Vector& A)
+  Vector cross(const Vector& lhs, const Vector rhs)
   {
-    return std::sqrt(A * A);
+    return {
+      lhs[index::y]*rhs[index::z] - lhs[index::z]*rhs[index::y],
+      lhs[index::z]*rhs[index::x] - lhs[index::x]*rhs[index::z],
+      lhs[index::x]*rhs[index::y] - lhs[index::y]*rhs[index::x]
+    };
   }
 };
 
