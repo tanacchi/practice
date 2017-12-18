@@ -7,7 +7,7 @@ using DataType = double;
 constexpr DataType offset{0.01};
 
 namespace Vector {
-  enum class index { x = 0, y = 1, z = 2 };
+  enum { x = 0, y = 1, z = 2 };
 
   class Vector {
   public:
@@ -38,18 +38,18 @@ namespace Vector {
       for (auto i{0u}; i < elem_.size(); ++i) elem_[i] *= rhs.elem_[i];
       return *this;
     }
-    DataType size()
+    DataType size() const
     {
-      DataType size{0};
-      for (cosnt auto& e : elem_) size += e;
-      return size;
+      DataType sizesq{0};
+      for (const auto& e : elem_) sizesq += e*e;
+      return std::sqrt(sizesq);
     }
     void show()
     {
       std::cout << "========================" << std::endl;
-      std::cout << "x = " << elem_[index::x] << '\n'
-                << "y = " << elem_[index::y] << '\n'
-                << "z = " << elem_[index::z] << '\n' << std::flush;
+      std::cout << "x = " << elem_[x] << '\n'
+                << "y = " << elem_[y] << '\n'
+                << "z = " << elem_[z] << '\n' << std::flush;
       std::cout << "========================" << std::endl;
     }
   private:
@@ -69,18 +69,18 @@ namespace Vector {
   }
   Vector operator*(DataType k, const Vector& A)
   {
-    return {k * A[index::x], k * A[index::y], k * A[index::z]};
+    return {k * A[x], k * A[y], k * A[z]};
   }
   Vector operator*(const Vector& A, DataType k)
   {
     return k * A;
   }
-  Vector cross(const Vector& lhs, const Vector rhs)
+  Vector cross(const Vector& lhs, const Vector& rhs)
   {
     return {
-      lhs[index::y]*rhs[index::z] - lhs[index::z]*rhs[index::y],
-      lhs[index::z]*rhs[index::x] - lhs[index::x]*rhs[index::z],
-      lhs[index::x]*rhs[index::y] - lhs[index::y]*rhs[index::x]
+      lhs[y]*rhs[z] - lhs[z]*rhs[y],
+      lhs[z]*rhs[x] - lhs[x]*rhs[z],
+      lhs[x]*rhs[y] - lhs[y]*rhs[x]
     };
   }
 };
@@ -112,6 +112,12 @@ struct ElectricCurrent {
     DataType xoffset{(route.domain.end - route.domain.begin) * offset};
     dir[0] = xoffset;
     dir[1] = route.func(pos[0] + xoffset) - route.func(pos[0]);
+    std::cout << "------------------------------------------------" << std::endl;
+    std::cout << "pos[0] + xoffset       = " << pos[0] + xoffset  << '\t'
+              << "func(pos[0] + xoffset) = " << route.func(pos[0] + xoffset) << '\n'
+              << "pos[0]                 = " << pos[0] << '\t'
+              << "func(pos[0])           = " << route.func(pos[0]) << std::endl;
+    std::cout << "------------------------------------------------" << std::endl;
   }
   void setPosition()
   {
@@ -126,7 +132,7 @@ struct ElectricCurrent {
 Vector::Vector biotSavart(Vector::Vector r, ElectricCurrent I)
 {
   Vector::Vector R{r - I.pos};
-  const DataType k{1/(4 * M_PI * std::pow(Vector::size(R), 3))};
+  const DataType k{1/(4 * M_PI * std::pow(R.size(), 3))};
   return k * I.dir * R;
 }
 
@@ -149,7 +155,6 @@ int main ()
       B += biotSavart(r, I);
       I.setPosition();
       I.setDirection();
-      B.show();
     }
     B.show();
   }
