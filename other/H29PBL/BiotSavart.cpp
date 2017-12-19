@@ -133,7 +133,7 @@ Vector::Vector biotSavart(Vector::Vector r, ElectricCurrent I)
 {
   Vector::Vector R{r - I.pos};
   const DataType k{1/(4 * M_PI * std::pow(R.size(), 3))};
-  return k * I.dir * R;
+  return k * cross(I.dir, R);
 }
 
 Vector::Vector polarToRectangular(DataType radian, DataType theta)
@@ -144,28 +144,13 @@ Vector::Vector polarToRectangular(DataType radian, DataType theta)
 int main ()
 {
   {
-    // Vector::Vector r{0, 0, 0};
-    // ElectricCurrent I{{1.0, 0.0, 0.0}, {0.0, 1.0, 0.0}};
-    // ElectricCurrent I2{{-1.0, 0.0, 0.0}, {0.0, 1.0, 0.0}};
-    // Vector::Vector B{biotSavart(r, I1)};
-    // B.show();
-    // B += biotSavart(r, I2);
-    // B.show();
-  }
-  {
-    // Vector::Vector r{}, B{};
-    // Route route1{[](DataType x){ return std::sqrt(1 - x*x); }, {-1.0, 1.0}};
-    // ElectricCurrent I{route1};
-    // while (I.pos[0] < route1.domain.end) {
-    //   B += biotSavart(r, I);
-    //   I.setPosition();
-    //   I.setDirection();
-    // }
-    // B.show();
-  }
-  {
-    const Vector::Vector circle{ polarToRectangular(1.0, M_PI / 2) };
-    circle.show();
+    Vector::Vector r{0, 0, 0};
+    ElectricCurrent I1{{1.0, 0.0, 0.0}, {0.0, 1.0, 0.0}};
+    ElectricCurrent I2{{-1.0, 0.0, 0.0}, {0.0, -1.0, 0.0}};
+    Vector::Vector B{biotSavart(r, I1)};
+    B.show();
+    B += biotSavart(r, I2);
+    B.show();
   }
   return 0;
 }
