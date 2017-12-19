@@ -38,6 +38,11 @@ namespace Vector {
       for (auto i{0u}; i < elem_.size(); ++i) elem_[i] *= rhs.elem_[i];
       return *this;
     }
+    Vector& operator/=(const Vector& rhs)
+    {
+      for (auto i{0u}; i < elem_.size(); ++i) elem_[i] /= rhs.elem_[i];
+      return *this;
+    }
     DataType size() const
     {
       DataType sizesq{0};
@@ -74,6 +79,14 @@ namespace Vector {
   Vector operator*(const Vector& A, DataType k)
   {
     return k * A;
+  }
+  Vector operator/(Vector A, const Vector& B)
+  {
+    return A /= B;
+  }
+  Vector operator/(const Vector& A, DataType k)
+  {
+    return {A[x] / k, A[y] / k, A[z] / k};
   }
   Vector cross(const Vector& lhs, const Vector& rhs)
   {
@@ -152,7 +165,7 @@ int main ()
     for (DataType x{route1.domain.begin}; x < route1.domain.end - offset; x += offset) {
       //     I.pos.show();
       I.setDirection();
-      B += biotSavart(r, I);
+      B += biotSavart(r, I) * offset;
       I.setPosition();
       B.show();
     }
