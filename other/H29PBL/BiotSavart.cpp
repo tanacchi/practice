@@ -79,9 +79,9 @@ namespace Vector {
   {
     return {
       lhs[y]*rhs[z] - lhs[z]*rhs[y],
-      lhs[z]*rhs[x] - lhs[x]*rhs[z],
-      lhs[x]*rhs[y] - lhs[y]*rhs[x]
-    };
+        lhs[z]*rhs[x] - lhs[x]*rhs[z],
+        lhs[x]*rhs[y] - lhs[y]*rhs[x]
+        };
   }
 };
 
@@ -109,15 +109,8 @@ struct ElectricCurrent {
   }
   void setDirection()
   {
-    DataType xoffset{(route.domain.end - route.domain.begin) * offset};
-    dir[0] = xoffset;
-    dir[1] = route.func(pos[0] + xoffset) - route.func(pos[0]);
-    std::cout << "------------------------------------------------" << std::endl;
-    std::cout << "pos[0] + xoffset       = " << pos[0] + xoffset  << '\t'
-              << "func(pos[0] + xoffset) = " << route.func(pos[0] + xoffset) << '\n'
-              << "pos[0]                 = " << pos[0] << '\t'
-              << "func(pos[0])           = " << route.func(pos[0]) << std::endl;
-    std::cout << "------------------------------------------------" << std::endl;
+    dir[0] = offset;
+    dir[1] = route.func(pos[0] + offset) - route.func(pos[0]);
   }
   void setPosition()
   {
@@ -133,7 +126,7 @@ Vector::Vector biotSavart(Vector::Vector r, ElectricCurrent I)
 {
   Vector::Vector R{r - I.pos};
   const DataType k{1/(4 * M_PI * std::pow(R.size(), 3))};
-  return k * cross(I.dir, R);
+  return k * cross(I.dir / I.dir.size() , R);
 }
 
 Vector::Vector polarToRectangular(DataType radian, DataType theta)
@@ -144,13 +137,25 @@ Vector::Vector polarToRectangular(DataType radian, DataType theta)
 int main ()
 {
   {
-    Vector::Vector r{0, 0, 0};
-    ElectricCurrent I1{{1.0, 0.0, 0.0}, {0.0, 1.0, 0.0}};
-    ElectricCurrent I2{{-1.0, 0.0, 0.0}, {0.0, -1.0, 0.0}};
-    Vector::Vector B{biotSavart(r, I1)};
-    B.show();
-    B += biotSavart(r, I2);
-    B.show();
+    // Vector::Vector r{0, 0, 0};
+    // ElectricCurrent I1{{1.0, 0.0, 0.0}, {0.0, 1.0, 0.0}};
+    // ElectricCurrent I2{{-1.0, 0.0, 0.0}, {0.0, -1.0, 0.0}};
+    // Vector::Vector B{biotSavart(r, I1)};
+    // B.show();
+    // B += biotSavart(r, I2);
+    // B.show();
+  }
+  {
+    Vector::Vector r{}, B{};
+    Route route1{[](DataType x){ return std::sqrt(1 - x*x); }, {0.0, 1.0}};
+    ElectricCurrent I{route1};
+    for (DataType x{route1.domain.begin}; x < route1.domain.end - offset; x += offset) {
+      //     I.pos.show();
+      I.setDirection();
+      B += biotSavart(r, I);
+      I.setPosition();
+      B.show();
+    }
   }
   return 0;
 }
