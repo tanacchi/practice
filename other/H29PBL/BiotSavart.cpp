@@ -44,7 +44,7 @@ namespace Vector {
       for (const auto& e : elem_) sizesq += e*e;
       return std::sqrt(sizesq);
     }
-    void show()
+    void show() const
     {
       std::cout << "========================" << std::endl;
       std::cout << "x = " << elem_[x] << '\n'
@@ -136,6 +136,11 @@ Vector::Vector biotSavart(Vector::Vector r, ElectricCurrent I)
   return k * I.dir * R;
 }
 
+Vector::Vector polarToRectangular(DataType radian, DataType theta)
+{
+  return {radian * std::cos(theta), radian*std::sin(theta)};
+}
+
 int main ()
 {
   {
@@ -148,15 +153,19 @@ int main ()
     // B.show();
   }
   {
-    Vector::Vector r{}, B{};
-    Route route1{[](DataType x){ return std::sqrt(1 - x*x); }, {-1.0, 1.0}};
-    ElectricCurrent I{route1};
-    while (I.pos[0] < route1.domain.end) {
-      B += biotSavart(r, I);
-      I.setPosition();
-      I.setDirection();
-    }
-    B.show();
+    // Vector::Vector r{}, B{};
+    // Route route1{[](DataType x){ return std::sqrt(1 - x*x); }, {-1.0, 1.0}};
+    // ElectricCurrent I{route1};
+    // while (I.pos[0] < route1.domain.end) {
+    //   B += biotSavart(r, I);
+    //   I.setPosition();
+    //   I.setDirection();
+    // }
+    // B.show();
+  }
+  {
+    const Vector::Vector circle{ polarToRectangular(1.0, M_PI / 2) };
+    circle.show();
   }
   return 0;
 }
