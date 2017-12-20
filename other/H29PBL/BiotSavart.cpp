@@ -6,9 +6,13 @@
 using DataType = double;
 constexpr DataType offset{0.01};
 
-namespace Vector {
-  enum { x = 0, y = 1, z = 2 };
+enum index : std::size_t {
+  x = 0,
+  y = 1,
+  z = 2
+};
 
+namespace Vector {
   class Vector {
   public:
     Vector(DataType x = {}, DataType y = {}, DataType z = {})
@@ -52,9 +56,9 @@ namespace Vector {
     void show() const
     {
       std::cout << "========================" << std::endl;
-      std::cout << "x = " << elem_[x] << '\n'
-                << "y = " << elem_[y] << '\n'
-                << "z = " << elem_[z] << '\n' << std::flush;
+      std::cout << "x = " << elem_[index::x] << '\n'
+                << "y = " << elem_[index::y] << '\n'
+                << "z = " << elem_[index::z] << '\n' << std::flush;
       std::cout << "========================" << std::endl;
     }
   private:
@@ -74,7 +78,7 @@ namespace Vector {
   }
   Vector operator*(DataType k, const Vector& A)
   {
-    return {k * A[x], k * A[y], k * A[z]};
+    return {k * A[index::x], k * A[index::y], k * A[index::z]};
   }
   Vector operator*(const Vector& A, DataType k)
   {
@@ -86,15 +90,15 @@ namespace Vector {
   }
   Vector operator/(const Vector& A, DataType k)
   {
-    return {A[x] / k, A[y] / k, A[z] / k};
+    return {A[index::x] / k, A[index::y] / k, A[index::z] / k};
   }
   Vector cross(const Vector& lhs, const Vector& rhs)
   {
     return {
-      lhs[y]*rhs[z] - lhs[z]*rhs[y],
-        lhs[z]*rhs[x] - lhs[x]*rhs[z],
-        lhs[x]*rhs[y] - lhs[y]*rhs[x]
-        };
+      lhs[index::y]*rhs[index::z] - lhs[index::z]*rhs[index::y],
+      lhs[index::z]*rhs[index::x] - lhs[index::x]*rhs[index::z],
+      lhs[index::x]*rhs[index::y] - lhs[index::y]*rhs[index::x]
+    };
   }
 };
 
@@ -116,14 +120,14 @@ struct ElectricCurrent {
   ElectricCurrent(Route r, DataType i = 1.0)
     : route{r}, intensity{i}
   {
-    pos[0] = route.domain.begin;
-    pos[1] = route.func(route.domain.begin);
+    pos[index::x] = route.domain.begin;
+    pos[index::y] = route.func(route.domain.begin);
     setDirection();
   }
   void setDirection()
   {
-    dir[0] = offset;
-    dir[1] = route.func(pos[0] + offset) - route.func(pos[0]);
+    dir[index::x] = offset;
+    dir[index::y] = route.func(pos[index::x] + offset) - route.func(pos[index::x]);
   }
   void setPosition()
   {
