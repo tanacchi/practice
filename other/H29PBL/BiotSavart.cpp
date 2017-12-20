@@ -4,7 +4,7 @@
 #include <iostream>
 
 using DataType = double;
-constexpr DataType offset{0.01};
+constexpr DataType offset{0.0001};
 
 enum index : std::size_t {
   x = 0,
@@ -143,7 +143,7 @@ Vector::Vector biotSavart(Vector::Vector r, ElectricCurrent I)
 {
   Vector::Vector R{r - I.pos};
   const DataType k{1/(4 * M_PI * std::pow(R.size(), 3))};
-  return k * cross(I.dir / I.dir.size() , R);
+  return k * cross(I.dir / I.dir.size(), R);
 }
 
 Vector::Vector polarToRectangular(DataType radian, DataType theta)
@@ -166,13 +166,16 @@ int main ()
     Vector::Vector r{}, B{};
     Route route1{[](DataType x){ return std::sqrt(1 - x*x); }, {0.0, 1.0}};
     ElectricCurrent I{route1};
+    DataType dir_sum{0.0};
     for (DataType x{route1.domain.begin}; x < route1.domain.end - offset; x += offset) {
       //     I.pos.show();
       I.setDirection();
+      dir_sum += I.dir.size();
       B += biotSavart(r, I) * offset;
       I.setPosition();
       B.show();
     }
+    std::cout << "dir_sum = " << dir_sum << std::endl;
   }
   return 0;
 }
