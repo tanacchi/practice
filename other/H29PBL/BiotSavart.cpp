@@ -164,7 +164,7 @@ int main ()
   }
   {
     Vector::Vector r{}, B{};
-    Route route1{[](DataType x){ return std::sqrt(1 - x*x); }, {0.0, 1.0}};
+    Route route1{[](DataType x){ return std::sqrt(1 - x*x); }, {-1.0, 1.0}};
     ElectricCurrent I{route1};
     DataType dir_sum{0.0};
     for (DataType x{route1.domain.begin}; x < route1.domain.end - offset; x += offset) {
