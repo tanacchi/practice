@@ -55,11 +55,11 @@ namespace Vector {
     }
     void show() const
     {
-      std::cout << "========================" << std::endl;
-      std::cout << "x = " << elem_[index::x] << '\n'
-                << "y = " << elem_[index::y] << '\n'
-                << "z = " << elem_[index::z] << '\n' << std::flush;
-      std::cout << "========================" << std::endl;
+      std::cout << "========================" << '\n'
+                << "x = " << elem_[index::x]  << '\n'
+                << "y = " << elem_[index::y]  << '\n'
+                << "z = " << elem_[index::z]  << '\n'
+                << "========================" << std::endl;
     }
   private:
     std::array<DataType, 3> elem_;
@@ -142,7 +142,7 @@ struct ElectricCurrent {
 Vector::Vector biotSavart(Vector::Vector r, ElectricCurrent I)
 {
   Vector::Vector R{r - I.pos};
-  const DataType k{1/(4 */* M_PI */ std::pow(R.size(), 3))};
+  const DataType k{1/(4 * M_PI * std::pow(R.size(), 3))};
   return k * cross(I.dir / I.dir.size(), R);
 }
 
@@ -164,18 +164,22 @@ int main ()
   }
   {
     Vector::Vector r{}, B{};
-    Route route1{[](DataType x){ return std::sqrt(1 - x*x); }, {-1.0, 1.0}};
-    ElectricCurrent I{route1};
-    DataType dir_sum{0.0};
-    for (DataType x{route1.domain.begin}; x < route1.domain.end - offset; x += offset) {
-      //     I.pos.show();
-      I.setDirection();
-      dir_sum += I.dir.size();
-      B += biotSavart(r, I) * offset;
-      I.setPosition();
+    // Route route1{[](DataType x){ return std::sqrt(1.0 - x*x); }, {-1.0, 1.0}};
+    // ElectricCurrent I1{route1};
+    // for (DataType x{route1.domain.begin}; x < route1.domain.end - offset; x += offset) {
+    //   I1.setDirection();
+    //   B += biotSavart(r, I1) * offset;
+    //   I1.setPosition();
+    //   B.show();
+    // }
+    Route route2{[](DataType x){ return -1 * std::sqrt(1.0 - x*x); }, {1.0, -1.0}};
+    ElectricCurrent I2{route2};
+    for (DataType x{route2.domain.begin - offset}; x > route2.domain.end; x -= offset) {
+      I2.setDirection();
+      B += biotSavart(r, I2) * offset;
+      I2.setPosition();
       B.show();
     }
-    std::cout << "dir_sum = " << dir_sum << std::endl;
   }
   return 0;
 }
