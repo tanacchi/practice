@@ -4,7 +4,7 @@
 #include <iostream>
 
 using DataType = double;
-constexpr DataType offset{0.0001};
+constexpr DataType offset_size{0.0001};
 
 enum index : std::size_t {
   x = 0,
@@ -103,8 +103,14 @@ namespace Vector {
 };
 
 struct Domain {
+  Domain(DataType b = 0.0, DataType e = 0.0)
+    : begin{b}, end{e}, offset{offset_size * (begin < end ? 1.0 : -1.0)}
+  {
+
+  }
   DataType begin;
   DataType end;
+  DataType offset;
 };
 
 struct Route {
@@ -126,8 +132,8 @@ struct ElectricCurrent {
   }
   void setDirection()
   {
-    dir[index::x] = offset;
-    dir[index::y] = route.func(pos[index::x] + offset) - route.func(pos[index::x]);
+    dir[index::x] = route.domain.offset;
+    dir[index::y] = route.func(pos[index::x] + route.domain.offset) - route.func(pos[index::x]);
   }
   void setPosition()
   {
@@ -151,6 +157,18 @@ Vector::Vector polarToRectangular(DataType radian, DataType theta)
   return {radian * std::cos(theta), radian*std::sin(theta)};
 }
 
+Vector::Vector getMagneticVector(const Vector::Vector& r, ElectricCurrent I)
+{
+  Vector::Vector B;
+  for (DataType x{I.route.domain.begin}; x < I.route.domain.end - I.route.domain.offset; x += I.route.domain.offset) {
+    B += biotSavart(r, I) * I.route.domain.offset;
+    I.setPosition();
+    I.setDirection();
+    B.show();
+  }
+  return B;
+}
+
 int main ()
 {
   {
@@ -163,23 +181,31 @@ int main ()
     // B.show();
   }
   {
-    Vector::Vector r{}, B{};
-    // Route route1{[](DataType x){ return std::sqrt(1.0 - x*x); }, {-1.0, 1.0}};
-    // ElectricCurrent I1{route1};
-    // for (DataType x{route1.domain.begin}; x < route1.domain.end - offset; x += offset) {
-    //   I1.setDirection();
-    //   B += biotSavart(r, I1) * offset;
-    //   I1.setPosition();
+    // Vector::Vector r{}, B{};
+    // // Route route1{[](DataType x){ return std::sqrt(1.0 - x*x); }, {-1.0, 1.0}};
+    // // ElectricCurrent I1{route1};
+    // // for (DataType x{route1.domain.begin}; x < route1.domain.end - offset; x += offset) {
+    // //   I1.setDirection();
+    // //   B += biotSavart(r, I1) * offset;
+    // //   I1.setPosition();
+    // //   B.show();
+    // // }
+    // Route route2{[](DataType x){ return -1 * std::sqrt(1.0 - x*x); }, {1.0, -1.0}};
+    // ElectricCurrent I2{route2};
+    // for (DataType x{route2.domain.begin - offset}; x > route2.domain.end; x -= offset) {
+    //   I2.setDirection();
+    //   B += biotSavart(r, I2) * offset;
+    //   I2.setPosition();
     //   B.show();
     // }
-    Route route2{[](DataType x){ return -1 * std::sqrt(1.0 - x*x); }, {1.0, -1.0}};
-    ElectricCurrent I2{route2};
-    for (DataType x{route2.domain.begin - offset}; x > route2.domain.end; x -= offset) {
-      I2.setDirection();
-      B += biotSavart(r, I2) * offset;
-      I2.setPosition();
-      B.show();
-    }
+  }
+  {
+    const Vector::Vector r{0.0, 0.0, 0.0};
+    Route route1{[](DataType x){ return -1; }, {-100.0, 100.0}};
+    ElectricCurrent I1{route1};
+    Vector::Vector B;
+    B += getMagneticVector(r, I1);
+    B.show();
   }
   return 0;
 }
