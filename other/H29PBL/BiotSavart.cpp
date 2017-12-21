@@ -142,7 +142,7 @@ struct ElectricCurrent {
 Vector::Vector biotSavart(Vector::Vector r, ElectricCurrent I)
 {
   Vector::Vector R{r - I.pos};
-  const DataType k{1/(4 * M_PI * std::pow(R.size(), 3))};
+  const DataType k{1/(4 */* M_PI */ std::pow(R.size(), 3))};
   return k * cross(I.dir / I.dir.size(), R);
 }
 
