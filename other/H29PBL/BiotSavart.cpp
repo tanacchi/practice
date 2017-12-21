@@ -4,7 +4,7 @@
 #include <iostream>
 
 using DataType = double;
-constexpr DataType offset_size{0.01};
+constexpr DataType offset_size{0.0001};
 
 enum index : std::size_t { x = 0, y = 1, z = 2 };
 
@@ -114,25 +114,28 @@ struct Route {
 };
 
 struct ElectricCurrent {
-  ElectricCurrent(Vector::Vector p, Vector::Vector d, DataType i = 1.0)
-    : pos{p}, dir{d}, intensity{i}
-  {
-  }
   ElectricCurrent(Route r, DataType i = 1.0)
     : route{r}, intensity{i}
   {
-    pos[index::x] = route.domain.begin;
-    pos[index::y] = route.func(route.domain.begin);
+    setPosition(Vector::Vector{route.domain.begin, route.func(route.domain.begin)});
     setDirection();
+  }
+  void setPosition()
+  {
+    pos += dir;
   }
   void setDirection()
   {
     dir[index::x] = route.domain.offset;
     dir[index::y] = route.func(pos[index::x] + route.domain.offset) - route.func(pos[index::x]);
   }
-  void setPosition()
+  void setPosition(Vector::Vector p)
   {
-    pos += dir;
+    pos = p;
+  }
+  void setDirection(Vector::Vector d)
+  {
+    dir = d;
   }
   void update()
   {
@@ -168,8 +171,7 @@ int main ()
   {
     const Vector::Vector r{0.0, 0.0, 0.0};
     Route route1{[](DataType x){ return std::sqrt(1 - x*x); }, {-1.0, 1.0}};
-    Route route2{[](DataType x){ return -1; }, {-100.0, 100.0}};
-    ElectricCurrent I1{route2, 1.0};
+    ElectricCurrent I1{route1};
     Vector::Vector B;
     B += getMagneticVector(r, I1);
     B.show();
