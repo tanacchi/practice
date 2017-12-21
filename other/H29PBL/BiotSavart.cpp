@@ -4,13 +4,9 @@
 #include <iostream>
 
 using DataType = double;
-constexpr DataType offset_size{0.0001};
+constexpr DataType offset_size{0.01};
 
-enum index : std::size_t {
-  x = 0,
-  y = 1,
-  z = 2
-};
+enum index : std::size_t { x = 0, y = 1, z = 2 };
 
 namespace Vector {
   class Vector {
@@ -49,7 +45,7 @@ namespace Vector {
     }
     DataType size() const
     {
-      DataType sizesq{0};
+      DataType sizesq{};
       for (const auto& e : elem_) sizesq += e*e;
       return std::sqrt(sizesq);
     }
@@ -106,7 +102,6 @@ struct Domain {
   Domain(DataType b = 0.0, DataType e = 0.0)
     : begin{b}, end{e}, offset{offset_size * (begin < end ? 1.0 : -1.0)}
   {
-
   }
   DataType begin;
   DataType end;
@@ -139,26 +134,30 @@ struct ElectricCurrent {
   {
     pos += dir;
   }
+  void update()
+  {
+    setPosition();
+    setDirection();
+  }
   Vector::Vector pos;
   Vector::Vector dir;
   Route route;
   const DataType intensity;
 };
 
-Vector::Vector biotSavart(Vector::Vector r, ElectricCurrent I)
+Vector::Vector biotSavart(const Vector::Vector& r, const ElectricCurrent& I)
 {
-  Vector::Vector R{r - I.pos};
-  const DataType k{1/(4 * M_PI * std::pow(R.size(), 3))};
-  return k * cross(I.dir / I.dir.size(), R);
+  const Vector::Vector R{r - I.pos};
+  const DataType k{I.intensity/(4 * M_PI * std::pow(R.size(), 3))};
+  return k * cross(I.dir, R);
 }
 
 Vector::Vector getMagneticVector(const Vector::Vector& r, ElectricCurrent I)
 {
-  Vector::Vector B;
+  Vector::Vector B{};
   for (DataType x{I.route.domain.begin}; x < I.route.domain.end - I.route.domain.offset; x += I.route.domain.offset) {
-    B += biotSavart(r, I) * I.route.domain.offset;
-    I.setPosition();
-    I.setDirection();
+    B += biotSavart(r, I);
+    I.update();
     B.show();
   }
   return B;
@@ -168,8 +167,9 @@ int main ()
 {
   {
     const Vector::Vector r{0.0, 0.0, 0.0};
-    Route route1{[](DataType x){ return -1; }, {-100.0, 100.0}};
-    ElectricCurrent I1{route1};
+    Route route1{[](DataType x){ return std::sqrt(1 - x*x); }, {-1.0, 1.0}};
+    Route route2{[](DataType x){ return -1; }, {-100.0, 100.0}};
+    ElectricCurrent I1{route2, 1.0};
     Vector::Vector B;
     B += getMagneticVector(r, I1);
     B.show();
