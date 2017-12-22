@@ -4,6 +4,8 @@
 *.exe*
 *.out*
 
+*.dat*
+
 *tmp*
 
 *CMake*
