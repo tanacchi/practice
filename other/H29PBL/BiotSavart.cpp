@@ -1,5 +1,6 @@
 #include <array>
 #include <cmath>
+#include <fstream>
 #include <functional>
 #include <iostream>
 #include <vector>
@@ -57,6 +58,12 @@ namespace Vector {
                 << "y = " << elem_[index::y]  << '\n'
                 << "z = " << elem_[index::z]  << '\n'
                 << "========================" << std::endl;
+    }
+    void show(std::fstream& fstream) const
+    {
+      fstream << elem_[index::x] << '\t'
+              << elem_[index::y] << '\t'
+              << elem_[index::z] << std::endl;
     }
   private:
     std::array<DataType, 3> elem_;
@@ -178,13 +185,24 @@ Vector::Vector getMagneticVector(const Vector::Vector& r, ElectricCurrent I)
 
 int main ()
 {
-  {
+  { // Mission 1
     const Vector::Vector r{0.0, 0.0, 0.0};
     Route route1{[](DataType x){ return std::sqrt(1 - x*x); }, {-1.0, 1.0}};
     ElectricCurrent I1{route1, 1.0};
     Vector::Vector B;
     B += getMagneticVector(r, I1);
+    std::fstream fstream{"data1.dat", std::ios_base::out | std::ios_base::trunc};
+    B.show(fstream);
+  }
+  { // Mission 2
+    const Vector::Vector r{0.0, 0.0, 0.0};
+    constexpr DataType a{1.0};
+    Route route1{[&](DataType x){ return a*x*x - a; }, {-1.0, 1.0}};
+    ElectricCurrent I1{route1, 1.0};
+    Vector::Vector B;
+    B += getMagneticVector(r, I1);
     B.show();
+    
   }
   return 0;
 }
