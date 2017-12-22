@@ -2,6 +2,7 @@
 #include <cmath>
 #include <functional>
 #include <iostream>
+#include <vector>
 
 using DataType = double;
 constexpr DataType offset_size{0.0001};
@@ -109,8 +110,18 @@ struct Domain {
 };
 
 struct Route {
-  std::function<DataType(DataType)> func;
+  using FuncType = std::function<DataType(DataType)>;
+  Route(FuncType f, Domain d)
+    : func{f}, domain{d}
+  {
+    for (DataType x{domain.begin}; x <= domain.end; x += domain.offset) {
+      xlist.push_back(x);
+      // std::cout << x << std::endl;
+    }
+  }
+  FuncType func;
   Domain domain;
+  std::vector<DataType> xlist;
 };
 
 struct ElectricCurrent {
@@ -161,7 +172,6 @@ Vector::Vector getMagneticVector(const Vector::Vector& r, ElectricCurrent I)
   for (DataType x{I.route.domain.begin}; x < I.route.domain.end - I.route.domain.offset; x += I.route.domain.offset) {
     B += biotSavart(r, I);
     I.update();
-    B.show();
   }
   return B;
 }
@@ -171,7 +181,7 @@ int main ()
   {
     const Vector::Vector r{0.0, 0.0, 0.0};
     Route route1{[](DataType x){ return std::sqrt(1 - x*x); }, {-1.0, 1.0}};
-    ElectricCurrent I1{route1};
+    ElectricCurrent I1{route1, 1.0};
     Vector::Vector B;
     B += getMagneticVector(r, I1);
     B.show();
