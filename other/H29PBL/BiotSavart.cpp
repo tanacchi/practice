@@ -51,19 +51,11 @@ namespace Vector {
       for (const auto& e : elem_) sizesq += e*e;
       return std::sqrt(sizesq);
     }
-    void show() const
+    void show(std::ostream& stream) const
     {
-      std::cout << "========================" << '\n'
-                << "x = " << elem_[index::x]  << '\n'
-                << "y = " << elem_[index::y]  << '\n'
-                << "z = " << elem_[index::z]  << '\n'
-                << "========================" << std::endl;
-    }
-    void show(std::fstream& fstream) const
-    {
-      fstream << elem_[index::x] << '\t'
-              << elem_[index::y] << '\t'
-              << elem_[index::z] << std::endl;
+      stream << elem_[index::x] << '\t'
+             << elem_[index::y] << '\t'
+             << elem_[index::z] << std::endl;
     }
   private:
     std::array<DataType, 3> elem_;
@@ -201,7 +193,7 @@ int main ()
     ElectricCurrent I1{route1, 1.0};
     Vector::Vector B;
     B += getMagneticVector(r, I1);
-    B.show();
+    B.show(std::cout);
     
   }
   return 0;
