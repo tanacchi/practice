@@ -100,23 +100,26 @@ namespace Vector {
 
 struct Domain {
   Domain(DataType b = 0.0, DataType e = 0.0)
-    : begin{b}, end{e}, offset{offset_size * (begin < end ? 1.0 : -1.0)}
+    : begin{b}, end{e}
   {
   }
-  const DataType begin;
-  const DataType end;
-  const DataType offset;
+  DataType begin;
+  DataType end;
 };
 
 struct Route {
   using FuncType = std::function<DataType(DataType)>;
   Route(FuncType f, Domain d)
-    : func{f}, domain{d}, xnum{(domain.end - domain.begin)/domain.offset}
+    : func{f},
+      domain{d},
+      offset{offset_size * (domain.begin < domain.end ? 1.0 : -1.0)},
+      xnum{(domain.end - domain.begin)/offset}
   {
   }
-  const FuncType func;
-  const Domain domain;
-  const DataType xnum;
+  FuncType func;
+  Domain domain;
+  DataType offset;
+  DataType xnum;
 };
 
 struct ElectricCurrent {
@@ -132,8 +135,8 @@ struct ElectricCurrent {
   }
   void setDirection()
   {
-    dir[index::x] = route.domain.offset;
-    dir[index::y] = route.func(pos[index::x] + route.domain.offset) - route.func(pos[index::x]);
+    dir[index::x] = route.offset;
+    dir[index::y] = route.func(pos[index::x] + route.offset) - route.func(pos[index::x]);
   }
   void setPosition(Vector::Vector p)
   {
@@ -150,8 +153,8 @@ struct ElectricCurrent {
   }
   Vector::Vector pos;
   Vector::Vector dir;
-  const Route route;
-  const DataType intensity;
+  Route route;
+  DataType intensity;
 };
 
 Vector::Vector biotSavart(const Vector::Vector& r, const ElectricCurrent& I)
@@ -178,20 +181,22 @@ int main ()
     Route route1{[](DataType x){ return std::sqrt(1 - x*x); }, {-1.0, 1.0}};
     Route route2{[](DataType x){ return -std::sqrt(1 - x*x); }, {1.0, -1.0}};
     ElectricCurrent I1{route1, 1.0};
+    ElectricCurrent I2{route2, 1.0};
     Vector::Vector B;
-    B += getMagneticVector(r, I1);
+    B += getMagneticVector(r, I1);    
+    B += getMagneticVector(r, I2);    
     std::fstream fstream{"data1.dat", std::ios_base::out | std::ios_base::trunc};
     B.show(fstream);
     B.show(std::cout);
   }
   { // Mission 2
-    // const Vector::Vector r{0.0, 0.0, 0.0};
-    // constexpr DataType a{1.0};
-    // Route route1{[&](DataType x){ return a*x*x - a; }, {-1.0, 1.0}};
-    // ElectricCurrent I1{route1, 1.0};
-    // Vector::Vector B;
-    // B += getMagneticVector(r, I1);
-    // B.show(std::cout);    
+    const Vector::Vector r{0.0, 0.0, 0.0};
+    constexpr DataType a{1.0};
+    Route route1{[&](DataType x){ return a*x*x - a; }, {-1.0, 1.0}};
+    ElectricCurrent I1{route1, 1.0};
+    Vector::Vector B;
+    B += getMagneticVector(r, I1);
+    B.show(std::cout);    
   }
   return 0;
 }
