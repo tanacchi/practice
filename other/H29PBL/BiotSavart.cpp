@@ -113,10 +113,8 @@ struct Route {
   Route(FuncType f, Domain d)
     : func{f}, domain{d}
   {
-    for (DataType x{domain.begin}; x <= domain.end; x += domain.offset) {
-      xlist.push_back(x);
-      // std::cout << x << std::endl;
-    }
+    const DataType xlist_size{(domain.end - domain.begin)/domain.offset};
+    for (DataType i{0}, x{domain.begin}; i < xlist_size; ++i, x += domain.offset) xlist.push_back(x);
   }
   FuncType func;
   Domain domain;
@@ -168,7 +166,8 @@ Vector::Vector biotSavart(const Vector::Vector& r, const ElectricCurrent& I)
 Vector::Vector getMagneticVector(const Vector::Vector& r, ElectricCurrent I)
 {
   Vector::Vector B{};
-  for (DataType x{I.route.domain.begin}; x < I.route.domain.end - I.route.domain.offset; x += I.route.domain.offset) {
+  const std::size_t xnum{I.route.xlist.size()};
+  for (auto i{0u}; i < xnum; ++i) {
     B += biotSavart(r, I);
     I.update();
   }
@@ -179,22 +178,23 @@ int main ()
 {
   { // Mission 1
     const Vector::Vector r{0.0, 0.0, 0.0};
-    Route route1{[](DataType x){ return std::sqrt(1 - x*x); }, {-1.0, 1.0}};
+    Route route1{[](DataType x){ return std::sqrt(1 - x*x); }, {1.0, -1.0}};
+    Route route2{[](DataType x){ return -std::sqrt(1 - x*x); }, {1.0, -1.0}};
     ElectricCurrent I1{route1, 1.0};
     Vector::Vector B;
     B += getMagneticVector(r, I1);
     std::fstream fstream{"data1.dat", std::ios_base::out | std::ios_base::trunc};
     B.show(fstream);
+    B.show(std::cout);
   }
   { // Mission 2
-    const Vector::Vector r{0.0, 0.0, 0.0};
-    constexpr DataType a{1.0};
-    Route route1{[&](DataType x){ return a*x*x - a; }, {-1.0, 1.0}};
-    ElectricCurrent I1{route1, 1.0};
-    Vector::Vector B;
-    B += getMagneticVector(r, I1);
-    B.show(std::cout);
-    
+    // const Vector::Vector r{0.0, 0.0, 0.0};
+    // constexpr DataType a{1.0};
+    // Route route1{[&](DataType x){ return a*x*x - a; }, {-1.0, 1.0}};
+    // ElectricCurrent I1{route1, 1.0};
+    // Vector::Vector B;
+    // B += getMagneticVector(r, I1);
+    // B.show(std::cout);    
   }
   return 0;
 }
