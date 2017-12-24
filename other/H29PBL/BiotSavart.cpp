@@ -2,6 +2,7 @@
 #include <cmath>
 #include <fstream>
 #include <functional>
+#include <initializer_list>
 #include <iostream>
 
 using DataType = double;
@@ -159,11 +160,12 @@ Vector::Vector biotSavart(const Vector::Vector& r, const ElectricCurrent& I)
   return k * Vector::cross(I.dir, R);
 }
 
-Vector::Vector getMagneticVector(const Vector::Vector& r, ElectricCurrent I)
+Vector::Vector getMagneticVector(const Vector::Vector& r, std::initializer_list<ElectricCurrent> I)
 {
   Vector::Vector B{};
-  for (auto i{0u}; i < I.route.xnum; I.setPosition(), I.setDirection(), ++i)
-    B += biotSavart(r, I);
+  for (auto i : I)
+    for (auto x{0u}; x < i.route.xnum; i.setPosition(), i.setDirection(), ++x)
+      B += biotSavart(r, i);
   return B;
 }
 
@@ -173,23 +175,24 @@ int main ()
     const Vector::Vector r{0.0, 0.0, 0.0};
     Route route1{[](DataType x){ return std::sqrt(1 - x*x); }, {-1.0, 1.0}};
     Route route2{[](DataType x){ return -std::sqrt(1 - x*x); }, {1.0, -1.0}};
-    ElectricCurrent I1{route1, 1.0};
-    ElectricCurrent I2{route2, 1.0};
+    ElectricCurrent I1{route1, 1.0}; ElectricCurrent I2{route2, 1.0};
     Vector::Vector B;
-    B += getMagneticVector(r, I1);    
-    B += getMagneticVector(r, I2);    
-    std::fstream fstream{"data1.dat", std::ios_base::out | std::ios_base::trunc};
+    B += getMagneticVector(r, {I1, I2});    
+    std::fstream fstream{"mission1.dat", std::ios_base::out | std::ios_base::trunc};
     B.show(fstream);
     B.show(std::cout);
   }
   { // Mission 2
     const Vector::Vector r{0.0, 0.0, 0.0};
     constexpr DataType a{1.0};
-    Route route1{[&](DataType x){ return a*x*x - a; }, {-1.0, 1.0}};
-    ElectricCurrent I1{route1, 1.0};
+    Route route1{[&](DataType x){ return -a*x*x + a; }, {-1.0, 1.0}};
+    Route route2{[&](DataType x){ return  a*x*x - a; }, {1.0, -1.0}};
+    ElectricCurrent I1{route1, 1.0}; ElectricCurrent I2{route2, 1.0};
     Vector::Vector B;
-    B += getMagneticVector(r, I1);
-    B.show(std::cout);    
+    B += getMagneticVector(r, {I1, I2});
+    std::fstream fstream{"mission2.dat", std::ios_base::out | std::ios_base::trunc};
+    B.show(fstream);
+    B.show(std::cout);
   }
   return 0;
 }
