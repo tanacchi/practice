@@ -146,11 +146,6 @@ struct ElectricCurrent {
   {
     dir = d;
   }
-  void update()
-  {
-    setPosition();
-    setDirection();
-  }
   Vector::Vector pos;
   Vector::Vector dir;
   Route route;
@@ -161,16 +156,14 @@ Vector::Vector biotSavart(const Vector::Vector& r, const ElectricCurrent& I)
 {
   const Vector::Vector R{r - I.pos};
   const DataType k{I.intensity/(4 * M_PI * std::pow(R.size(), 3))};
-  return k * cross(I.dir, R);
+  return k * Vector::cross(I.dir, R);
 }
 
 Vector::Vector getMagneticVector(const Vector::Vector& r, ElectricCurrent I)
 {
   Vector::Vector B{};
-  for (auto i{0u}; i < I.route.xnum; ++i) {
+  for (auto i{0u}; i < I.route.xnum; I.setPosition(), I.setDirection(), ++i)
     B += biotSavart(r, I);
-    I.update();
-  }
   return B;
 }
 
