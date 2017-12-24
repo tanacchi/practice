@@ -3,7 +3,6 @@
 #include <fstream>
 #include <functional>
 #include <iostream>
-#include <vector>
 
 using DataType = double;
 constexpr DataType offset_size{0.0001};
@@ -11,6 +10,7 @@ constexpr DataType offset_size{0.0001};
 enum index : std::size_t { x = 0, y = 1, z = 2 };
 
 namespace Vector {
+  enum : std::size_t { Demention = 3 };
   class Vector {
   public:
     Vector(DataType x = {}, DataType y = {}, DataType z = {})
@@ -27,22 +27,22 @@ namespace Vector {
     }
     Vector& operator+=(const Vector& rhs)
     {
-      for (auto i{0u}; i < elem_.size(); ++i) elem_[i] += rhs.elem_[i];
+      for (auto i{0u}; i < Demention; ++i) elem_[i] += rhs.elem_[i];
       return *this;
     }
     Vector& operator-=(const Vector& rhs)
     {
-      for (auto i{0u}; i < elem_.size(); ++i) elem_[i] -= rhs.elem_[i];
+      for (auto i{0u}; i < Demention; ++i) elem_[i] -= rhs.elem_[i];
       return *this;
     }
     Vector& operator*=(const Vector& rhs)
     {
-      for (auto i{0u}; i < elem_.size(); ++i) elem_[i] *= rhs.elem_[i];
+      for (auto i{0u}; i < Demention; ++i) elem_[i] *= rhs.elem_[i];
       return *this;
     }
     Vector& operator/=(const Vector& rhs)
     {
-      for (auto i{0u}; i < elem_.size(); ++i) elem_[i] /= rhs.elem_[i];
+      for (auto i{0u}; i < Demention; ++i) elem_[i] /= rhs.elem_[i];
       return *this;
     }
     DataType size() const
@@ -58,7 +58,7 @@ namespace Vector {
              << elem_[index::z] << std::endl;
     }
   private:
-    std::array<DataType, 3> elem_;
+    std::array<DataType, Demention> elem_;
   };
   Vector operator+(Vector A, const Vector& B)
   {
@@ -103,22 +103,20 @@ struct Domain {
     : begin{b}, end{e}, offset{offset_size * (begin < end ? 1.0 : -1.0)}
   {
   }
-  DataType begin;
-  DataType end;
-  DataType offset;
+  const DataType begin;
+  const DataType end;
+  const DataType offset;
 };
 
 struct Route {
   using FuncType = std::function<DataType(DataType)>;
   Route(FuncType f, Domain d)
-    : func{f}, domain{d}
+    : func{f}, domain{d}, xnum{(domain.end - domain.begin)/domain.offset}
   {
-    const DataType xlist_size{(domain.end - domain.begin)/domain.offset};
-    for (DataType i{0}, x{domain.begin}; i < xlist_size; ++i, x += domain.offset) xlist.push_back(x);
   }
-  FuncType func;
-  Domain domain;
-  std::vector<DataType> xlist;
+  const FuncType func;
+  const Domain domain;
+  const DataType xnum;
 };
 
 struct ElectricCurrent {
@@ -152,7 +150,7 @@ struct ElectricCurrent {
   }
   Vector::Vector pos;
   Vector::Vector dir;
-  Route route;
+  const Route route;
   const DataType intensity;
 };
 
@@ -166,8 +164,7 @@ Vector::Vector biotSavart(const Vector::Vector& r, const ElectricCurrent& I)
 Vector::Vector getMagneticVector(const Vector::Vector& r, ElectricCurrent I)
 {
   Vector::Vector B{};
-  const std::size_t xnum{I.route.xlist.size()};
-  for (auto i{0u}; i < xnum; ++i) {
+  for (auto i{0u}; i < I.route.xnum; ++i) {
     B += biotSavart(r, I);
     I.update();
   }
@@ -178,7 +175,7 @@ int main ()
 {
   { // Mission 1
     const Vector::Vector r{0.0, 0.0, 0.0};
-    Route route1{[](DataType x){ return std::sqrt(1 - x*x); }, {1.0, -1.0}};
+    Route route1{[](DataType x){ return std::sqrt(1 - x*x); }, {-1.0, 1.0}};
     Route route2{[](DataType x){ return -std::sqrt(1 - x*x); }, {1.0, -1.0}};
     ElectricCurrent I1{route1, 1.0};
     Vector::Vector B;
