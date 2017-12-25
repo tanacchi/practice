@@ -197,11 +197,11 @@ int main ()
     //   }
   }
   { // Mission 3
-    const Vector::Vector r{0.0, 0.0, 0.0};
-    constexpr DataType a{2.0};
-    Route route1{[&](DataType x){ return -a*x*x + a; }, {-1.0, 1.0}};
-    Route route2{[&](DataType x){ return  a*x*x - a; }, {1.0, -1.0}};
-    ElectricCurrent I1{route1, 1.0}; ElectricCurrent I2{route2, 1.0};
+    // const Vector::Vector r{0.0, 0.0, 0.0};
+    // constexpr DataType a{2.0};
+    // Route route1{[&](DataType x){ return -a*x*x + a; }, {-1.0, 1.0}};
+    // Route route2{[&](DataType x){ return  a*x*x - a; }, {1.0, -1.0}};
+    // ElectricCurrent I1{route1, 1.0}; ElectricCurrent I2{route2, 1.0};
     // {
     //   std::fstream fstream{"mission3xy.dat", std::ios_base::out | std::ios_base::trunc};
     //   for (Vector::Vector r{-3.0, -3.0, 0.0}; r[index::x] < 3.0; r[index::x] += 0.075)
