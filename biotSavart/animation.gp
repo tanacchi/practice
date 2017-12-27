@@ -12,7 +12,7 @@ set zrange [-2.0:2.0]     # z軸方向の範囲の設定
 set term gif animate optimize \
     delay 50 \
     size 720,540        # 出力をgifアニメに設定
-set output "sample.gif"   # 出力ファイル名の設定
+set output "tmp.gif"   # 出力ファイル名の設定
 
 # 変数の設定
 n0 = 0    # ループ変数の初期値
