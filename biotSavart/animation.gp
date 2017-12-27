@@ -3,8 +3,8 @@ reset
 set nokey                 # 凡例の非表示
 set ticslevel 0
 set xlabel "x"
-set ylabel "y"
-set zlabel "z"
+set ylabel "z"
+set zlabel "y"
 set xrange [-3.0:3.0]     # x軸方向の範囲の設定
 set yrange [-3.0:3.0]     # y軸方向の範囲の設定
 set zrange [-2.0:2.0]     # z軸方向の範囲の設定
