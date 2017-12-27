@@ -4,6 +4,8 @@
 #include <functional>
 #include <initializer_list>
 #include <iostream>
+#include <stdexcept>
+#include <vector>
 
 using DataType = double;
 constexpr DataType offset_size{0.0001};
@@ -169,61 +171,70 @@ Vector::Vector getMagneticVector(const Vector::Vector& r, std::initializer_list<
   return B;
 }
 
-int main ()
+int main (int argc, char** argv)
 {
-  { // Mission 1
-    // const Route route1{[](DataType x){ return  std::sqrt(1 - x*x); }, {-1.0, 1.0}};
-    // const Route route2{[](DataType x){ return -std::sqrt(1 - x*x); }, {1.0, -1.0}};
-    // const ElectricCurrent I1{route1, 1.0}; const ElectricCurrent I2{route2, 1.0};
-    // std::fstream fstream{"mission1.dat", std::ios_base::out | std::ios_base::trunc};
-    // for (Vector::Vector r{-3.0, -3.0, 0.0}; r[index::x] < 3.0; r[index::x] += 0.1)
-    //   for (r[index::y] = -3.0; r[index::y] < 3.0; r[index::y] += 0.1) {
-    //     Vector::Vector B{getMagneticVector(r, {I1, I2})};
-    //     fstream << r[index::x] << '\t' << r[index::y] << '\t' << B[index::z] << std::endl;
-    //   }
-    // fstream << std::endl;
-  }
-  { // Mission 2
-    // constexpr DataType a{1.0};
-    // Route route1{[&](DataType x){ return -a*x*x + a; }, {-1.0,  1.0}};
-    // Route route2{[&](DataType x){ return  a*x*x - a; }, { 1.0, -1.0}};
-    // ElectricCurrent I1{route1, 1.0}; ElectricCurrent I2{route2, 1.0};
-    // std::fstream fstream{"mission2.dat", std::ios_base::out | std::ios_base::trunc};
-    // for (Vector::Vector r{-3.0, -3.0, 0.0}; r[index::x] < 3.0; r[index::x] += 0.05)
-    //   for (r[index::y] = -3.0; r[index::y] < 3.0; r[index::y] += 0.05) {
-    //     Vector::Vector B{getMagneticVector(r, {I1, I2})};
-    //     fstream << r[index::x] << '\t' << r[index::y] << '\t' << B[index::z] << std::endl;
-    //   }
-  }
-  { // Mission 3
-    constexpr DataType a{2.0};
-    Route route1{[&](DataType x){ return -a*x*x + a; }, {-1.0,  1.0}};
-    Route route2{[&](DataType x){ return  a*x*x - a; }, { 1.0, -1.0}};
-    ElectricCurrent I1{route1, 1.0}; ElectricCurrent I2{route2, 1.0};
+  if (argc != 2) throw std::invalid_argument{"A valid argment is '1', '2' or '3'"};
+  switch (std::atoi(argv[1])) {
+  case 1: // Mission 1
     {
-      // std::fstream fstream{"mission3xy.dat", std::ios_base::out | std::ios_base::trunc};
-      // for (Vector::Vector r{-3.0, -3.0, 0.0}; r[index::x] < 3.0; r[index::x] += 0.1)
-      //   for (r[index::y] = -3.0; r[index::y] < 3.0; r[index::y] += 0.1) {
-      //     Vector::Vector B{getMagneticVector(r, {I1, I2})};
-      //     fstream << r[index::x] << '\t' << r[index::y] << '\t' << B[index::z] << std::endl;
-      //   }
-    }
-    {
-      std::fstream fstream{"mission3xz.dat", std::ios_base::out | std::ios_base::trunc};
-      for (Vector::Vector r{-3.0, 0.0, -3.0}; r[index::x] < 3.0; r[index::x] += 0.1)
-        for (r[index::z] = -3.0; r[index::z] < 3.0; r[index::z] += 0.1) {
+      const Route route1{[](DataType x){ return  std::sqrt(1 - x*x); }, {-1.0, 1.0}};
+      const Route route2{[](DataType x){ return -std::sqrt(1 - x*x); }, {1.0, -1.0}};
+      const ElectricCurrent I1{route1, 1.0}; const ElectricCurrent I2{route2, 1.0};
+      std::fstream fstream{"mission1.dat", std::ios_base::out | std::ios_base::trunc};
+      for (Vector::Vector r{-3.0, -3.0, 0.0}; r[index::x] < 3.0; r[index::x] += 0.1)
+        for (r[index::y] = -3.0; r[index::y] < 3.0; r[index::y] += 0.1) {
           Vector::Vector B{getMagneticVector(r, {I1, I2})};
-          fstream << r[index::x] << '\t' << B[index::z] << '\t' << r[index::z] << std::endl;
+          fstream << r[index::x] << '\t' << r[index::y] << '\t' << B[index::z] << std::endl;
         }
-    }    
-    {
-        // std::fstream fstream{"mission3yz.dat", std::ios_base::out | std::ios_base::trunc};
-        // for (Vector::Vector r{0.0, -3.0, -3.0}; r[index::y] < 3.0; r[index::y] += 0.1)
-        //   for (r[index::z] = -3.0; r[index::z] < 3.0; r[index::z] += 0.1) {
-        //     Vector::Vector B{getMagneticVector(r, {I1, I2})};
-        //     fstream << B[index::x] << '\t' << r[index::y] << '\t' << r[index::z] << std::endl;
-        //   }
+      fstream << std::endl;
     }
+    break;
+  case 2: // Mission 2
+    {
+      constexpr DataType a{1.0};
+      Route route1{[&](DataType x){ return -a*x*x + a; }, {-1.0,  1.0}};
+      Route route2{[&](DataType x){ return  a*x*x - a; }, { 1.0, -1.0}};
+      ElectricCurrent I1{route1, 1.0}; ElectricCurrent I2{route2, 1.0};
+      std::fstream fstream{"mission2.dat", std::ios_base::out | std::ios_base::trunc};
+      for (Vector::Vector r{-3.0, -3.0, 0.0}; r[index::x] < 3.0; r[index::x] += 0.05)
+        for (r[index::y] = -3.0; r[index::y] < 3.0; r[index::y] += 0.05) {
+          Vector::Vector B{getMagneticVector(r, {I1, I2})};
+          fstream << r[index::x] << '\t' << r[index::y] << '\t' << B[index::z] << std::endl;
+        }
+    }
+    break;
+  case 3: // Mission 3
+    {
+      constexpr DataType a{2.0};
+      Route route1{[&](DataType x){ return -a*x*x + a; }, {-1.0,  1.0}};
+      Route route2{[&](DataType x){ return  a*x*x - a; }, { 1.0, -1.0}};
+      ElectricCurrent I1{route1, 1.0}; ElectricCurrent I2{route2, 1.0};
+      {
+        std::fstream fstream{"mission3xy.dat", std::ios_base::out | std::ios_base::trunc};
+        for (Vector::Vector r{-3.0, -3.0, 0.0}; r[index::x] < 3.0; r[index::x] += 0.1)
+          for (r[index::y] = -3.0; r[index::y] < 3.0; r[index::y] += 0.1) {
+            Vector::Vector B{getMagneticVector(r, {I1, I2})};
+            fstream << r[index::x] << '\t' << r[index::y] << '\t' << B[index::z] << std::endl;
+          }
+      }
+      {
+        std::fstream fstream{"mission3xz.dat", std::ios_base::out | std::ios_base::trunc};
+        for (Vector::Vector r{-3.0, 0.0, -3.0}; r[index::x] < 3.0; r[index::x] += 0.1)
+          for (r[index::z] = -3.0; r[index::z] < 3.0; r[index::z] += 0.1) {
+            Vector::Vector B{getMagneticVector(r, {I1, I2})};
+            fstream << r[index::x] << '\t' << B[index::z] << '\t' << r[index::z] << std::endl;
+          }
+      }    
+      {
+        std::fstream fstream{"mission3yz.dat", std::ios_base::out | std::ios_base::trunc};
+        for (Vector::Vector r{0.0, -3.0, -3.0}; r[index::y] < 3.0; r[index::y] += 0.1)
+          for (r[index::z] = -3.0; r[index::z] < 3.0; r[index::z] += 0.1) {
+            Vector::Vector B{getMagneticVector(r, {I1, I2})};
+            fstream << B[index::x] << '\t' << r[index::y] << '\t' << r[index::z] << std::endl;
+          }
+      }
+    }
+  default: throw std::runtime_error{"A valid argment is '1', '2' or '3'"};
   }
   return 0;
 }
