@@ -67,18 +67,18 @@ void traceLR(int position)
 
 int main(int argc, char** argv)
 {
+  unsigned int sequence = 0;
   unsigned int position = 0x0;
   const unsigned int* const threshold = {200, 200};
   const Script script[] = {
-    {0xf, no_motion},
-    NULL
+    {0xf, no_motion}
   };
   
   Init(MAIN_CYCLE);
-  for (int i = 0; i < _countof(script); ++i) { // Loop of Recognition, Operation, and Determinaiton,.
+  while (sequence < _countof(script)) {
     position = get_position(threshold);
-    script[i].run(position);
-    if (!(0x1 << position & script[i].condition)) ++sequence;
+    script[sequence].run(position);
+    if (!(0x1 << position & script[sequence].condition)) ++sequence;
   }
   return 0;
 }
