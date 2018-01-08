@@ -164,11 +164,11 @@ Vector::Vector biotSavart(const Vector::Vector& r, const ElectricCurrent& I)
 
 Vector::Vector getMagneticVector(const Vector::Vector& r, std::initializer_list<ElectricCurrent> I)
 {
-  Vector::Vector B{};
+  Vector::Vector H{};
   for (auto i : I)
     for (auto x{0u}; x < i.route.xnum; i.setPosition(), i.setDirection(), ++x)
-      B += biotSavart(r, i);
-  return B;
+      H += biotSavart(r, i);
+  return H;
 }
 
 int main (int argc, char** argv)
@@ -183,8 +183,8 @@ int main (int argc, char** argv)
       std::fstream fstream{"mission1.dat", std::ios_base::out | std::ios_base::trunc};
       for (Vector::Vector r{-3.0, -3.0, 0.0}; r[index::x] < 3.0; r[index::x] += 0.1)
         for (r[index::y] = -3.0; r[index::y] < 3.0; r[index::y] += 0.1) {
-          Vector::Vector B{getMagneticVector(r, {I1, I2})};
-          fstream << r[index::x] << '\t' << r[index::y] << '\t' << B[index::z] << std::endl;
+          Vector::Vector H{getMagneticVector(r, {I1, I2})};
+          fstream << r[index::x] << '\t' << r[index::y] << '\t' << H[index::z] << std::endl;
         }
       fstream << std::endl;
     }
@@ -198,8 +198,8 @@ int main (int argc, char** argv)
       std::fstream fstream{"mission2.dat", std::ios_base::out | std::ios_base::trunc};
       for (Vector::Vector r{-3.0, -3.0, 0.0}; r[index::x] < 3.0; r[index::x] += 0.1)
         for (r[index::y] = -3.0; r[index::y] < 3.0; r[index::y] += 0.1) {
-          Vector::Vector B{getMagneticVector(r, {I1, I2})};
-          fstream << r[index::x] << '\t' << r[index::y] << '\t' << B[index::z] << std::endl;
+          Vector::Vector H{getMagneticVector(r, {I1, I2})};
+          fstream << r[index::x] << '\t' << r[index::y] << '\t' << H[index::z] << std::endl;
         }
     }
     break;
@@ -213,24 +213,24 @@ int main (int argc, char** argv)
         std::fstream fstream{"mission3xy.dat", std::ios_base::out | std::ios_base::trunc};
         for (Vector::Vector r{-4.0, -4.0, 0.0}; r[index::x] < 4.0; r[index::x] += 0.15)
           for (r[index::y] = -4.0; r[index::y] < 4.0; r[index::y] += 0.15) {
-            Vector::Vector B{getMagneticVector(r, {I1, I2})};
-            fstream << r[index::x] << '\t' << r[index::y] << '\t' << B[index::z] << std::endl;
+            Vector::Vector H{getMagneticVector(r, {I1, I2})};
+            fstream << r[index::x] << '\t' << r[index::y] << '\t' << H[index::z] << std::endl;
           }
       }
       {
         std::fstream fstream{"mission3xz.dat", std::ios_base::out | std::ios_base::trunc};
         for (Vector::Vector r{-4.0, 0.0, -4.0}; r[index::x] < 4.0; r[index::x] += 0.15)
           for (r[index::z] = -4.0; r[index::z] < 4.0; r[index::z] += 0.15) {
-            Vector::Vector B{getMagneticVector(r, {I1, I2})};
-            fstream << r[index::x] << '\t' << B[index::z] << '\t' << r[index::z] << std::endl;
+            Vector::Vector H{getMagneticVector(r, {I1, I2})};
+            fstream << r[index::x] << '\t' << H[index::z] << '\t' << r[index::z] << std::endl;
           }
       }    
       {
         std::fstream fstream{"mission3yz.dat", std::ios_base::out | std::ios_base::trunc};
         for (Vector::Vector r{0.0, -4.0, -4.0}; r[index::y] < 4.0; r[index::y] += 0.15)
           for (r[index::z] = -4.0; r[index::z] < 4.0; r[index::z] += 0.15) {
-            Vector::Vector B{getMagneticVector(r, {I1, I2})};
-            fstream << B[index::x] << '\t' << r[index::y] << '\t' << r[index::z] << std::endl;
+            Vector::Vector H{getMagneticVector(r, {I1, I2})};
+            fstream << H[index::x] << '\t' << r[index::y] << '\t' << r[index::z] << std::endl;
           }
       }
     }
