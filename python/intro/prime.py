@@ -20,3 +20,7 @@ else:
 
 prime_list = getListOfPrime(limit)
 print(prime_list)
+
+with open('prime_list.tmp.txt', mode = 'w', encoding = 'utf-8') as f:
+    f.write(str(prime_list) + '\n')
+print('See you~~')
