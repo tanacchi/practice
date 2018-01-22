@@ -24,12 +24,15 @@ def main():
     while (True):
         pygame.display.update()
         pygame.time.wait(30)
-        screen.fill((200, 200, 200, 50));
+        screen.fill((200, 200, 200, 50))
         show(screen, mark_board)
-
+        
         if update_board(mark_board, turn):
+            if is_finish(mark_board, turn):
+                screen.fill((200, 200, 0, 50))
             if turn == MARU: turn = BATSU
             else: turn = MARU
+
         for event in pygame.event.get():
             if event.type == QUIT:
                 pygame.quit()
@@ -75,6 +78,16 @@ def draw_maru(display_object, x, y):
 def draw_batsu(display_object, x, y):
     pygame.draw.line(display_object, (0, 0, 200), (x-50, y-50), (x+50, y+50), 10)
     pygame.draw.line(display_object, (0, 0, 200), (x-50, y+50), (x+50, y-50), 10)
+
+def is_finish(board_object, turn):
+    finish_sample = [turn for i in range(3)]
+    for i in range(3):
+        if board_object[3*i:3*i+3:] == finish_sample: return True
+    for i in range(3):
+        if board_object[i::3] == finish_sample: return True
+    if board_object[::4] == finish_sample: return True
+    if board_object[3::2] == finish_sample: return True
+    return False
     
 if __name__=="__main__":
     main()
