@@ -20,18 +20,22 @@ def main():
 
     mark_board = [SPACE for i in range(9)]
     turn = MARU
+    is_game_active = True
     
     while (True):
         pygame.display.update()
         pygame.time.wait(30)
         screen.fill((200, 200, 200, 50))
         show(screen, mark_board)
-        
-        if update_board(mark_board, turn):
-            if is_finish(mark_board, turn):
-                screen.fill((200, 200, 0, 50))
-            if turn == MARU: turn = BATSU
-            else: turn = MARU
+
+        if is_game_active:
+            if update_board(mark_board, turn):
+                if is_finish(mark_board, turn):
+                    is_game_active = False
+                if turn == MARU: turn = BATSU
+                else: turn = MARU
+        else:
+            screen.fill((200, 200, 0, 50))
 
         for event in pygame.event.get():
             if event.type == QUIT:
