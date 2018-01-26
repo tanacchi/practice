@@ -11,16 +11,22 @@ class Board:
     def __init__(self, width = 8, height = 8):
         self.__width = width
         self.__height = height
-        self.__board = [[SPACE for x in range(width)] for y in range(height)]
+        self.__board = [SPACE for x in range(width*height)]
         self.__active_stone = WHITE
 
+    def __get_access_num(self, x, y):
+        return self.__width * y + x
+        
     def show(self):
         print("==========================")
-        for row in self.__board: print(row)
+        for y in range(self.__height):
+            for x in range(self.__width):
+                print(self.__board[self.__get_access_num(x, y)], end = " ")
+            print("")
         print("==========================")
 
     def insert(self, x, y, stone):
-        self.__board[y][x] = stone
+        self.__board[self.__get_access_num(x, y)] = stone
 
 def main():
     board = Board(8, 8)
