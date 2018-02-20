@@ -17,6 +17,14 @@ class Board:
     def __get_access_num(self, x, y) -> int:
         return self.__col * y + x
         
+    def cout(self) -> None:
+        print("==========================")
+        for y in range(self.__row):
+            for x in range(self.__col):
+                print(self.__board[self.__get_access_num(x, y)], end = ' ')
+            else: print("")
+        print("==========================")
+        
     def insert(self, x, y, stone) -> int:
         self.__board[self.__get_access_num(x, y)] = stone
 
