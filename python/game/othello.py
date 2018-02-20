@@ -1,17 +1,18 @@
-# -*- coding:utf-8 -*-
 import pygame
 from pygame.locals import *
 import sys
+from enum import Enum 
 
-SPACE =  0
-WHITE =  1
-BLACK =  2
+class Stone(Enum):
+    SPACE =  0
+    WHITE =  1
+    BLACK =  2
 
 class Board:
     def __init__(self, row = 8, col = 8):
         self.__col = col
         self.__row = row
-        self.__board = [SPACE for _ in range(row*col)]
+        self.__board = [Stone.SPACE for _ in range(row*col)]
 
     def __get_access_num(self, x, y) -> int:
         return self.__col * y + x
@@ -55,10 +56,10 @@ class Display:
             pygame.draw.line(self.__screen, (150,150,150), (c*col_unit,0), (c*col_unit, self.__height), 5)
         
     def draw_stone(self, index, stone):
-        if stone == SPACE: pass
-        elif stone == WHITE:
+        if stone == Stone.SPACE: pass
+        elif stone == Stone.WHITE:
             pygame.draw.circle(self.__screen, (255,255,255), self.__position_list[index], 30)
-        elif stone == BLACK:
+        elif stone == Stone.BLACK:
             pygame.draw.circle(self.__screen, (0,0,0), self.__position_list[index], 30)
         else: raise "Invalid value of stone."
         
@@ -71,6 +72,10 @@ class Display:
             self.draw_stone(i, board_data[i])
         pygame.display.update()
 
+    def get_position_number(self, x, y):
+        for i in range(len(self.__position_list)):
+            pass
+        
 class GameMaster:
     def __init__(self, width, height, row, col):
         pygame.init()
@@ -78,7 +83,7 @@ class GameMaster:
         self.__board   = Board(row, col)
     def run(self):
         self.__board.cout()
-        self.__board.insert(2, 5, BLACK)
+        self.__board.insert(2, 5, Stone.BLACK)
         self.__board.cout()
         for _ in range(100):
             self.__display.show(self.__board)
