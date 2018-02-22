@@ -4,9 +4,9 @@ import sys
 from enum import Enum 
 
 class Stone(Enum):
-    SPACE =  0
-    WHITE =  1
-    BLACK =  2
+    SPACE =  ' '
+    WHITE =  'O'
+    BLACK =  'X'
 
 class Board:
     def __init__(self, row = 8, col = 8):
@@ -18,12 +18,12 @@ class Board:
         return self.__col * y + x
         
     def cout(self) -> None:
-        print("==========================")
+        print("================")
         for y in range(self.__row):
             for x in range(self.__col):
-                print(self.__board[self.__get_access_num(x, y)], end = ' ')
+                print(self.__board[self.__get_access_num(x, y)].value, end = ' ')
             else: print("")
-        print("==========================")
+        print("================")
         
     def insert(self, x, y, stone) -> int:
         self.__board[self.__get_access_num(x, y)] = stone
