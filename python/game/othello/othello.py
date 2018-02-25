@@ -87,7 +87,7 @@ class GameMaster:
         self.__board.cout()
         for _ in range(100):
             self.__display.show(self.__board)
-        
+
 if __name__ == "__main__":
     master = GameMaster(800, 800, 8, 8)
     master.run()
