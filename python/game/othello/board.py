@@ -25,7 +25,7 @@ class Board:
         return str(self.__info)
 
     def is_inside(self, x:int, y:int):
-        return (0 <= x and x < self.__info.col) and (0 <= y and y < self.__info.row)
+        return 0 <= x < self.__info.col and 0 <= y < self.__info.row
 
     def __get_access_num(self, x, y):
         if (not self.is_inside(x, y)):
