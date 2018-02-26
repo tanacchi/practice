@@ -2,35 +2,14 @@ import pygame
 from pygame.locals import *
 import sys
 from enum import Enum 
+import board
 
 class Stone(Enum):
-    SPACE =  ' '
-    WHITE =  'O'
-    BLACK =  'X'
+    SPACE = ' '
+    WHITE = 'O'
+    BLACK = 'X'
 
-class Board:
-    def __init__(self, row = 8, col = 8):
-        self.__col = col
-        self.__row = row
-        self.__board = [Stone.SPACE for _ in range(row*col)]
-
-    def __get_access_num(self, x, y) -> int:
-        return self.__col * y + x
-        
-    def cout(self) -> None:
-        print("================")
-        for y in range(self.__row):
-            for x in range(self.__col):
-                print(self.__board[self.__get_access_num(x, y)].value, end = ' ')
-            else: print("")
-        print("================")
-        
-    def insert(self, x, y, stone) -> int:
-        self.__board[self.__get_access_num(x, y)] = stone
-
-    def get_data(self) -> tuple:
-        return tuple(self.__board)
-
+    
 class Display:
     def __init__(self, width: int, height: int, row = 8, col = 8):
         self.__width = width
@@ -63,7 +42,7 @@ class Display:
             pygame.draw.circle(self.__screen, (0,0,0), self.__position_list[index], 30)
         else: raise "Invalid value of stone."
         
-    def show(self, board: Board):
+    def show(self, board: board.Board):
         pygame.time.wait(30)
         self.__screen.fill((0, 150, 0))
         board_data = board.get_data()
@@ -80,11 +59,11 @@ class GameMaster:
     def __init__(self, width, height, row, col):
         pygame.init()
         self.__display = Display(width, height, row, col)
-        self.__board   = Board(row, col)
+        self.__board   = board.Board(board.BoardInfo(8, 8, 800, 800), Stone.SPACE)
     def run(self):
-        self.__board.cout()
+        print(self.__board)
         self.__board.insert(2, 5, Stone.BLACK)
-        self.__board.cout()
+        print(self.__board)
         for _ in range(100):
             self.__display.show(self.__board)
 
