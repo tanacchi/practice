@@ -30,7 +30,7 @@ class Board:
     def __get_access_num(self, x, y):
         if (not self.is_inside(x, y)):
             raise 'Invalid access'
-        return self.__info.row*y + x
+        return self.__info.col*y + x
 
     def insert(self, x, y, value):
         if (self.__data_type != type(value)):

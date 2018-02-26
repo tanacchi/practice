@@ -48,9 +48,7 @@ class GameMaster:
         self.__display = Display(board_info)
         self.__board   = board.Board((board_info), Stone.SPACE)
     def run(self):
-        print(self.__board)
         self.__board.insert(2, 5, Stone.BLACK)
-        print(self.__board)
         for _ in range(100):
             self.__display.show(self.__board)
 
