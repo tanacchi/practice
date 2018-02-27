@@ -1,4 +1,4 @@
-class BoardInfo:
+class BoardInfo(object):
     def __init__(self, row: int, col:int, width: int, height: int):
         self.row = row
         self.col = col
@@ -12,7 +12,7 @@ class BoardInfo:
             .format(self.row, self.col, self.height, self.width)
 
 
-class Board:
+class Board(object):
     def __init__(self, info: BoardInfo, initial_value):
         self.__info = info
         self.__data_type = type(initial_value)

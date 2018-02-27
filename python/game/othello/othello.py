@@ -9,7 +9,7 @@ class Stone(Enum):
     WHITE = lambda screen, pos: pygame.draw.circle(screen, (255,255,255), pos, 30)
     BLACK = lambda screen, pos: pygame.draw.circle(screen, (0,0,0), pos, 30)
     
-class Display:
+class Display(object):
     def __init__(self, board_info:board.BoardInfo):
         self.info = board_info
         self.__screen = pygame.display.set_mode((self.info.width, self.info.height))
@@ -42,7 +42,7 @@ class Display:
         for i in range(len(self.__position_list)):
             pass
         
-class GameMaster:
+class GameMaster(object):
     def __init__(self, board_info):
         pygame.init()
         self.__display = Display(board_info)
