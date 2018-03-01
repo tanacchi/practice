@@ -34,12 +34,12 @@ class Display(object):
         self.__screen.fill((0, 150, 0))
         board_data = board.get_data()
         self.draw_partition()
-        for i in range(len(board_data)):
-            self.draw_stone(i, board_data[i])
+        for i, data in enumerate(board_data):
+            self.draw_stone(i, data)
         pygame.display.update()
 
     def get_position_number(self, x, y):
-        for i in range(len(self.__position_list)):
+        for i, position in enumerate(self.__position_list):
             pass
         
 class GameMaster(object):
