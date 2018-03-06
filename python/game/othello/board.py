@@ -1,17 +1,21 @@
 class BoardInfo(object):
     def __init__(self, row: int, col:int, width: int, height: int):
-        self.row = row
-        self.col = col
-        self.width = width
-        self.height = height
-        self.row_unit = height // row
-        self.col_unit = width // col
+        self.row, self.col = row, col
+        self.width, self.height = width, height
+        self.row_unit, self.col_unit = height // row, width // col
 
     def __str__(self):
         return '<row: {}, col: {}>\n<height: {}, width: {}>'\
             .format(self.row, self.col, self.height, self.width)
 
-
+    def __eq__(self, rhs):
+        return (self.row == rhs.row
+                and self.col == rhs
+                and self.width == rhs.width
+                and self.height == rhs.height
+                and self.row_unit == rhs.row_unit
+                and self.col_unit == rhs.col_unit)
+    
 class Board(object):
     def __init__(self, info: BoardInfo, initial_value):
         self.__info = info
@@ -23,7 +27,7 @@ class Board(object):
         for row in data_splited:
             print(row)
         return str(self.__info)
-
+    
     def is_inside(self, x:int, y:int):
         return 0 <= x < self.__info.col and 0 <= y < self.__info.row
 
