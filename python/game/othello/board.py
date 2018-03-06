@@ -33,7 +33,7 @@ class Board(object):
         return self.__info.col*y + x
 
     def insert(self, x, y, value):
-        if (self.__data_type != type(value)):
+        if (not isinstance(value, self.__data_type)):
             raise 'Invalid type of value'
         self.__data[self.__get_access_num(x, y)] = value
 
@@ -41,8 +41,10 @@ class Board(object):
         return tuple(self.__data)
         
 if __name__ == '__main__':
-    board = Board(BoardInfo(6, 6, 600, 600), 't')
-    print(board)
+    board1 = Board(BoardInfo(6, 6, 600, 600), 't')
+    board2 = Board(BoardInfo(6, 6, 600, 600), 't')
+    print(board1)
 
-    board.insert(3, 2, 3)
-    print(board)
+    board1.insert(3, 2, 'x')
+    print(board1)
+    print(board1 == board2)
