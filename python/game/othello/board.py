@@ -17,38 +17,45 @@ class BoardInfo(object):
                 and self.col_unit == rhs.col_unit)
     
 class Board(object):
+    data_type = None
+    
     def __init__(self, info: BoardInfo, initial_value):
-        self.__info = info
-        self.__data_type = type(initial_value)
-        self.__data = [initial_value for _ in range(info.row*info.col)]
+        self.info = info
+        if Board.data_type == None:
+            Board.data_type = type(initial_value)
+        else:
+            assert Board.data_type == type(initial_value), 'Invalid initialization'
+        self.data = [initial_value for _ in range(info.row*info.col)]
             
     def __str__(self):
-        data_splited = list(zip(*[iter(self.__data)]*self.__info.col))
+        data_splited = list(zip(*[iter(self.data)]*self.info.col))
         for row in data_splited:
             print(row)
-        return str(self.__info)
+        return str(self.info)
     
     def is_inside(self, x:int, y:int):
-        return 0 <= x < self.__info.col and 0 <= y < self.__info.row
+        return 0 <= x < self.info.col and 0 <= y < self.info.row
 
-    def __get_access_num(self, x, y):
+    def get_access_num(self, x, y):
         if (not self.is_inside(x, y)):
             raise 'Invalid access'
-        return self.__info.col*y + x
+        return self.info.col*y + x
 
     def insert(self, x, y, value):
-        if (not isinstance(value, self.__data_type)):
+        if (not isinstance(value, Board.data_type)):
             raise 'Invalid type of value'
-        self.__data[self.__get_access_num(x, y)] = value
+        self.data[self.get_access_num(x, y)] = value
 
     def get_data(self):
-        return tuple(self.__data)
+        return tuple(self.data)
         
 if __name__ == '__main__':
     board1 = Board(BoardInfo(6, 6, 600, 600), 't')
-    board2 = Board(BoardInfo(6, 6, 600, 600), 't')
+    board2 = Board(BoardInfo(6, 6, 600, 600), '1')
     print(board1)
-
+    
     board1.insert(3, 2, 'x')
     print(board1)
     print(board1 == board2)
+    print(board2)
+    
