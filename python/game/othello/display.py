@@ -23,7 +23,7 @@ class Display(object):
             pygame.draw.line(self.__screen, (150,150,150), (c*self.info.col_unit,0), (c*self.info.col_unit, self.info.height), 5)
         
     def draw_stone(self, index, stone):
-        func = othello_board.Stone.funcs.get(stone)
+        func = othello_board.object_printer.get(stone)
         func(self.__screen, self.__position_list[index])
         
     def show(self, board: board.Board):

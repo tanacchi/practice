@@ -8,12 +8,13 @@ class Stone(Enum):
     SPACE = ' '
     WHITE = 'O'
     BLACK = 'X'
-    funcs = \
-    {
-        SPACE: lambda screen, pos: pygame.draw.circle(screen, (0,150,0), pos, 30),
-        WHITE: lambda screen, pos: pygame.draw.circle(screen, (255,255,255), pos, 30),
-        BLACK: lambda screen, pos: pygame.draw.circle(screen, (0,0,0), pos, 30)
-    }
+
+object_printer = \
+{
+    Stone.SPACE: lambda screen, pos: pygame.draw.circle(screen, (0,150,0), pos, 30),
+    Stone.WHITE: lambda screen, pos: pygame.draw.circle(screen, (255,255,255), pos, 30),
+    Stone.BLACK: lambda screen, pos: pygame.draw.circle(screen, (0,0,0), pos, 30)
+}
     
 from board import BoardInfo, Board
 
