@@ -6,14 +6,13 @@ import display
         
 class GameMaster(object):
     def __init__(self, board_info):
-        pygame.init()
-        self.__display = Display(board_info)
-        self.__board   = othello_board.OthelloBoard((board_info), Stone.SPACE)
+        self.__display = display.Display(board_info)
+        self.__board   = othello_board.OthelloBoard((board_info))
     def run(self):
-        self.__board.insert(2, 5, Stone.BLACK)
+        self.__board.insert(2, 5, othello_board.Stone.BLACK)
         for _ in range(100):
             self.__display.show(self.__board)
 
 if __name__ == "__main__":
-    master = GameMaster(board.BoardInfo(8, 9, 800, 800))
+    master = GameMaster(othello_board.BoardInfo(8, 8, 800, 800))
     master.run()

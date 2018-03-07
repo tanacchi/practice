@@ -14,6 +14,7 @@ class Display(object):
         for r in range(self.info.row):
             for c in range(self.info.col):
                 self.__position_list.append([calc_pos(c, self.info.col_unit), calc_pos(r, self.info.row_unit)])
+        pygame.init()
         pygame.display.set_caption("othello")
 
     def draw_partition(self):
