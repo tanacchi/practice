@@ -26,7 +26,7 @@ class Display(object):
         func = othello_board.object_printer.get(stone)
         func(self.__screen, self.__position_list[index])
         
-    def show(self, board: board.Board):
+    def show(self, board: board.BoardBase):
         pygame.time.wait(30)
         self.__screen.fill((0, 150, 0))
         board_data = board.get_data()

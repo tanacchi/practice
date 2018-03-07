@@ -16,9 +16,9 @@ object_printer = \
     Stone.BLACK: lambda screen, pos: pygame.draw.circle(screen, (0,0,0), pos, 30)
 }
     
-from board import BoardInfo, Board
+from board import BoardInfo, BoardBase
 
-class OthelloBoard(Board):
+class OthelloBoard(BoardBase):
     def __init__(self, info):
         super(OthelloBoard, self).__init__(info, Stone.SPACE)
         self.data[self.get_access_num(info.row//2-1, info.col//2-1)] \

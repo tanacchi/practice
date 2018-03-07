@@ -16,15 +16,15 @@ class BoardInfo(object):
                 and self.row_unit == rhs.row_unit
                 and self.col_unit == rhs.col_unit)
     
-class Board(object):
+class BoardBase(object):
     data_type = None
     
     def __init__(self, info: BoardInfo, initial_value):
         self.info = info
-        if Board.data_type == None:
-            Board.data_type = type(initial_value)
+        if BoardBase.data_type == None:
+            BoardBase.data_type = type(initial_value)
         else:
-            assert Board.data_type == type(initial_value), 'Invalid initialization'
+            assert BoardBase.data_type == type(initial_value), 'Invalid initialization'
         self.data = [initial_value for _ in range(info.row*info.col)]
             
     def __str__(self):
@@ -42,7 +42,7 @@ class Board(object):
         return self.info.col*y + x
 
     def insert(self, x, y, value):
-        if (not isinstance(value, Board.data_type)):
+        if (not isinstance(value, BoardBase.data_type)):
             raise 'Invalid type of value'
         self.data[self.get_access_num(x, y)] = value
 
@@ -50,8 +50,8 @@ class Board(object):
         return tuple(self.data)
         
 if __name__ == '__main__':
-    board1 = Board(BoardInfo(6, 6, 600, 600), 't')
-    board2 = Board(BoardInfo(6, 6, 600, 600), '1')
+    board1 = BoardBase(BoardInfo(6, 6, 600, 600), 't')
+    board2 = BoardBase(BoardInfo(6, 6, 600, 600), '1')
     print(board1)
     
     board1.insert(3, 2, 'x')

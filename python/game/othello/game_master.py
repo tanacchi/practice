@@ -8,7 +8,7 @@ class GameMaster(object):
     def __init__(self, board_info):
         pygame.init()
         self.__display = Display(board_info)
-        self.__board   = board.Board((board_info), Stone.SPACE)
+        self.__board   = othello_board.OthelloBoard((board_info), Stone.SPACE)
     def run(self):
         self.__board.insert(2, 5, Stone.BLACK)
         for _ in range(100):
