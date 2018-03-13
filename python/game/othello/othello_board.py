@@ -42,10 +42,36 @@ class OthelloBoard(BoardBase):
             length += 1
         return 0
 
+    def can_reverse(self, x, y):
+        for dr in OthelloBoard.dr_tuple:
+            if self.get_reversible_length(x, y, dr) != 0:
+                return True
+        return False
+
+    def reverse(self, x, y):
+        for dr in OthelloBoard.dr_tuple:
+            reverse_length = self.get_reversible_length(x, y, dr)
+            for i in range(1, reverse_length+1):
+                self.insert(x + reverse_length*dr[0], y + reverse_length*dr[1], self.active_stone)
+    
+    def count_stone(self, stone):
+        return self.data.count(stone)
     
 if __name__ == '__main__':
     info = BoardInfo(8, 8, 800, 800)
     board = OthelloBoard(info)
     print(board)
-    for dr in OthelloBoard.dr_tuple:
-        print(board.get_reversible_length(4, 2, dr))
+    dr = {True: 1, False: 0}
+    a = []
+    for x in range(8):
+        for y in range(8):  
+            a.append(dr.get(board.can_reverse(x, y)))
+
+    for x in range(8):
+        for y in range(8):  
+            print(a[board.get_access_num(x,y)], end=' ')
+        print()
+
+    board.insert(4, 2, Stone.WHITE)
+    board.reverse(4, 2)
+    print(board)
