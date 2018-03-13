@@ -9,11 +9,12 @@ class Display(object):
     def __init__(self, board_info:board.BoardInfo):
         self.info = board_info
         self.__screen = pygame.display.set_mode((self.info.width, self.info.height))
-        calc_pos = lambda i, unit: i*unit + unit//2
+        calc_pos = lambda i, unit: i*unit
         self.__position_list = []
         for r in range(self.info.row):
             for c in range(self.info.col):
                 self.__position_list.append([calc_pos(c, self.info.col_unit), calc_pos(r, self.info.row_unit)])
+        print(self.__position_list)
         pygame.init()
         pygame.display.set_caption("othello")
         
@@ -26,7 +27,8 @@ class Display(object):
         
         def draw_stone(self, index, stone):
             func = othello_board.object_printer.get(stone)
-            func(self.__screen, self.__position_list[index])
+            point = [self.__position_list[index][0]+self.info.col_unit//2, self.__position_list[index][1]+self.info.row_unit//2]
+            func(self.__screen, point)
 
         pygame.time.wait(30)
         self.__screen.fill((0, 150, 0))
