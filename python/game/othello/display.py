@@ -21,8 +21,8 @@ class Display(object):
         def draw_partition(self):
             for r in range(self.info.row):
                 pygame.draw.line(self.__screen, (150,150,150), (0,r*self.info.row_unit), (self.info.width, r*self.info.row_unit), 5)
-                for c in range(self.info.col):
-                    pygame.draw.line(self.__screen, (150,150,150), (c*self.info.col_unit,0), (c*self.info.col_unit, self.info.height), 5)
+            for c in range(self.info.col):
+                pygame.draw.line(self.__screen, (150,150,150), (c*self.info.col_unit,0), (c*self.info.col_unit, self.info.height), 5)
         
         def draw_stone(self, index, stone):
             func = othello_board.object_printer.get(stone)
