@@ -15,6 +15,11 @@ class Display(object):
                 self.__position_list.append([c*self.info.col_unit, r*self.info.row_unit])
         pygame.init()
         pygame.display.set_caption('othello')
+
+    def update(self):
+        self.current_events = pygame.event.get()
+        pygame.display.update()
+        pygame.time.wait(30)
         
     def show(self, board: board.BoardBase):
         def draw_partition(self):
@@ -28,13 +33,11 @@ class Display(object):
             point = [self.__position_list[index][0]+self.info.col_unit//2, self.__position_list[index][1]+self.info.row_unit//2]
             func(self.__screen, point)
 
-        pygame.time.wait(30)
         self.__screen.fill((0, 150, 0))
         draw_partition(self)
         board_data = board.get_data()
         for i, data in enumerate(board_data):
             draw_stone(self, i, data)
-        pygame.display.update()
 
     def get_position_num(self, x, y):
         def in_range(self, x, y, point):
@@ -43,19 +46,36 @@ class Display(object):
         for i, position in enumerate(self.__position_list):
             if in_range(self, x, y, position):
                 return i
-        return -1
+        else: return -1
 
-    
-            
+    def get_hand(self):
+        mouse_pressed = pygame.mouse.get_pressed()
+        if mouse_pressed[0]:
+            x, y = pygame.mouse.get_pos()
+            return self.get_position_num(x, y)
+        else:
+            return -1
+        
+    def is_shutdown(self):
+        for event in self.current_events:
+            if event.type == QUIT or (event.type == KEYDOWN and event.key == K_ESCAPE):
+                return True
+        else:
+            return False
+
+    def shutdown(self):
+        pygame.quit()
+        
 if __name__ == '__main__':
     info = board.BoardInfo(8, 8, 800, 800)
     board = othello_board.OthelloBoard(info)
     disp = Display(info)
 
     disp.show(board)
+    hand = -1
+    disp.update()
+
+    while hand == -1:
+        print(disp.get_hand())
+        disp.update()
         
-    while True:
-        for event in pygame.event.get():
-            if event.type == MOUSEMOTION:
-                x, y = event.pos
-                print(disp.get_position_num(x, y))
