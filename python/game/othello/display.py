@@ -72,10 +72,11 @@ if __name__ == '__main__':
     disp = Display(info)
 
     disp.show(board)
-    hand = -1
     disp.update()
 
-    while hand == -1:
+    while not disp.is_shutdown():
         print(disp.get_hand())
         disp.update()
-        
+
+    disp.shutdown()
+    
