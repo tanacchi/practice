@@ -39,6 +39,10 @@ class Display(object):
         for i, data in enumerate(board_data):
             draw_stone(self, i, data)
 
+    def get_coordinate(self, pos_num):
+        x, y = self.__position_list[pos_num][0], self.__position_list[pos_num][1]
+        return x, y
+        
     def get_position_num(self, x, y):
         def in_range(self, x, y, point):
             return (0 <= x-point[0] < self.info.col_unit) and (0 <= y-point[1] < self.info.row_unit)
