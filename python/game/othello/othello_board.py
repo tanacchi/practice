@@ -28,6 +28,10 @@ class OthelloBoard(BoardBase):
         self.insert(info.row//2, info.col//2-1, Stone.BLACK)
         self.insert(info.row//2-1, info.col//2, Stone.BLACK)
         self.active_stone, self.enemy_stone = Stone.WHITE, Stone.BLACK
+
+    def insert(self, x, y, stone = None):
+        if stone == None: stone = self.active_stone
+        super(OthelloBoard, self).insert(x, y, stone)
         
     def switch_stone(self):
         self.active_stone, self.enemy_stone = self.enemy_stone, self.active_stone
