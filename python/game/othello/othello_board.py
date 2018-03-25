@@ -19,7 +19,7 @@ object_printer = \
 from board import BoardInfo, BoardBase
 
 class OthelloBoard(BoardBase):
-    dr_tuple = ((0,-1), (1,-1), (1,0), (1,1), (0,1), (-1,1), (-1,0), (-1,-1))
+    directions = ((0,-1), (1,-1), (1,0), (1,1), (0,1), (-1,1), (-1,0), (-1,-1))
     
     def __init__(self, info):
         super(OthelloBoard, self).__init__(info, Stone.SPACE)
@@ -47,13 +47,13 @@ class OthelloBoard(BoardBase):
         return 0
 
     def can_reverse(self, x, y):
-        for dr in OthelloBoard.dr_tuple:
+        for dr in OthelloBoard.directions:
             if self.get_reversible_length(x, y, dr) != 0:
                 return True
         return False
 
     def reverse(self, x, y):
-        for dr in OthelloBoard.dr_tuple:
+        for dr in OthelloBoard.directions:
             reverse_length = self.get_reversible_length(x, y, dr)
             for i in range(1, reverse_length+1):
                 self.insert(x + reverse_length*dr[0], y + reverse_length*dr[1], self.active_stone)
