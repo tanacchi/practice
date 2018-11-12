@@ -41,13 +41,13 @@ public:
   LifeField()
     : seed_gen_{},
       random_engine_{seed_gen_()},
-      dist_{0, 1}
+      dist_{0, 15}
   { 
     for (auto& row : field_)
     {
       for (auto& elem : row)
       {
-        if (dist_(random_engine_))
+        if (!dist_(random_engine_))
           elem.revive();
       }
     }
@@ -120,7 +120,7 @@ private:
   std::random_device seed_gen_;
   std::default_random_engine random_engine_;
   std::uniform_int_distribution<> dist_;
-  std::array<std::array<Cell, 5>, 5> field_;
+  std::array<std::array<Cell, 70>, 46> field_;
 };
 
 int main()
@@ -131,7 +131,7 @@ int main()
   {
     life_field.show();
     life_field.update();
-    std::this_thread::sleep_for(std::chrono::seconds(3));
+    std::this_thread::sleep_for(std::chrono::milliseconds(50));
   }
   return 0;
 }
