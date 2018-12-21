@@ -235,7 +235,57 @@ int main (int argc, char** argv)
       }
     }
     break;
-  default: throw std::runtime_error{"A valid argment is '1', '2' or '3'"};
+  case 4: // Fukuda 2
+    {
+      Route route1{[&](DataType x){ return -x + 1; }, { 0.0,  1.0}};
+      Route route2{[&](DataType x){ return  x + 1; }, {-1.0,  0.0}};
+      Route route3{[&](DataType x){ return -x - 1; }, { 0.0, -1.0}};
+      Route route4{[&](DataType x){ return  x - 1; }, { 1.0,  0.0}};
+      ElectricCurrent I1{route1, 1.0}; ElectricCurrent I2{route2, 1.0};
+      ElectricCurrent I3{route3, 1.0}; ElectricCurrent I4{route4, 1.0};
+      std::fstream fstream{"mission2.dat", std::ios_base::out | std::ios_base::trunc};
+      for (Vector::Vector r{-3.0, -3.0, 0.0}; r[index::x] < 3.0; r[index::x] += 0.12)
+        for (r[index::y] = -3.0; r[index::y] < 3.0; r[index::y] += 0.12) {
+          Vector::Vector H{getMagneticVector(r, {I1, I2, I3, I4})};
+          fstream << r[index::x] << '\t' << r[index::y] << '\t' << H[index::z] << std::endl;
+        }
+    }
+    break;
+  case 5: // Fukuda 3
+    {
+      const Route route1{[](DataType x){ return  std::pow(1 + x*x*x, 0.3333333333); }, {-1.0,  0.0}};
+      const Route route2{[](DataType x){ return  std::pow(1 - x*x*x, 0.3333333333); }, { 0.0,  1.0}};
+      const Route route3{[](DataType x){ return -std::pow(1 + x*x*x, 0.3333333333); }, { 0.0, -1.0}};
+      const Route route4{[](DataType x){ return -std::pow(1 - x*x*x, 0.3333333333); }, { 1.0,  0.0}};
+      ElectricCurrent I1{route1, 1.0}; ElectricCurrent I2{route2, 1.0};
+      ElectricCurrent I3{route3, 1.0}; ElectricCurrent I4{route4, 1.0};
+      {
+        std::fstream fstream{"mission3xy.dat", std::ios_base::out | std::ios_base::trunc};
+        for (Vector::Vector r{-3.0, -3.0, 0.0}; r[index::x] < 3.0; r[index::x] += 0.12)
+          for (r[index::y] = -3.0; r[index::y] < 3.0; r[index::y] += 0.12) {
+            Vector::Vector H{getMagneticVector(r, {I1, I2, I3, I4})};
+            fstream << r[index::x] << '\t' << r[index::y] << '\t' << H[index::z] << std::endl;
+          }
+      }
+      {
+        std::fstream fstream{"mission3xz.dat", std::ios_base::out | std::ios_base::trunc};
+        for (Vector::Vector r{-3.0, 0.0, -3.0}; r[index::x] < 3.0; r[index::x] += 0.12)
+          for (r[index::z] = -3.0; r[index::z] < 3.0; r[index::z] += 0.12) {
+            Vector::Vector H{getMagneticVector(r, {I1, I2, I3, I4})};
+            fstream << r[index::x] << '\t' << H[index::z] << '\t' << r[index::z] << std::endl;
+          }
+      }    
+      {
+        std::fstream fstream{"mission3yz.dat", std::ios_base::out | std::ios_base::trunc};
+        for (Vector::Vector r{0.0, -3.0, -3.0}; r[index::y] < 3.0; r[index::y] += 0.12)
+          for (r[index::z] = -3.0; r[index::z] < 3.0; r[index::z] += 0.12) {
+            Vector::Vector H{getMagneticVector(r, {I1, I2, I3, I4})};
+            fstream << H[index::x] << '\t' << r[index::y] << '\t' << r[index::z] << std::endl;
+          }
+      }
+    }
+    break;
+  default: throw std::runtime_error{"A valid argment is '[1..5]'"};
   }
   return 0;
 }
