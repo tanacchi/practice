@@ -5,7 +5,7 @@
 int main(int argc, char** argv)
 {
   char** args;
-  args = (char**)malloc(sizeof(char*)*argc);
+  args = (char**)calloc(argc+1, sizeof(char*));
 
   for (int i = 0; i < argc; ++i)
   {
@@ -18,5 +18,11 @@ int main(int argc, char** argv)
     printf("%s\n", args[i]);
   }
 
+  for (size_t i = 0u; i < argc; ++i)
+  {
+    free(args[i]);
+  }
+
+  free(args);
   return 0;
 }
