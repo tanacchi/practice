@@ -7,7 +7,7 @@ const server = http.createServer((req, res) => {
   }
 
   let body = '';
-  req.on('data', (chunk) => {  // req is a Readable Stream
+  req.on('data', (chunk) => {
     body += chunk;
   });
   req.on('end', () => {
