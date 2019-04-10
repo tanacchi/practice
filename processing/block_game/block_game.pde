@@ -14,5 +14,12 @@ void draw()
   draw_objects(ball, bar); 
   update_objects(ball, bar); 
 
-  ball.vel.y++;
+  if (is_touching(ball, bar))
+  {
+    ball.object_color = color(255, 0, 0);
+  }
+  else 
+  {
+    ball.object_color = color(0, 255, 0);
+  }
 }

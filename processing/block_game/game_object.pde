@@ -39,3 +39,10 @@ void draw_objects(GameObject... objects)
     object.draw();
   }
 }
+
+boolean is_touching(GameObject lhs, GameObject rhs)
+{
+  boolean x_judge = lhs.pos.x-lhs.size.x/2-rhs.size.x <= rhs.pos.x && rhs.pos.x <= lhs.pos.x+lhs.size.x/2;
+  boolean y_judge = lhs.pos.y-lhs.size.y/2-rhs.size.y <= rhs.pos.y && rhs.pos.y <= lhs.pos.y+lhs.size.y/2;
+  return x_judge && y_judge;
+}

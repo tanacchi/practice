@@ -30,5 +30,6 @@ class Bar extends GameObject
   void update()
   {
     pos.x = mouseX - size.x/2;
+    pos.y = mouseY - size.y/2;
   }
 }
