@@ -14,13 +14,12 @@ class GameObject
   
   void draw()
   {
-    println("Invalid function call !");
+    println("Invalid function call on GameObject.draw !");
   }
   
   void update()
   {
-    pos.x += vel.x;
-    pos.y += vel.y;
+    println("Invalid function call on GameObject.update !");
   }
 }
 
@@ -42,7 +41,7 @@ void draw_objects(GameObject... objects)
 
 boolean is_touching(GameObject lhs, GameObject rhs)
 {
-  boolean x_judge = lhs.pos.x-lhs.size.x/2-rhs.size.x <= rhs.pos.x && rhs.pos.x <= lhs.pos.x+lhs.size.x/2;
-  boolean y_judge = lhs.pos.y-lhs.size.y/2-rhs.size.y <= rhs.pos.y && rhs.pos.y <= lhs.pos.y+lhs.size.y/2;
+  boolean x_judge = lhs.pos.x-rhs.size.x <= rhs.pos.x && rhs.pos.x <= lhs.pos.x+lhs.size.x;
+  boolean y_judge = lhs.pos.y-rhs.size.y <= rhs.pos.y && rhs.pos.y <= lhs.pos.y+lhs.size.y;
   return x_judge && y_judge;
 }

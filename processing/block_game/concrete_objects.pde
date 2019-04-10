@@ -5,6 +5,31 @@ class Ball extends GameObject
     super(c, p, new PVector(radius, radius));
   }
   
+  void update()
+  {
+    pos.add(vel);
+    if (pos.x < 0) 
+    {
+      pos.x = 0;
+      vel.x = abs(vel.x);
+    }
+    else if (pos.x > width)
+    {
+      pos.x = width;
+      vel.x = -abs(vel.x);
+    }
+    if (pos.y < 0)
+    {
+      pos.y = 0;
+      vel.y = abs(vel.y);
+    }
+    else if (pos.y > height)
+    {
+      pos.y = height;
+      vel.y = -abs(vel.y);
+    }
+  }
+  
   void draw()
   {
     fill(object_color);
