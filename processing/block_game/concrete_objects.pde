@@ -1,12 +1,15 @@
 class Ball extends GameObject
 {
+  PVector old_pos;
   Ball(color c, PVector p, float radius)
   {
     super(c, p, new PVector(radius, radius));
+    old_pos = new PVector();
   }
   
   void update()
   {
+    old_pos = pos.copy();
     pos.add(vel);
     if (pos.x < 0) // Left-wall reflection
     {
@@ -31,6 +34,11 @@ class Ball extends GameObject
     ellipse(pos.x, pos.y, size.x, size.y);
     fill(0);
   }
+  
+  PVector get_old_center()
+  {
+    return new PVector(pos.x + size.x/2, pos.y + size.y/2);
+  }
 }
 
 class Bar extends GameObject
@@ -50,7 +58,6 @@ class Bar extends GameObject
   void update()
   {
     pos.x = mouseX - size.x/2;
-    pos.y = mouseY - size.y/2;
   }
 }
 
@@ -65,17 +72,21 @@ class Block extends GameObject
   
   void draw()
   {
-    fill(object_color);
-    rect(pos.x, pos.y, size.x, size.y);
-    fill(0);
+    if (is_active)
+    {
+      fill(object_color);
+      rect(pos.x, pos.y, size.x, size.y);
+      fill(0);
+    }
   }
   
   void update()
   {
-    if (!is_active)
-    {
-      object_color = color(background_color);
-    }
+  }
+  
+  void kill()
+  {
+    is_active = false;
   }
 }
 
@@ -84,13 +95,5 @@ void draw_blocks(Block[] blocks)
   for (Block block : blocks)
   {
     draw_objects(block);
-  }
-}
-
-void update_blocks(Block[] blocks)
-{
-  for (Block block : blocks)
-  {
-    update_objects(block);
   }
 }
