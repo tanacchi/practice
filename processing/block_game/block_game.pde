@@ -45,7 +45,6 @@ void draw()
   //
   if (is_touching(ball, bar))
   {
-    ball.object_color = color(255, 0, 0);
     ball.pos.y = bar.pos.y - ball.size.y;
     ball.vel.y = -abs(ball.vel.y);
     //ball.vel.mult(1.1);
