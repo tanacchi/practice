@@ -1,8 +1,5 @@
-a.out: sum.o
-	ld sum.o
-
-sum.o: sum.s
-	nasm -f elf64 sum.s
+a.out: sum.s
+	gcc sum.s
 
 clean:
-	rm sum.o a.out
+	rm a.out
