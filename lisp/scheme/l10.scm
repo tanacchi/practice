@@ -1,4 +1,5 @@
-(define src '(0 1 2 3 4 5))
+(define nums '(0 1 2 3 4 5))
+(define chars '("a" "b" "c" "d" "e" "f"))
 
 
 ; #1
@@ -10,7 +11,8 @@
       ((null? (cdr lst)) lst)
       (else (last (cdr lst))))))
 
-(print (last src))
+(print (last nums))
+(print (last chars))
 
 
 ; #2
@@ -23,7 +25,8 @@
       ((null? (cddr lst)) lst)
       (else (last2 (cdr lst))))))
 
-(print (last2 src))
+(print (last2 nums))
+(print (last2 chars))
 
 
 ; #3
@@ -35,4 +38,5 @@
       ((eq? count 1) (car lst))
       (else (element-at (cdr lst) (- count 1))))))
 
-(print (element-at src 3))
+(print (element-at nums 3))
+(print (element-at chars 3))
