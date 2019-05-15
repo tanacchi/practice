@@ -112,7 +112,7 @@
     (cond
       ((null? lst) '())
       ((null? (cdr lst)) lst)
-      ((eq? (car lst) (car (cdr lst))) (compress (cdr lst)))
+      ((eq? (car lst) (cadr lst)) (compress (cdr lst)))
       (else (cons (car lst) (compress (cdr lst)))))))
 
 (print (compress '()))
