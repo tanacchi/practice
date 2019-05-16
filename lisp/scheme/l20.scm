@@ -26,13 +26,13 @@
 (print (repli '(0 1 2 3 4 5) 3))
 
 
-; #16
+; #20
 
-(define drop
+(define remove-at
   (lambda (lst count)
     (cond
       ((null? lst) '())
       ((eq? count 1) (cdr lst))
-      (else (cons (car lst) (drop (cdr lst) (- count 1)))))))
+      (else (cons (car lst) (remove-at (cdr lst) (- count 1)))))))
 
-(print (drop '(0 1 2 3 4 5 6) 3))
+(print (remove-at '(0 1 2 3 4 5 6) 3))
