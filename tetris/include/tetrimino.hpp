@@ -8,7 +8,7 @@
 class Tetrimino
 {
   public:
-    using Position = std::pair<int, int>;
+    using Position = std::pair<std::size_t, std::size_t>;
 
     Tetrimino() noexcept;
     explicit Tetrimino(CellMatrix&& body);  // XXX: Must not be used.
