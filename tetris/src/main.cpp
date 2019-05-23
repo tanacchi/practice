@@ -7,11 +7,11 @@
 
 int main()
 {
-  // Tetrimino tetrimino{{
-    // {Cell(true),  Cell(true), Cell(false)},
-    // {Cell(false), Cell(true), Cell(true)}
-  // }};
-  // std::cout << tetrimino.to_string() << std::endl;
+  Tetrimino tetrimino{{
+    {Cell(true),  Cell(true), Cell(false)},
+    {Cell(false), Cell(true), Cell(true)}
+  }};
+  std::cout << tetrimino.to_string() << std::endl;
 
   initscr();
   keypad(stdscr, TRUE);
@@ -27,7 +27,7 @@ int main()
     {Cell(false), Cell(true),  Cell(true), Cell(true),  Cell(false)},
     {Cell(false), Cell(false), Cell(true), Cell(false), Cell(false)},
   }};
-  disp.show(pile);
+  disp.show(pile, tetrimino);
 
   sleep(3);  // XXX: Avoid to use it.
 

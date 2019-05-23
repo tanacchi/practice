@@ -4,6 +4,7 @@
 #include <memory>
 #include <ncurses.h>
 #include <pile.hpp>
+#include <tetrimino.hpp>
 
 struct WindowPtrDeleter
 {
@@ -17,7 +18,7 @@ class MainDisplay
 {
   public:
     MainDisplay();
-    void show(const Pile& pile) const;
+    void show(const Pile& pile, const Tetrimino& tetrimino) const;
   private:
     std::unique_ptr<WINDOW, WindowPtrDeleter> win_;
 };
