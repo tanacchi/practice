@@ -6,7 +6,7 @@ Tetrimino::Tetrimino() noexcept
 {
 }
 
-Tetrimino::Tetrimino(std::vector<std::vector<Cell>>&& body)
+Tetrimino::Tetrimino(CellMatrix&& body)
   : body_{std::move(body)}
 {
 }

@@ -8,11 +8,11 @@ class Tetrimino
 {
   public:
     Tetrimino() noexcept;
-    explicit Tetrimino(std::vector<std::vector<Cell>>&& body);  // XXX: Must not be used.
+    explicit Tetrimino(CellMatrix&& body);  // XXX: Must not be used.
     std::string to_string() const noexcept;
 
   private:
-    std::vector<std::vector<Cell>> body_;
+    CellMatrix body_;
 };
 
 #endif  // INCLUDED_TETRIMINO_HPP

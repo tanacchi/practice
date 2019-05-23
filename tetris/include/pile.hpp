@@ -8,10 +8,10 @@ class Pile
 {
   public:
     Pile() noexcept;
-    const std::vector<std::vector<Cell>>& get_data() const;
+    const CellMatrix& get_data() const;
 
   private:
-    std::vector<std::vector<Cell>> body_;
+    CellMatrix body_;
 };
 
 #endif  // INCLUDED_PILE_HPP
