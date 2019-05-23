@@ -36,3 +36,8 @@ Tetrimino::Position::second_type Tetrimino::get_y() const noexcept
 {
   return pos_.second;
 }
+
+const CellMatrix& Tetrimino::get_body() const
+{
+  return body_;
+}

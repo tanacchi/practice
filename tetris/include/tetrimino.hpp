@@ -15,6 +15,7 @@ class Tetrimino
     std::string to_string() const noexcept;
     Position::first_type  get_x() const noexcept;
     Position::second_type get_y() const noexcept;
+    const CellMatrix& get_body() const;
 
   private:
     CellMatrix body_;
