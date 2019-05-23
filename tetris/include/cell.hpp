@@ -6,6 +6,7 @@ class Cell
   public:
     explicit Cell(bool is_present = false) noexcept;
     explicit operator bool() const noexcept;
+    char to_char() const noexcept;
 
   private:
     bool is_present_;
