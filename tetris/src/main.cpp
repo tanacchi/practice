@@ -1,11 +1,15 @@
 #include <iostream>
 #include <ncurses.h>
-
-
+#include <tetrimino.hpp>
 
 int main()
 {
-  std::cout << std::endl;
+  Tetrimino tetrimino{{
+    {Cell(true),  Cell(true), Cell(false)},
+    {Cell(false), Cell(true), Cell(true)}
+  }};
+
+  std::cout << tetrimino.to_string() << std::endl;
 
   return 0;
 }
