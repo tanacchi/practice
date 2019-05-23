@@ -8,8 +8,8 @@
 int main()
 {
   Tetrimino tetrimino{{
-    {Cell(true),  Cell(true), Cell(false)},
-    {Cell(false), Cell(true), Cell(true)}
+    {Cell(true),  Cell(true), Cell(true)},
+    {Cell(false), Cell(true), Cell(false)}
   }};
   std::cout << tetrimino.to_string() << std::endl;
 

@@ -16,7 +16,7 @@ void MainDisplay::show(const Pile& pile, const Tetrimino& tetrimino) const
     {
       for (auto x{0ul}, width{body[y].size()}; x < width; ++x)
       {
-        mvwaddch(win_.get(), HEIGHT - y, x + 1, body[y][x].to_char());
+        mvwaddch(win_.get(), y + 1, x + 1, body[y][x].to_char());
       }
     }
   }
