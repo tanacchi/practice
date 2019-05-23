@@ -19,7 +19,7 @@ class MainDisplay
     MainDisplay();
     void show(const Pile& pile) const;
   private:
-    std::unique_ptr<WINDOW> win_;
+    std::unique_ptr<WINDOW, WindowPtrDeleter> win_;
 };
 
 #endif  // INCLUDED_MAIN_DISPLAY_HPP
