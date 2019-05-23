@@ -3,6 +3,7 @@
 
 #include <memory>
 #include <ncurses.h>
+#include <pile.hpp>
 
 struct WindowPtrDeleter
 {
@@ -16,6 +17,7 @@ class MainDisplay
 {
   public:
     MainDisplay();
+    void show(const Pile& pile) const;
   private:
     std::unique_ptr<WINDOW> win_;
 };
