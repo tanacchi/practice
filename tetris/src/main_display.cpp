@@ -3,7 +3,7 @@
 #define HEIGHT 20
 
 MainDisplay::MainDisplay()
-  : win_{newwin(HEIGHT, 10, 0, 0)}
+  : win_{newwin(22, 12, 0, 0)}
 {
 }
 
@@ -15,8 +15,9 @@ void MainDisplay::show(const Pile& pile) const
   {
     for (auto x{0ul}, width{body[y].size()}; x < width; ++x)
     {
-      mvwaddch(win_.get(), y, x, body[y][x].to_char());
+      mvwaddch(win_.get(), HEIGHT - y, x + 1, body[y][x].to_char());
     }
   }
+  box(win_.get(), ACS_VLINE, ACS_HLINE);
   wrefresh(win_.get());
 }
