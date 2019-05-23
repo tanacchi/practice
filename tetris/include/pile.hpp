@@ -8,6 +8,7 @@ class Pile
 {
   public:
     Pile() noexcept;
+    const std::vector<std::vector<Cell>>& get_data() const;
 
   private:
     std::vector<std::vector<Cell>> body_;

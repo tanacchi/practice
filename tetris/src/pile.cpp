@@ -5,3 +5,7 @@ Pile::Pile() noexcept
 {
 }
 
+const std::vector<std::vector<Cell>>& Pile::get_data() const
+{
+  return body_;
+}
