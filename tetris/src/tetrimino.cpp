@@ -41,3 +41,14 @@ const CellMatrix& Tetrimino::get_body() const
 {
   return body_;
 }
+
+void Tetrimino::move(Direction direction)
+{
+  switch (direction)
+  {
+    case Direction::Up:    --pos_.second; break;
+    case Direction::Down:  ++pos_.second; break;
+    case Direction::Left:  --pos_.first;  break;
+    case Direction::Right: ++pos_.first;  break;
+  }
+}

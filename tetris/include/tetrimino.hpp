@@ -5,6 +5,11 @@
 #include <cell.hpp>
 #include <utility>
 
+enum class Direction : short
+{
+  Up, Down, Left, Right
+};
+
 class Tetrimino
 {
   public:
@@ -16,6 +21,7 @@ class Tetrimino
     Position::first_type  get_x() const noexcept;
     Position::second_type get_y() const noexcept;
     const CellMatrix& get_body() const;
+    void move(Direction direction);
 
   private:
     CellMatrix body_;

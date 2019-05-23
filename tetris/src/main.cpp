@@ -27,10 +27,13 @@ int main()
     {Cell(false), Cell(true),  Cell(true), Cell(true),  Cell(false)},
     {Cell(false), Cell(false), Cell(true), Cell(false), Cell(false)},
   }};
-  disp.show(pile, tetrimino);
 
-  sleep(3);  // XXX: Avoid to use it.
-
+  while (true)
+  {
+    disp.show(pile, tetrimino);
+    sleep(1);  // XXX: Avoid to use it.
+    tetrimino.move(Direction::Down);
+  }
   endwin();
 
   return 0;
