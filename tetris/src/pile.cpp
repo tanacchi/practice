@@ -5,6 +5,11 @@ Pile::Pile() noexcept
 {
 }
 
+Pile::Pile(CellMatrix&& body) noexcept
+  : body_{std::move(body)}
+{
+}
+
 const CellMatrix& Pile::get_data() const
 {
   return body_;

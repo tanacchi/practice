@@ -8,6 +8,7 @@ class Pile
 {
   public:
     Pile() noexcept;
+    Pile(CellMatrix&& cells) noexcept;
     const CellMatrix& get_data() const;
 
   private:
