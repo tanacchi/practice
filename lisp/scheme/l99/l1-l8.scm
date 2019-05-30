@@ -83,9 +83,7 @@
 
 (define palindrome?
   (lambda (lst)
-    (cond
-      ((list-eq? (reverse lst) lst) #t)
-      (else #f))))
+    (list-eq? (reverse lst) lst)))
 
 (print (palindrome? nums))
 (print (palindrome? chars))
