@@ -8,6 +8,8 @@
 
 (define slice
   (lambda (lst head tail)
-    (slice-aux lst head tail '())))
+    (cond
+      ((> head tail) '())
+      (else (slice-aux lst head tail '())))))
 
-(print (slice '(0 1 2 3) 2 3 ))
+(print (slice '(0 1 2 3) 1 3))
