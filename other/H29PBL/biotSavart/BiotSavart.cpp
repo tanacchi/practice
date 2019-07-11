@@ -178,8 +178,11 @@ int main (int argc, char** argv)
   std::fstream fstream{"mission1.dat", std::ios_base::out | std::ios_base::trunc};
   for (Vector::Vector r{-3.0, -3.0, 0.0}; r[index::x] < 3.0; r[index::x] += 0.1)
     for (r[index::y] = -3.0; r[index::y] < 3.0; r[index::y] += 0.1) {
-      Vector::Vector H{getMagneticVector(r, {I1, I2})};
-      fstream << r[index::x] << '\t' << r[index::y] << '\t' << H[index::z] << std::endl;
+      for (r[index::z] = -3.0; r[index::z] < 3.0; r[index::z] += 1) {
+        Vector::Vector H{getMagneticVector(r, {I1, I2})};
+        fstream << r[index::x] << '\t' << r[index::y] << '\t' << r[index::z] << '\t' 
+                << H[index::x] << '\t' << H[index::y] << '\t' << H[index::z] << std::endl;
+      }
     }
   fstream << std::endl;
   return 0;
