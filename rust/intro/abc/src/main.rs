@@ -17,6 +17,13 @@ fn q0() {
     println!("{} {}", abc_sum, s);
 }
 
+fn q1(num: u32) -> bool {
+    num % 2 == 0
+}
+
 fn main() {
-    q0();
+    // q0()
+
+    let ans = q1(read::<u32>());
+    println!("{}", ans);
 }
