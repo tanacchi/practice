@@ -1,3 +1,9 @@
+use std::io;
+
 fn main() {
-    println!("Hello, world!");
+    loop {
+        let mut string_buffer = String::new();
+        io::stdin().read_line(&mut string_buffer).ok();
+        println!("{}", string_buffer);
+    }
 }
