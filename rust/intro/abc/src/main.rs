@@ -11,9 +11,12 @@ fn read<T: FromStr>() -> T {
     s.parse::<T>().ok().unwrap()
 }
 
+fn q0() {
+    let abc_sum = (0..3).fold(0, |acc, _| acc + read::<u32>());
+    let s = read::<String>();
+    println!("{} {}", abc_sum, s);
+}
+
 fn main() {
-    loop {
-        let a = read::<u32>();
-        println!("{}", a);
-    }
+    q0();
 }
