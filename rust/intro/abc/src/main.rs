@@ -17,13 +17,17 @@ fn q0() {
     println!("{} {}", abc_sum, s);
 }
 
-fn q1(num: u32) -> bool {
-    num % 2 == 0
+fn q1<T>(num: u32, even_value: T, odd_value: T) -> T {
+    if num & 0x1 == 0 {
+        even_value
+    } else {
+        odd_value
+    }
 }
 
 fn main() {
     // q0()
 
-    let ans = q1(read::<u32>());
+    let ans = q1(read::<u32>(), "Even", "Odd");
     println!("{}", ans);
 }
