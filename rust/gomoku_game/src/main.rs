@@ -1,5 +1,21 @@
 use std::io;
 
+enum Stone {
+    White,
+    Black,
+    Space
+}
+
+impl Stone {
+    fn to_char(self) -> char {
+        match self {
+            Stone::White => 'O',
+            Stone::Black => 'X',
+            Stone::Space => ' '
+        }
+    }
+}
+
 fn main() {
     let mut board = [[0, 0], [0, 0]];
 
