@@ -17,7 +17,9 @@ impl Stone {
 }
 
 fn main() {
-    let mut board = [[0, 0], [0, 0]];
+    const WIDTH:  usize = 9;
+    const HEIGHT: usize = 9;
+    let mut board = [[0; WIDTH]; HEIGHT];
 
     println!("Input x");
     let mut x = String::new();
