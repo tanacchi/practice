@@ -16,27 +16,23 @@ impl Stone {
     }
 }
 
+fn get_hand(msg: &str) -> usize {
+    println!("{}", msg);
+    let mut hand = String::new();
+    io::stdin().read_line(&mut hand)
+               .expect("Failed to read_line.");
+    hand.trim()
+        .parse::<usize>()
+        .expect("Prease type a number.")
+}
+
 fn main() {
     const WIDTH:  usize = 9;
     const HEIGHT: usize = 9;
     let mut board = [[0; WIDTH]; HEIGHT];
 
-    println!("Input x");
-    let mut x = String::new();
-    io::stdin().read_line(&mut x)
-              .expect("Failed to read_line.");
-    let x: usize = x.trim()
-                  .parse()
-                  .expect("Prease type a number.");
-
-    println!("Input y");
-    let mut y = String::new();
-    io::stdin().read_line(&mut y)
-              .expect("Failed to read_line.");
-    let y: usize = y.trim()
-                  .parse()
-                  .expect("Prease type a number.");
-
+    let x = get_hand("Input x: ");
+    let y = get_hand("Input y: ");
     println!("x = {}, y = {}", x, y);
 
     board[y][x] = 1;
