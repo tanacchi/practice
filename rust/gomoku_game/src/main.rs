@@ -10,7 +10,7 @@ enum Stone {
 }
 
 impl Stone {
-    fn to_char(self) -> char {
+    fn to_char(&self) -> char {
         match self {
             Stone::White => 'O',
             Stone::Black => 'X',
@@ -29,24 +29,25 @@ fn get_hand(msg: &str) -> usize {
         .expect("Prease type a number.")
 }
 
-fn show_board(board: &[[u32; WIDTH]; HEIGHT]) {
+fn show_board(board: &[[Stone; WIDTH]; HEIGHT]) {
     for row in board.iter() {
         for elem in row.iter() {
-            print!("{} ", elem);
+            print!("{} ", elem.to_char());
         }
         println!();
     }
 }
 
 fn main() {
-    let mut board = [[0; WIDTH]; HEIGHT];
+    let mut board = [[Stone::White; WIDTH]; HEIGHT];
 
     loop {
         let x = get_hand("Input x: ");
         let y = get_hand("Input y: ");
         println!("x = {}, y = {}", x, y);
 
-        board[y][x] = 1;
+        // board[y][x] = 1;
+        board[y][x] = Stone::Black;
         show_board(&board)
     }
 }
