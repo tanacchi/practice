@@ -19,6 +19,14 @@ impl Stone {
     }
 }
 
+impl Clone for Stone {
+    fn clone(&self) -> Stone {
+        *self
+    }
+}
+
+impl Copy for Stone {}
+
 fn get_hand(msg: &str) -> usize {
     println!("{}", msg);
     let mut hand = String::new();
