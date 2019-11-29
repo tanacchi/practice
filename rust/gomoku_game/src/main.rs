@@ -41,10 +41,12 @@ fn show_board(board: &[[u32; WIDTH]; HEIGHT]) {
 fn main() {
     let mut board = [[0; WIDTH]; HEIGHT];
 
-    let x = get_hand("Input x: ");
-    let y = get_hand("Input y: ");
-    println!("x = {}, y = {}", x, y);
+    loop {
+        let x = get_hand("Input x: ");
+        let y = get_hand("Input y: ");
+        println!("x = {}, y = {}", x, y);
 
-    board[y][x] = 1;
-    show_board(&board)
+        board[y][x] = 1;
+        show_board(&board)
+    }
 }
