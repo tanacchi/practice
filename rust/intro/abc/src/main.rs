@@ -25,9 +25,22 @@ fn q1<T>(num: u32, even_value: T, odd_value: T) -> T {
     }
 }
 
+fn q2_1(input_str: String) -> u32 {
+    let mut count: u32 = 0;
+    for c in input_str.chars() {
+       if c == '1' {
+           count = count + 1;
+       }
+    }
+    count
+}
+
 fn main() {
     // q0()
 
-    let ans = q1(read::<u32>(), "Even", "Odd");
-    println!("{}", ans);
+    // let ans = q1(read::<u32>(), "Even", "Odd");
+    // println!("{}", ans);
+    
+    let s: String = read();
+    println!("{}", q2(s));
 }
