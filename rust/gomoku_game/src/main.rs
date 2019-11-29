@@ -1,5 +1,8 @@
 use std::io;
 
+const WIDTH:  usize = 9;
+const HEIGHT: usize = 9;
+
 enum Stone {
     White,
     Black,
@@ -26,9 +29,16 @@ fn get_hand(msg: &str) -> usize {
         .expect("Prease type a number.")
 }
 
+fn show_board(board: &[[u32; WIDTH]; HEIGHT]) {
+    for row in board.iter() {
+        for elem in row.iter() {
+            print!("{} ", elem);
+        }
+        println!();
+    }
+}
+
 fn main() {
-    const WIDTH:  usize = 9;
-    const HEIGHT: usize = 9;
     let mut board = [[0; WIDTH]; HEIGHT];
 
     let x = get_hand("Input x: ");
@@ -36,11 +46,5 @@ fn main() {
     println!("x = {}, y = {}", x, y);
 
     board[y][x] = 1;
-
-    for row in board.iter() {
-        for elem in row.iter() {
-            print!("{} ", elem);
-        }
-        println!();
-    }
+    show_board(&board)
 }
