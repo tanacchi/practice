@@ -23,9 +23,9 @@ fn main() {
 
     board[y][x] = 1;
 
-    for row in &board {
-        for i in 0..row.len() {
-            print!("{} ", row[i]);
+    for row in board.iter() {
+        for elem in row.iter() {
+            print!("{} ", elem);
         }
         println!();
     }
