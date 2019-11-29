@@ -44,6 +44,26 @@ fn q2_2(input_str: &String) -> usize
     input_str.chars().filter(|&c| c == '1').count()
 }
 
+#[allow(unused)]
+fn q3_1() {
+    fn devide_by_2(nums: &mut Vec<u32>) -> std::result::Result<(), usize> {
+        for i in 0..nums.len() {
+            if nums[i] & 0x1 == 0x1 {
+                return Err(i);
+            }
+            nums[i] >>= 1;
+        }
+        Ok(())
+    }
+
+    let mut nums: Vec<u32> = vec![64, 32, 64, 16, 32];
+    let mut count = 0;
+    while devide_by_2(&mut nums).is_ok() {
+        count += 1;
+    }
+    println!("{}", count);
+}
+
 fn main() {
     // q0()
 
@@ -53,4 +73,6 @@ fn main() {
     // let s: String = read();
     // println!("{}", q2_1(&s));
     // println!("{}", q2_2(&s));
+
+    q3_1();
 }
