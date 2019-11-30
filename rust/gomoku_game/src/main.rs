@@ -50,14 +50,21 @@ fn show_board(board: &[[Stone; WIDTH]; HEIGHT]) {
 }
 
 fn main() {
-    let mut board = [[Stone::White; WIDTH]; HEIGHT];
+    let mut board = [[Stone::Space; WIDTH]; HEIGHT];
+    let mut active_stone = Stone::White;
 
     loop {
         let x = get_hand("Input x: ");
         let y = get_hand("Input y: ");
         println!("x = {}, y = {}", x, y);
 
-        board[y][x] = Stone::Black;
-        show_board(&board)
+        board[y][x] = active_stone;
+        show_board(&board);
+
+        active_stone = match active_stone {
+            Stone::White => Stone::Black,
+            Stone::Black => Stone::White,
+            Stone::Space => Stone::Space
+        }
     }
 }
