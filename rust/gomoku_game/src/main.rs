@@ -34,16 +34,19 @@ fn get_hand(msg: &str) -> usize {
                .expect("Failed to read_line.");
     hand.trim()
         .parse::<usize>()
-        .expect("Prease type a number.")
+        .expect("Prease type a number.") - 1
 }
 
 fn show_board(board: &[[Stone; WIDTH]; HEIGHT]) {
+    println!("---------------------");
     for row in board.iter() {
+        print!("| ");
         for elem in row.iter() {
             print!("{} ", elem.to_char());
         }
-        println!();
+        println!("|");
     }
+    println!("---------------------");
 }
 
 fn main() {
@@ -54,7 +57,6 @@ fn main() {
         let y = get_hand("Input y: ");
         println!("x = {}, y = {}", x, y);
 
-        // board[y][x] = 1;
         board[y][x] = Stone::Black;
         show_board(&board)
     }
