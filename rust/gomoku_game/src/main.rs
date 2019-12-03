@@ -18,6 +18,7 @@ impl Stone {
             Stone::Space => ' '
         }
     }
+
 }
 
 fn get_hand(msg: &str) -> usize {
@@ -30,32 +31,37 @@ fn get_hand(msg: &str) -> usize {
         .expect("Prease type a number.") - 1
 }
 
-fn show_board(board: &[[Stone; WIDTH]; HEIGHT]) {
+fn show_board(board: &[Stone; WIDTH*HEIGHT]) {
     println!("---------------------");
-    for row in board.iter() {
+    for i in (0..board.len()).step_by(WIDTH) {
         print!("| ");
-        for elem in row.iter() {
-            print!("{} ", elem.to_char());
+        for x in i..(i + WIDTH) {
+            print!("{} ", board[x].to_char());
         }
         println!("|");
     }
     println!("---------------------");
 }
 
-fn insert_stone(board: &mut [[Stone; WIDTH]; HEIGHT], (x, y): (usize, usize), stone: Stone) {
-    if board[y][x] != Stone::Space {
+fn calc_index(x: usize, y: usize) -> usize {
+    y * WIDTH + x
+}
+
+fn insert_stone(board: &mut [Stone; WIDTH*HEIGHT], (x, y): (usize, usize), stone: Stone) {
+    let index: usize = calc_index(x, y);
+    if board[index] != Stone::Space {
         println!("Invalid position.");
     } else {
-        board[y][x] = stone;
+        board[index] = stone;
     }
 }
 
-fn is_game_finished(board: &[[Stone; WIDTH]; HEIGHT]) -> bool {
+fn is_game_finished(board: &[Stone; WIDTH*HEIGHT]) -> bool {
     true
 }
 
 fn main() {
-    let mut board = [[Stone::Space; WIDTH]; HEIGHT];
+    let mut board = [Stone::Space; WIDTH*HEIGHT];
     let mut active_stone = Stone::White;
 
     while is_game_finished(&board) {
