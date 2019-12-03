@@ -50,11 +50,15 @@ fn insert_stone(board: &mut [[Stone; WIDTH]; HEIGHT], (x, y): (usize, usize), st
     }
 }
 
+fn is_game_finished(board: &[[Stone; WIDTH]; HEIGHT]) -> bool {
+    true
+}
+
 fn main() {
     let mut board = [[Stone::Space; WIDTH]; HEIGHT];
     let mut active_stone = Stone::White;
 
-    loop {
+    while is_game_finished(&board) {
         let x = get_hand("Input x: ");
         let y = get_hand("Input y: ");
         println!("x = {}, y = {}", x, y);
