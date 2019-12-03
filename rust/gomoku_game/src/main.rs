@@ -3,7 +3,7 @@ use std::io;
 const WIDTH:  usize = 9;
 const HEIGHT: usize = 9;
 
-#[derive(Clone, Copy, PartialEq)]
+#[derive(Debug, Clone, Copy, PartialEq)]
 enum Stone {
     White,
     Black,
@@ -57,6 +57,28 @@ fn insert_stone(board: &mut [Stone; WIDTH*HEIGHT], (x, y): (usize, usize), stone
 }
 
 fn is_game_finished(board: &[Stone; WIDTH*HEIGHT]) -> bool {
+    fn extract_partial_lines(board: &[Stone; WIDTH*HEIGHT], start_i: usize, step: usize) -> [&Stone; 5] {
+        let target_line = board[start_i..].iter()
+                                          .step_by(step)
+                                          .collect::<Vec<_>>();
+        // subvector can be useful.
+        if target_line.len() >= 5 {
+            let mut result_array = [&Stone::Space; 5];
+            result_array.clone_from_slice(&target_line[..]);
+            result_array
+        } else {
+            [&Stone::Space; 5]
+        }
+    }
+
+    // let horizontal_line = &board[0..20].iter().collect::<Vec<_>>()[0..5];
+    // let vertival_line   = &board[0..20].iter().step_by(WIDTH).collect::<Vec<_>>()[0..5];
+    // let fall_left_line  = &board[0..20].iter().step_by(WIDTH-1);
+    // let fall_right_line = &board[0..20].iter().step_by(WIDTH+1);
+    // println!("horizontal_line:\t{:?}", horizontal_line);
+    // println!("vertival_line:\t\t{:?}", vertival_line);
+    // println!("rising_line:\t\t{:?}", fall_left_line);
+    // println!("falling_line:\t\t{:?}", fall_right_line);
     true
 }
 
