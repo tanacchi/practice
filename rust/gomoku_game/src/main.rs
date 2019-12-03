@@ -3,6 +3,7 @@ use std::io;
 const WIDTH:  usize = 9;
 const HEIGHT: usize = 9;
 
+#[derive(Clone, Copy, PartialEq)]
 enum Stone {
     White,
     Black,
@@ -18,14 +19,6 @@ impl Stone {
         }
     }
 }
-
-impl Clone for Stone {
-    fn clone(&self) -> Stone {
-        *self
-    }
-}
-
-impl Copy for Stone {}
 
 fn get_hand(msg: &str) -> usize {
     println!("{}", msg);
@@ -49,6 +42,14 @@ fn show_board(board: &[[Stone; WIDTH]; HEIGHT]) {
     println!("---------------------");
 }
 
+fn insert_stone(board: &mut [[Stone; WIDTH]; HEIGHT], (x, y): (usize, usize), stone: Stone) {
+    if board[y][x] != Stone::Space {
+        println!("Invalid position.");
+    } else {
+        board[y][x] = stone;
+    }
+}
+
 fn main() {
     let mut board = [[Stone::Space; WIDTH]; HEIGHT];
     let mut active_stone = Stone::White;
@@ -58,7 +59,7 @@ fn main() {
         let y = get_hand("Input y: ");
         println!("x = {}, y = {}", x, y);
 
-        board[y][x] = active_stone;
+        insert_stone(&mut board, (x, y), active_stone);
         show_board(&board);
 
         active_stone = match active_stone {
