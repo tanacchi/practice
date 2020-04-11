@@ -13,3 +13,6 @@
 *cmake*
 
 !CMakeList*s*.txt
+
+*.venv*
+__pycache__
