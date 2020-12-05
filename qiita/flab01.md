@@ -18,26 +18,36 @@
 
 今回は線形回帰の拡張として解説します．
 
+## 問題設定
+
+$\{(x_i, y_i)\}_{i=1}^{N}$  が与えられているとします．（$ x, y$ のペアの集合，$i = 1, \cdots,  N$）
+
+ここで，$x$ は入力， $y$ は出力に相当するものです．
+
+与えられた $\{(x_i, y_i)\}_{i=1}^{N}$ をもとに，
+新規の入力 $x^{\ast}$ に対する出力値を予測したいとします．
+
+
+![qiita_pictures (1)-02.png](https://qiita-image-store.s3.ap-northeast-1.amazonaws.com/0/199099/467814aa-f3a8-9083-36fa-8ffc72501a13.png)
+
+
+このときに，$y = f(x)$ となるモデル $f$ をデータから学習しましょうという話です．
+
 
 ## 線形回帰とは
 
-
-$ x $, [$ y] のペアを入力として
-
-x を入力，と y を出力とする
-
-新規の入力 [$ x^{\ast}] に対する出力値を予測したい
+線形回帰では，$ f $ を一次関数として問題を解きます．
+具体的には，
+$ f(x) = a_0 + a_1 x $ などとおいて，データから $a_0$ と $a_1$ を推定します．．
+$a_0$ が切片（0次のパラメータ），$a_1$ が傾き（1次のパラメータ）です．
 
 
-このときに，[$ y = f(x)] となるモデル [$ f] をデータから学習しましょうという話です．
+![qiita_pictures (1)-04.png](https://qiita-image-store.s3.ap-northeast-1.amazonaws.com/0/199099/fffe4f1b-6c65-0b64-fcdb-294d1ecd569f.png)
 
 
-線形回帰では，[$ f(x) = a_0 + a_1 x] とおいて，
-[$ f] を直線で近似します．
+このモデル $f$ を用いて推定した出力を $\hat{y}$ として，
+直線の式を以下のように書きます．
 
-
-直線の式は以下のように書けます．
-推定値は [$ \hat{y}]
 
 ```math
 \begin{align}
@@ -48,7 +58,12 @@ x を入力，と y を出力とする
 \end{align}
 ```
 
-[$ a_1] が傾き（1次のパラメータ），[$ a_0] が切片（0次のパラメータ）です．
+![qiita_pictures (1)-06.png](https://qiita-image-store.s3.ap-northeast-1.amazonaws.com/0/199099/905e9714-f3f2-4f7c-aabb-978f78805364.png)
+
+さて，パラメータ $\boldsymbol{a}$ をどうやって決めるのかという話ですが，
+ある入力 $x_i$ に対する「出力の推定値 $\hat{y_i}$」 と「実際の出力 $y_i$」 の二乗誤差を
+最小にするように $\boldsymbol{a}$ を決めます．
+まあこの辺りは調べればいくらでもヒットするような内容ですので多くは語りません．
 
 ```math 
 \begin{align}
@@ -57,8 +72,8 @@ E &= \sum_i^n ( y_i - \hat{y}_i )^2 \\
 \end{align}
 ```
 
-ここで，敢えて [$ \sum] を外した形で書いてみます．
 
+ここで，敢えて $\sum$ を外した形で書いてみます．
 
 
 ```math
@@ -68,7 +83,8 @@ E &=  ( y_1 - \boldsymbol{x}_1^T\boldsymbol{a} )^2 + \cdots + ( y_i - \boldsymbo
 ```
 
 最小二乗法では
-[$ E] を最小にするようなパラメータ [$ \boldsymbol{a}] を求めることになります．
+$E$ を最小にするようなパラメータ $\boldsymbol{a}$ を求めることになります．
+
 
 そしてこれを行列積の形で表現すると以下のようになります．
 
@@ -181,6 +197,15 @@ E &= \left( \boldsymbol{y} - \boldsymbol{X}\boldsymbol{a} \right)^T
 イメージは以下の図の通りです．
 
 
+![qiita_pictures (1)-08.png](https://qiita-image-store.s3.ap-northeast-1.amazonaws.com/0/199099/09045501-2d89-02a8-0aba-9ab2f417bdaf.png)
+
+
+![qiita_pictures (1)-09.png](https://qiita-image-store.s3.ap-northeast-1.amazonaws.com/0/199099/7539ee97-6288-477a-d7b8-cd0466c2c6a0.png)
+
+
+![qiita_pictures (1)-10.png](https://qiita-image-store.s3.ap-northeast-1.amazonaws.com/0/199099/d65d1a9e-0434-c903-4d42-da69dc5f310f.png)
+
+
 場所によって傾きが異なるのも
 なんとなくわかりますね．
 「線形」とありますが
@@ -204,7 +229,7 @@ k(x^\ast, x_1) & & \huge{0} \\
 \end{align}
 ```
 
-ここで先ほどと同じように [$ y, X] を定義し
+ここで先ほどと同じように $y, X$ を定義し
 
 ```math
 \begin{align}
@@ -225,7 +250,7 @@ k(x^\ast, x_1) & & \huge{0} \\
 \end{align}
 ```
 
-[$ \boldsymbol{a}] で偏微分すると以下のようになります．
+$\boldsymbol{a}$ で偏微分すると以下のようになります．
 
 
 ```math 
@@ -250,7 +275,7 @@ k(x^\ast, x_1) & & \huge{0} \\
 \frac{\partial}{\partial \boldsymbol{a}} E = 0
 ```
 
-となるような [$ \boldsymbol{a}] を求めていきます．
+となるような $\boldsymbol{a}$ を求めていきます．
 
 ```math
 \begin{align}
