@@ -15,6 +15,7 @@
 局所線形回帰について調べました．
 研究室に入りたての私でも理解できるような、
 ちょっとクドいくらい丁寧に説明できたらと思っております。
+（サークルの後輩も読んでくれるそうなので）
 
 今回は線形回帰の拡張として解説します．
 
@@ -65,12 +66,18 @@ $a_0$ が切片（0次のパラメータ），$a_1$ が傾き（1次のパラメ
 最小にするように $\boldsymbol{a}$ を決めます．
 まあこの辺りは調べればいくらでもヒットするような内容ですので多くは語りません．
 
+
+『ある入力 $x_i$ に対する「出力の推定値 $\hat{y_i}$」 と「実際の出力 $y_i$」 の二乗誤差』の総和を $E$ とします．
+いわゆる目的関数です．
+
 ```math 
 \begin{align}
 E &= \sum_i^n ( y_i - \hat{y}_i )^2 \\
 &= \sum_i^n ( y_i - \boldsymbol{x}_i^T\boldsymbol{a} )^2 \\
 \end{align}
 ```
+
+$E$ を最小にするようなパラメータ $\boldsymbol{a}$ を求めていきます．
 
 
 ここで，敢えて $\sum$ を外した形で書いてみます．
@@ -81,10 +88,6 @@ E &= \sum_i^n ( y_i - \hat{y}_i )^2 \\
 E &=  ( y_1 - \boldsymbol{x}_1^T\boldsymbol{a} )^2 + \cdots + ( y_i - \boldsymbol{x}_i^T\boldsymbol{a} )^2
 \end{align}
 ```
-
-最小二乗法では
-$E$ を最小にするようなパラメータ $\boldsymbol{a}$ を求めることになります．
-
 
 そしてこれを行列積の形で表現すると以下のようになります．
 
@@ -105,7 +108,7 @@ X &:= \left( \begin{array}{c} \boldsymbol{x}_1^T \\ \vdots \\ \boldsymbol{x}_n^T
 \end{align}
 ```
 
-というふうにおくと，
+とすることで，以下のように変形できます．
 
 ```math
 \boldsymbol{y} - \boldsymbol{X} \boldsymbol{a} = \left( \begin{array}{c} y_1 \\ \vdots \\ y_n \\ \end{array} \right) - \left( \begin{array}{c} \boldsymbol{x}_1^T \\ \vdots \\ \boldsymbol{x}_n^T \\ \end{array} \right) \boldsymbol{a} = \begin{align} 
@@ -113,7 +116,8 @@ X &:= \left( \begin{array}{c} \boldsymbol{x}_1^T \\ \vdots \\ \boldsymbol{x}_n^T
 \end{align}
 ```
 
-すなわち先程の式は以下のように書けます．
+
+すなわち先程の $E$ 式は以下のように書けます．
 
 ```math
 \begin{align} 
@@ -123,7 +127,7 @@ E &= \left( \boldsymbol{y} - \boldsymbol{X}\boldsymbol{a} \right)^T
 \end{align}
 ```
 
-ユークリッドノルムの二乗ですね．
+$\boldsymbol{y} - \boldsymbol{X} \boldsymbol{a}$ のユークリッドノルムの二乗の形ですね．
 
 [The Matrix Cookbook](https://www.math.uwaterloo.ca/~hwolkowi/matrixcookbook.pdf)
 
@@ -132,6 +136,8 @@ E &= \left( \boldsymbol{y} - \boldsymbol{X}\boldsymbol{a} \right)^T
 読み飛ばしてもらって大丈夫です．
 いわゆる最小二乗法を行列の形で解きます．
 
+上で変形した $E$ の式について，
+右辺を展開してから $\boldsymbol{a}$ で微分します．
 
 ```math
 \begin{align} 
@@ -158,7 +164,7 @@ E &= \left( \boldsymbol{y} - \boldsymbol{X}\boldsymbol{a} \right)^T
 \frac{\partial}{\partial \boldsymbol{a}} E = 0
 ```
 
-極値を求めますと，
+となる $\boldsymbol{a}$ を求めますと，
 
 ```math
 \begin{align}
@@ -170,32 +176,37 @@ E &= \left( \boldsymbol{y} - \boldsymbol{X}\boldsymbol{a} \right)^T
 
 となります．
 めでたしめでたし．
-また，
+
+また，ここで求まった $\boldsymbol{a}$ の形式は
+ムーア-ペンローズの一般化逆行列です．
+
 
 ```math
-\boldsymbol{X}^{\dagger} = \begin{align}
-\left( \boldsymbol{X}^T \boldsymbol{X} \right)^{-1}\boldsymbol{X}^T
-\end{align}
+\boldsymbol{X}^{\dagger} := \left( \boldsymbol{X}^T \boldsymbol{X} \right)^{-1}\boldsymbol{X}^T
 ```
 
-ムーアペンローズの逆行列です．
+<!--
 
 ```math 
 \hat{\boldsymbol{y}} = \boldsymbol{X}^{\dagger}\boldsymbol{a}
 ```
+-->
+
 
 ## 局所線形回帰に拡張
 
 ここからが本題です．
 
 上で説明した線形回帰では
-すべてのデータを平等に重み付けしてパラメータを計算していましたが，
+すべてのデータに対する誤差を
+平等に重み付けしてパラメータを計算していました．
 
-局所線形回帰では，新規の入力に近いデータに対しては
-誤差を重く，逆に遠いデータ誤差を軽く見て
+局所線形回帰では，
+新規の入力に**近いデータに対しては誤差を重く**，
+逆に**遠いデータに対しては誤差を軽く**見て
 パラメータを計算します．
-イメージは以下の図の通りです．
 
+イメージは以下の図の通りです．
 
 ![qiita_pictures (1)-08.png](https://qiita-image-store.s3.ap-northeast-1.amazonaws.com/0/199099/09045501-2d89-02a8-0aba-9ab2f417bdaf.png)
 
@@ -207,13 +218,16 @@ E &= \left( \boldsymbol{y} - \boldsymbol{X}\boldsymbol{a} \right)^T
 
 
 場所によって傾きが異なるのも
-なんとなくわかりますね．
-「線形」とありますが
-直線ではないです．
-あくまで局所的に直線を推定しています．
+なんとなくわかるかと思います．
 
 
-このときの誤差の重みを決める関数（カーネル関数）$ k(x^\ast, x_i) $ は以下の式で表されるとします．
+このときの誤差の重みを決める関数（カーネル関数）$ k(x_1, x_i) $ は以下の式で表されるとします．
+
+```math
+k(x^\ast, x_i) = \exp( \frac{1}{2 * \sigma **2} \| x^\ast - x\|)
+
+```
+
 
 
 ```math 
@@ -294,9 +308,14 @@ $\boldsymbol{a}$ で偏微分すると以下のようになります．
 
 -->
 
+「線形」とありますが
+直線ではないです．
+あくまで局所的に直線を推定しています．
+
 ## ちなみに
 
 ## おわりに
+
 
 ## 付録：実装まとめ
 
