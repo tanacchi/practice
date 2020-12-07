@@ -221,12 +221,18 @@ $\boldsymbol{y} - \boldsymbol{X} \boldsymbol{a}$ のユークリッドノルム�
 なんとなくわかるかと思います．
 
 
-このときの誤差の重みを決める関数（カーネル関数）$ k(x_1, x_i) $ は以下の式で表されるとします．
+このときの誤差の重みを決める関数（カーネル関数）$ k(x, x^\prime) $ は以下の式で表されるとします．
 
 ```math
-k(x^\ast, x_i) = \exp( \frac{1}{2 * \sigma **2} \| x^\ast - x\|)
+k(x, x^\prime) = \exp( \frac{1}{2 * \sigma **2} \| x - x^\prime \|)
 
 ```
+
+$sigma$ はカーネル幅と呼ばれるパラメータで，
+ざっくり言いますと
+「新規データに対する近い or 遠いを決める境目」を決めるものです．
+これを**大きく**するとより**広い範囲**を近傍のデータと見なします．
+これを究極に大きくすると先程の線形回帰と同じ結果を得られます．
 
 
 
@@ -243,11 +249,14 @@ k(x^\ast, x_1) & & \huge{0} \\
 \end{align}
 ```
 
-ここで先ほどと同じように $y, X$ を定義し
+ここで
 
 ```math
-\begin{align}
-\boldsymbol{W} = \left( \begin{array}{ccc}
+\begin{align} 
+\boldsymbol{y} &:= \left( \begin{array}{c} y_1 \\ \vdots \\ y_n \\ \end{array} \right)\\
+
+\boldsymbol{X} &:= \left( \begin{array}{c} \boldsymbol{x}_1^T \\ \vdots \\ \boldsymbol{x}_n^T \\ \end{array} \right)
+\boldsymbol{W} &:= \left( \begin{array}{ccc}
 k(x^\ast, x_1) & & \huge{0} \\
  & \ddots  & \\
 \huge{0} & & k(x^\ast, x_n) \\
@@ -255,7 +264,7 @@ k(x^\ast, x_1) & & \huge{0} \\
 \end{align}
 ```
 
-とおきます．
+とおくと以下のように書けます．
 
 ```math
 \begin{align}
@@ -264,6 +273,9 @@ k(x^\ast, x_1) & & \huge{0} \\
 \end{align}
 ```
 
+線形回帰の時と似たような式が出てきましたね．
+
+そして，線形回帰の時と同様に
 $\boldsymbol{a}$ で偏微分すると以下のようになります．
 
 
@@ -285,6 +297,8 @@ $\boldsymbol{a}$ で偏微分すると以下のようになります．
 \end{align}
 ```
 
+結構大変ですね．
+
 ```math
 \frac{\partial}{\partial \boldsymbol{a}} E = 0
 ```
@@ -298,23 +312,21 @@ $\boldsymbol{a}$ で偏微分すると以下のようになります．
 \end{align}
 ```
 
+ということで，目的関数 $E$ を最小とする
+パラメータ $\boldsymbol{a}$ が求められました．
 
 ## 実際に回帰してみる
 
-<!--
-## Nadaraya-Watson との関係
-どちらも局所多項式回帰の特別なパターン
-比較
+Python で実際に回帰させてみます．
+コードは最後に載せます．
 
--->
-
-「線形」とありますが
-直線ではないです．
-あくまで局所的に直線を推定しています．
-
-## ちなみに
+局所**線形**回帰という名前なのに直線になってないじゃないか，
+と思われるかも知れませんが，
+あくまで局所的に直線を推定して
+$\hat{y}$ を計算しています．
 
 ## おわりに
+
 
 
 ## 付録：実装まとめ
