@@ -37,6 +37,10 @@ $\{(x_i, y_i)\}_{i=1}^{N}$  が与えられているとします．（$ x, y$ �
 
 ## 線形回帰とは
 
+いわゆる最小二乗法です．
+「そんなもんわかっとるわい」という方は
+読み飛ばしてもらって大丈夫です．
+
 線形回帰では，$ f $ を一次関数として問題を解きます．
 具体的には，
 $ f(x) = a_0 + a_1 x $ などとおいて，データから $a_0$ と $a_1$ を推定します．．
@@ -108,7 +112,7 @@ X &:= \left( \begin{array}{c} \boldsymbol{x}_1^T \\ \vdots \\ \boldsymbol{x}_n^T
 \end{align}
 ```
 
-とすることで，以下のように変形できます．
+とすることで，以下のような変形ができます．
 
 ```math
 \boldsymbol{y} - \boldsymbol{X} \boldsymbol{a} = \left( \begin{array}{c} y_1 \\ \vdots \\ y_n \\ \end{array} \right) - \left( \begin{array}{c} \boldsymbol{x}_1^T \\ \vdots \\ \boldsymbol{x}_n^T \\ \end{array} \right) \boldsymbol{a} = \begin{align} 
@@ -129,12 +133,7 @@ E &= \left( \boldsymbol{y} - \boldsymbol{X}\boldsymbol{a} \right)^T
 
 $\boldsymbol{y} - \boldsymbol{X} \boldsymbol{a}$ のユークリッドノルムの二乗の形ですね．
 
-[The Matrix Cookbook](https://www.math.uwaterloo.ca/~hwolkowi/matrixcookbook.pdf)
-
 ## 線形回帰を解く
-
-読み飛ばしてもらって大丈夫です．
-いわゆる最小二乗法を行列の形で解きます．
 
 上で変形した $E$ の式について，
 右辺を展開してから $\boldsymbol{a}$ で微分します．
@@ -178,8 +177,14 @@ $\boldsymbol{y} - \boldsymbol{X} \boldsymbol{a}$ のユークリッドノルム�
 めでたしめでたし．
 
 また，ここで求まった $\boldsymbol{a}$ の形式は
-ムーア-ペンローズの一般化逆行列です．
+ムーア-ペンローズの一般化逆行列を用いて以下のようにも表現できます．
 
+```math
+\boldsymbol{a} &= \boldsymbol{X}^{\dagger} \boldsymbol{y}
+\end{align}
+```
+
+ただし，
 
 ```math
 \boldsymbol{X}^{\dagger} := \left( \boldsymbol{X}^T \boldsymbol{X} \right)^{-1}\boldsymbol{X}^T
@@ -198,8 +203,8 @@ $\boldsymbol{y} - \boldsymbol{X} \boldsymbol{a}$ のユークリッドノルム�
 ここからが本題です．
 
 上で説明した線形回帰では
-すべてのデータに対する誤差を
-平等に重み付けしてパラメータを計算していました．
+推定した出力 $\hat{\boldsymbol{y}_i}$ と実際の出力 $\boldsymbol{y}_i$ の誤差を
+**すべてのデータに対して平等に**重み付けしてパラメータを計算していました．
 
 局所線形回帰では，
 新規の入力に**近いデータに対しては誤差を重く**，
@@ -221,19 +226,19 @@ $\boldsymbol{y} - \boldsymbol{X} \boldsymbol{a}$ のユークリッドノルム�
 なんとなくわかるかと思います．
 
 
-このときの誤差の重みを決める関数（カーネル関数）$ k(x, x^\prime) $ は以下の式で表されるとします．
+このときの誤差の重みを決める関数（カーネル関数）$ k(\boldsymbol{x}, \boldsymbol{x}^\prime) $ は
+以下の式で表されるとします．
 
 ```math
-k(x, x^\prime) = \exp( \frac{1}{2 * \sigma **2} \| x - x^\prime \|)
+k(\boldsymbol{x}, \boldsymbol{x}^\prime) = \exp(- \frac{1}{2  \sigma^2} \| \boldsymbol{x} - \boldsymbol{x}^\prime \|^2)
 
 ```
 
-$sigma$ はカーネル幅と呼ばれるパラメータで，
+$\sigma$ はカーネル幅と呼ばれる（ハイパー）パラメータで，
 ざっくり言いますと
 「新規データに対する近い or 遠いを決める境目」を決めるものです．
-これを**大きく**するとより**広い範囲**を近傍のデータと見なします．
+これを**大きく**するとより**広い範囲**のデータを近傍と見なします．
 これを究極に大きくすると先程の線形回帰と同じ結果を得られます．
-
 
 
 ```math 
@@ -299,6 +304,8 @@ $\boldsymbol{a}$ で偏微分すると以下のようになります．
 
 結構大変ですね．
 
+目的関数 $E$ をパラメータ $\boldsymbol{a}$ で微分した式が求まりましたので，
+
 ```math
 \frac{\partial}{\partial \boldsymbol{a}} E = 0
 ```
@@ -320,14 +327,35 @@ $\boldsymbol{a}$ で偏微分すると以下のようになります．
 Python で実際に回帰させてみます．
 コードは最後に載せます．
 
-局所**線形**回帰という名前なのに直線になってないじゃないか，
+局所**線形**回帰という名前なのに直線になってないじゃん，
 と思われるかも知れませんが，
 あくまで局所的に直線を推定して
-$\hat{y}$ を計算しています．
+$\hat{\boldsymbol{y}}$ を計算しています．
 
 ## おわりに
 
+局所線形回帰では，ある $\boldsymbol{x}$ に対する出力 $\boldsymbol{\hat{y}}$について，
+局所的に**一次関数**で近似します．
+ただ，一次関数にこだわる必要はなくて，
+二次関数でも三次関数でもゼロ次（定数）関数でも良いわけです．
+このように，「局所的に**多項式**で回帰する」というように
+一般化した回帰モデルを「**局所多項式回帰**」と呼びます．
 
+ちなみに，Nadaraya-Watson 回帰は
+局所多項式回帰のゼロ次関数版です．
+Nadaraya-Watson is 何？という話は
+後日 @nakashima1125 氏がわかりやすく解説してくれると思います．
 
 ## 付録：実装まとめ
 
+```Python:linear_regression.py
+```
+
+```Python:local_linear_regression.py
+```
+
+## 参考文献
+
+
+- [The Matrix Cookbook](https://www.math.uwaterloo.ca/~hwolkowi/matrixcookbook.pdf)
+- 統計的学習の基礎
