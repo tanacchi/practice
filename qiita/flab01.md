@@ -59,17 +59,29 @@ $a_0$ が切片（0次のパラメータ），$a_1$ が傾き（1次のパラメ
 \hat{y} &= a_1 x + a_0 \\
 &= \left( \begin{array}{cc} 1 & x \\ \end{array} \right)
 \left( \begin{array}{c} a_0 \\ a_1 \end{array} \right) \\
-&= \boldsymbol{x}^T \boldsymbol{a}
 \end{align}
 ```
 
-![qiita_pictures (1)-06.png](https://qiita-image-store.s3.ap-northeast-1.amazonaws.com/0/199099/905e9714-f3f2-4f7c-aabb-978f78805364.png)
+ここで，
+
+```math
+\begin{align} 
+\boldsymbol{x} := \left( \begin{array}{c} 1 \\ x \end{array} \right)
+\boldsymbol{a} := \left( \begin{array}{c} a_0 \\ a_1 \end{array} \right)
+\end{align}
+```
+として，以下のように表されます．
+
+```math
+E = \boldsymbol{x}^T \boldsymbol{a}
+```
 
 さて，パラメータ $\boldsymbol{a}$ をどうやって決めるのかという話ですが，
 ある入力 $x_i$ に対する「出力の推定値 $\hat{y_i}$」 と「実際の出力 $y_i$」 の二乗誤差を
 最小にするように $\boldsymbol{a}$ を決めます．
 まあこの辺りは調べればいくらでもヒットするような内容ですので多くは語りません．
 
+![qiita_pictures (1)-06.png](https://qiita-image-store.s3.ap-northeast-1.amazonaws.com/0/199099/905e9714-f3f2-4f7c-aabb-978f78805364.png)
 
 『ある入力 $x_i$ に対する「出力の推定値 $\hat{y_i}$」 と「実際の出力 $y_i$」 の二乗誤差』の総和を $E$ とします．
 いわゆる目的関数です．
@@ -88,18 +100,14 @@ $E$ を最小にするようなパラメータ $\boldsymbol{a}$ を求めてい�
 
 
 ```math
-\begin{align} 
-E &=  ( y_1 - \boldsymbol{x}_1^T\boldsymbol{a} )^2 + \cdots + ( y_i - \boldsymbol{x}_i^T\boldsymbol{a} )^2
-\end{align}
+E =  ( y_1 - \boldsymbol{x}_1^T\boldsymbol{a} )^2 + \cdots + ( y_i - \boldsymbol{x}_i^T\boldsymbol{a} )^2
 ```
 
-そしてこれを行列積の形で表現すると以下のようになります．
+そしてこれを行列積の形で表現してみると以下のようになります．
 
 ```math
-\begin{align} 
-E &= \left( \begin{array}{cccc} y_1 - \boldsymbol{x}_1^T\boldsymbol{a} & \cdots & y_n - \boldsymbol{x}_n^T\boldsymbol{a}  \end{array} \right)
+E = \left( \begin{array}{cccc} y_1 - \boldsymbol{x}_1^T\boldsymbol{a} & \cdots & y_n - \boldsymbol{x}_n^T\boldsymbol{a}  \end{array} \right)
 \left( \begin{array}{c} y_1 - \boldsymbol{x}_1^T\boldsymbol{a} \\ \vdots \\ y_n - \boldsymbol{x}_n^T\boldsymbol{a} \\ \end{array} \right) \\
-\end{align}
 ```
 
 ここで，
@@ -115,9 +123,7 @@ X &:= \left( \begin{array}{c} \boldsymbol{x}_1^T \\ \vdots \\ \boldsymbol{x}_n^T
 とすることで，以下のような変形ができます．
 
 ```math
-\boldsymbol{y} - \boldsymbol{X} \boldsymbol{a} = \left( \begin{array}{c} y_1 \\ \vdots \\ y_n \\ \end{array} \right) - \left( \begin{array}{c} \boldsymbol{x}_1^T \\ \vdots \\ \boldsymbol{x}_n^T \\ \end{array} \right) \boldsymbol{a} = \begin{align} 
-\left( \begin{array}{c} y_1 - \boldsymbol{x}_1^T\boldsymbol{a} \\ \vdots \\ y_n - \boldsymbol{x}_n^T\boldsymbol{a} \\ \end{array} \right)
-\end{align}
+\left( \begin{array}{c} y_1 - \boldsymbol{x}_1^T\boldsymbol{a} \\ \vdots \\ y_n - \boldsymbol{x}_n^T\boldsymbol{a} \\ \end{array} \right) = \left( \begin{array}{c} y_1 \\ \vdots \\ y_n \\ \end{array} \right) - \left( \begin{array}{c} \boldsymbol{x}_1^T \\ \vdots \\ \boldsymbol{x}_n^T \\ \end{array} \right) \boldsymbol{a} = \boldsymbol{y} - \boldsymbol{X} \boldsymbol{a}
 ```
 
 
@@ -158,6 +164,7 @@ $\boldsymbol{y} - \boldsymbol{X} \boldsymbol{a}$ のユークリッドノルム�
 ```
 
 となります．
+そして，これを最小とする $\boldsymbol{a}$ ，すなわち
 
 ```math
 \frac{\partial}{\partial \boldsymbol{a}} E = 0
@@ -176,15 +183,14 @@ $\boldsymbol{y} - \boldsymbol{X} \boldsymbol{a}$ のユークリッドノルム�
 となります．
 めでたしめでたし．
 
-また，ここで求まった $\boldsymbol{a}$ の形式は
-ムーア-ペンローズの一般化逆行列を用いて以下のようにも表現できます．
+また，ここで求まった $\boldsymbol{a}$ は
+ムーア・ペンローズの一般化逆行列を用いて以下のようにも表現できます．
 
 ```math
-\boldsymbol{a} &= \boldsymbol{X}^{\dagger} \boldsymbol{y}
-\end{align}
+\boldsymbol{a} = \boldsymbol{X}^{\dagger} \boldsymbol{y}
 ```
 
-ただし，
+ただし，$\boldsymbol{X}^{\dagger}$ は以下のように定義されます．
 
 ```math
 \boldsymbol{X}^{\dagger} := \left( \boldsymbol{X}^T \boldsymbol{X} \right)^{-1}\boldsymbol{X}^T
@@ -222,16 +228,15 @@ $\boldsymbol{y} - \boldsymbol{X} \boldsymbol{a}$ のユークリッドノルム�
 ![qiita_pictures (1)-10.png](https://qiita-image-store.s3.ap-northeast-1.amazonaws.com/0/199099/d65d1a9e-0434-c903-4d42-da69dc5f310f.png)
 
 
-場所によって傾きが異なるのも
+$x^\ast$ の値によってパラメータが異なるのも
 なんとなくわかるかと思います．
 
 
-このときの誤差の重みを決める関数（カーネル関数）$ k(\boldsymbol{x}, \boldsymbol{x}^\prime) $ は
+このときの誤差の重みを決める関数（カーネル関数）$ k(x, x^\prime) $ は
 以下の式で表されるとします．
 
 ```math
-k(\boldsymbol{x}, \boldsymbol{x}^\prime) = \exp(- \frac{1}{2  \sigma^2} \| \boldsymbol{x} - \boldsymbol{x}^\prime \|^2)
-
+k(x, x^\prime) = \exp \left(- \frac{1}{2  \sigma^2} ( x - x^\prime )^2 \right)
 ```
 
 $\sigma$ はカーネル幅と呼ばれる（ハイパー）パラメータで，
@@ -261,7 +266,7 @@ k(x^\ast, x_1) & & \huge{0} \\
 \boldsymbol{y} &:= \left( \begin{array}{c} y_1 \\ \vdots \\ y_n \\ \end{array} \right)\\
 
 \boldsymbol{X} &:= \left( \begin{array}{c} \boldsymbol{x}_1^T \\ \vdots \\ \boldsymbol{x}_n^T \\ \end{array} \right)
-\boldsymbol{W} &:= \left( \begin{array}{ccc}
+\boldsymbol{W}_{x^\ast} &:= \left( \begin{array}{ccc}
 k(x^\ast, x_1) & & \huge{0} \\
  & \ddots  & \\
 \huge{0} & & k(x^\ast, x_n) \\
@@ -272,13 +277,18 @@ k(x^\ast, x_1) & & \huge{0} \\
 とおくと以下のように書けます．
 
 ```math
-\begin{align}
- &= \left( \boldsymbol{y} - \boldsymbol{X}\boldsymbol{a} \right)^T
-\boldsymbol{W} \left( \boldsymbol{y} - \boldsymbol{X}\boldsymbol{a} \right)
-\end{align}
+E = \left( \boldsymbol{y} - \boldsymbol{X}\boldsymbol{a} \right)^T
+\boldsymbol{W}_{x^\ast} \left( \boldsymbol{y} - \boldsymbol{X}\boldsymbol{a} \right)
 ```
 
 線形回帰の時と似たような式が出てきましたね．
+実際，この式は「$\boldsymbol{W}_{x^\ast}$ をメトリックとするノルム」として
+
+```math
+E = \left\| \boldsymbol{y} - \boldsymbol{X}\boldsymbol{a}  \right\|_{\boldsymbol{W}_{x^\ast}}^2
+```
+
+とも表現できる（らしい）です．（要出典）
 
 そして，線形回帰の時と同様に
 $\boldsymbol{a}$ で偏微分すると以下のようになります．
@@ -287,18 +297,18 @@ $\boldsymbol{a}$ で偏微分すると以下のようになります．
 ```math 
 \begin{align}
 \frac{\partial}{\partial \boldsymbol{a}} E &= \frac{\partial}{\partial \boldsymbol{a}} \left( \boldsymbol{y} - \boldsymbol{X}\boldsymbol{a} \right)^T
-\boldsymbol{W} \left( \boldsymbol{y} - \boldsymbol{X}\boldsymbol{a} \right)\\
+\boldsymbol{W}_{x^\ast} \left( \boldsymbol{y} - \boldsymbol{X}\boldsymbol{a} \right)\\
 &= \frac{\partial}{\partial \boldsymbol{a}} \left( \boldsymbol{y}^T - \boldsymbol{a}^T\boldsymbol{X}^T \right) 
-\boldsymbol{W} \left( \boldsymbol{y} - \boldsymbol{X}\boldsymbol{a} \right)\\
+\boldsymbol{W}_{x^\ast} \left( \boldsymbol{y} - \boldsymbol{X}\boldsymbol{a} \right)\\
 &=  \frac{\partial}{\partial \boldsymbol{a}}\left(
-\boldsymbol{y}^T \boldsymbol{W} \boldsymbol{y}
-- \boldsymbol{y}^T \boldsymbol{W} \boldsymbol{X}\boldsymbol{a}
-- \boldsymbol{a}^T\boldsymbol{X}^T \boldsymbol{W} \boldsymbol{y} 
-+ (\boldsymbol{X}\boldsymbol{a})^T \boldsymbol{W} \boldsymbol{X}\boldsymbol{a} \right)\\
-&= 0 - \boldsymbol{X}^T \boldsymbol{W} \boldsymbol{y} - \boldsymbol{X}^T \boldsymbol{W} \boldsymbol{y}  + 2 \boldsymbol{X}^T \boldsymbol{W} \boldsymbol{X} \boldsymbol{a} \\
-&= - 2 \boldsymbol{X}^T \boldsymbol{W} \boldsymbol{y} + 2 \boldsymbol{X}^T \boldsymbol{W} \boldsymbol{X} \boldsymbol{a} \\
-2 \boldsymbol{X}^T \boldsymbol{W} \boldsymbol{X} \boldsymbol{a} &= 2 \boldsymbol{X}^T \boldsymbol{W} \boldsymbol{y} \\
-\boldsymbol{a} &= \left(  \boldsymbol{X}^T \boldsymbol{W} \boldsymbol{X} \right)^{-1} \boldsymbol{X}^T \boldsymbol{W} \boldsymbol{y}
+\boldsymbol{y}^T \boldsymbol{W}_{x^\ast} \boldsymbol{y}
+- \boldsymbol{y}^T \boldsymbol{W}_{x^\ast} \boldsymbol{X}\boldsymbol{a}
+- \boldsymbol{a}^T\boldsymbol{X}^T \boldsymbol{W}_{x^\ast} \boldsymbol{y} 
++ (\boldsymbol{X}\boldsymbol{a})^T \boldsymbol{W}_{x^\ast} \boldsymbol{X}\boldsymbol{a} \right)\\
+&= 0 - \boldsymbol{X}^T \boldsymbol{W}_{x^\ast} \boldsymbol{y} - \boldsymbol{X}^T \boldsymbol{W}_{x^\ast} \boldsymbol{y}  + 2 \boldsymbol{X}^T \boldsymbol{W}_{x^\ast} \boldsymbol{X} \boldsymbol{a} \\
+&= - 2 \boldsymbol{X}^T \boldsymbol{W}_{x^\ast} \boldsymbol{y} + 2 \boldsymbol{X}^T \boldsymbol{W}_{x^\ast} \boldsymbol{X} \boldsymbol{a} \\
+2 \boldsymbol{X}^T \boldsymbol{W}_{x^\ast} \boldsymbol{X} \boldsymbol{a} &= 2 \boldsymbol{X}^T \boldsymbol{W}_{x^\ast} \boldsymbol{y} \\
+\boldsymbol{a} &= \left(  \boldsymbol{X}^T \boldsymbol{W}_{x^\ast} \boldsymbol{X} \right)^{-1} \boldsymbol{X}^T \boldsymbol{W}_{x^\ast} \boldsymbol{y}
 \end{align}
 ```
 
@@ -314,13 +324,28 @@ $\boldsymbol{a}$ で偏微分すると以下のようになります．
 
 ```math
 \begin{align}
-2 \boldsymbol{X}^T \boldsymbol{W} \boldsymbol{X} \boldsymbol{a} &= 2 \boldsymbol{X}^T \boldsymbol{W} \boldsymbol{y} \\
-\boldsymbol{a} &= \left(  \boldsymbol{X}^T \boldsymbol{W} \boldsymbol{X} \right)^{-1} \boldsymbol{X}^T \boldsymbol{W} \boldsymbol{y}
+2 \boldsymbol{X}^T \boldsymbol{W}_{x^\ast} \boldsymbol{X} \boldsymbol{a} &= 2 \boldsymbol{X}^T \boldsymbol{W}_{x^\ast} \boldsymbol{y} \\
+\boldsymbol{a} &= \left(  \boldsymbol{X}^T \boldsymbol{W}_{x^\ast} \boldsymbol{X} \right)^{-1} \boldsymbol{X}^T \boldsymbol{W}_{x^\ast} \boldsymbol{y}
 \end{align}
 ```
 
 ということで，目的関数 $E$ を最小とする
 パラメータ $\boldsymbol{a}$ が求められました．
+この式も線形回帰の時に求めたものと似ていますね．
+
+「$\boldsymbol{W}_{x^\ast}$ をメトリックとする $\boldsymbol{X}$ の一般化逆行列 」を
+
+```math
+\boldsymbol{X}_{\boldsymbol{W}_{x^\ast}}^{\dagger} :=  \left(  \boldsymbol{X}^T \boldsymbol{W}_{x^\ast} \boldsymbol{X} \right)^{-1} \boldsymbol{X}^T \boldsymbol{W}_{x^\ast}
+```
+
+のように定義することで
+
+```math
+\boldsymbol{a} =\boldsymbol{X}_{\boldsymbol{W}_{x^\ast}}^{\dagger}  \boldsymbol{y}
+```
+
+とも書けます．
 
 ## 実際に回帰してみる
 
