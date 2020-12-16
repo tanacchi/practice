@@ -127,11 +127,17 @@ z_1^2 - z_2^2
 
 # 結果
 
+目的関数の値をプロットしたものが以下になります．
+
 ![learning_history.png](https://qiita-image-store.s3.ap-northeast-1.amazonaws.com/0/199099/a90ed908-826c-3a02-ec92-a650b91f68d2.png)
 
+いい感じに学習できてそうですね
 
 ![sample100.gif](https://qiita-image-store.s3.ap-northeast-1.amazonaws.com/0/199099/289ca4f0-ec45-29eb-7138-b117123a1db4.gif)
 
+フルスクラッチで実装する時と比べて
+- 目的関数のアレンジ
+- 多層化
 
 # おわりに
 
