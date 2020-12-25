@@ -11,9 +11,20 @@ Ball ball = new Ball(color(255),
                      new PVector(10, 10),
                      new PVector(3, 3));
 
+FloatList x_list;
+FloatList y_list;;
+BlockArray blocks;
+
 void setup()
 {
   ellipseMode(CORNER);
+  float[] ahi = {20.0, 60.0, 100.0, 140.0};
+  x_list = new FloatList(ahi);
+  y_list = x_list.copy();
+  blocks = new BlockArray(x_list,
+                          y_list,
+                          new PVector(30, 20),
+                          color(255));
 }
 
 void draw()
@@ -22,15 +33,11 @@ void draw()
   
   bar.update();
   ball.update();
+  blocks.update(ball);
   
-  HitPattern pattern = detect_hit_pattern(ball, bar);
-  if (pattern == HitPattern.Absolute)
-  {
-    Base prev_ball = new Base(ball.col, ball.prev_pos, ball.size);
-    HitPattern prev_pattern = detect_hit_pattern(prev_ball, bar);
-    ball.hit(prev_pattern);
-  }
+  ball.hit(bar);
   
   bar.draw();
   ball.draw();
+  blocks.draw();
 }

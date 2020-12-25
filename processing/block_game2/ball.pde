@@ -35,23 +35,26 @@ class Ball extends Base
     fill(0);
   }
   
-  void hit(HitPattern pattern)
+  boolean hit(Base obj)
   {
-    println(pattern);
+    if (detect_hit_pattern(pos, size, obj.pos, obj.size) != HitPattern.Absolute)
+      return false;
+    HitPattern pattern = detect_hit_pattern(prev_pos, size, obj.pos, obj.size);
     switch (pattern)
     {
       case Horizontal:
         vec.x = - vec.x;
-        return;
+        break;
       case Vertical:
         vec.y = - vec.y;
-        return;
+        break;
       case None:
         vec.x = - vec.x;
         vec.y = - vec.y;
-        return;
+        break;
       default:
-        return;
+        break;
     }
+    return true;
   }
 }

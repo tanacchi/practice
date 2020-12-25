@@ -42,10 +42,10 @@ public enum HitPattern
 //        |         |
 
 
-HitPattern detect_hit_pattern(Base lhs, Base rhs)
+HitPattern detect_hit_pattern(PVector lhs_pos, PVector lhs_size, PVector rhs_pos, PVector rhs_size)
 {
-  boolean x_judge = lhs.pos.x-rhs.size.x <= rhs.pos.x && rhs.pos.x <= lhs.pos.x+lhs.size.x;
-  boolean y_judge = lhs.pos.y-rhs.size.y <= rhs.pos.y && rhs.pos.y <= lhs.pos.y+lhs.size.y;
+  boolean x_judge = lhs_pos.x-rhs_size.x <= rhs_pos.x && rhs_pos.x <= lhs_pos.x+lhs_size.x;
+  boolean y_judge = lhs_pos.y-rhs_size.y <= rhs_pos.y && rhs_pos.y <= lhs_pos.y+lhs_size.y;
   if (x_judge)
   {
     if (y_judge)

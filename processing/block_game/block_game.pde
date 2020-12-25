@@ -15,7 +15,6 @@ void setup()
   
   color   block_color  = color(255, 0, 0);
   PVector block_size   = new PVector(60, 40);
-  PVector block_offset = new PVector(30, 30);
   PVector block_num    = new PVector(8, 5);
   
   blocks = new Block[int(block_num.x*block_num.y)];
