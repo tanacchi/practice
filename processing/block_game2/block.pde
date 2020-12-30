@@ -1,10 +1,10 @@
 class Block extends Base
 {
   Item item;
-  Block(color c, PVector p, PVector s)
+  Block(color c, PVector p, PVector s, boolean has_item)
   {
     super(c, p, s);
-    item = new Item(p, s);
+    item = has_item ? new Item(p, s) : null;
   }
   
   void update()
@@ -29,7 +29,7 @@ class BlockArray
     {
       for (float y : y_list)
       {
-        blocks.add(new Block(col, new PVector(x, y), size));
+        blocks.add(new Block(col, new PVector(x, y), size, random(1) >= 0.5));
       }
     }
   }

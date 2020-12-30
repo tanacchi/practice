@@ -44,13 +44,26 @@ void draw()
   if (new_item != null)
     items.add(new_item);
   ball.hit(bar);
+  for (int i = 0; i < items.size(); ++i)
+  {
+    HitPattern pattern = detect_hit_pattern(bar.pos, bar.size, items.get(i).pos, items.get(i).size);
+    if (pattern == HitPattern.Absolute)
+    {
+      items.remove(i);
+      continue;
+    }
+    if (items.get(i).pos.y >= height)
+    {
+      items.remove(i);
+      continue;
+    }
+  }
+
   for (Item item : items)
   {
     item.update();
-    item.draw();
+    item.draw();  
   }
-
-  
   bar.draw();
   ball.draw();
   blocks.draw();
