@@ -13,6 +13,13 @@ class Ball extends Base
     prev_pos = p.copy();
   }
   
+  Ball(Ball ball)
+  {
+    super(ball.col, ball.pos, ball.size);
+    vec = ball.vec.copy();
+    prev_pos = ball.prev_pos.copy();
+  }
+  
   void update()
   {
     if (pos.x <= 0 || width <= pos.x)

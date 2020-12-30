@@ -40,6 +40,7 @@ void setup()
 void draw()
 {
   background(0);
+  ArrayList<Ball> new_balls = new ArrayList<Ball>();
   
   bar.update();
   for (Ball ball : balls)
@@ -54,6 +55,14 @@ void draw()
       HitPattern pattern = detect_hit_pattern(bar.pos, bar.size, items.get(i).pos, items.get(i).size);
       if (pattern == HitPattern.Absolute)
       {
+        for (int j = 0; j < 5; ++j)
+        {
+          Ball new_ball = new Ball(ball);
+          float theta = random(3.14);
+          new_ball.vec.x *= cos(theta);
+          new_ball.vec.y *= sin(theta);
+          new_balls.add(new_ball);
+        }
         items.remove(i);
         continue;
       }
@@ -64,6 +73,7 @@ void draw()
       }
     }
   }
+  balls.addAll(new_balls);
 
   for (Item item : items)
   {
