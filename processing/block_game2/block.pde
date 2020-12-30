@@ -1,8 +1,10 @@
 class Block extends Base
 {
+  Item item;
   Block(color c, PVector p, PVector s)
   {
     super(c, p, s);
+    item = new Item(p, s);
   }
   
   void update()
@@ -32,7 +34,7 @@ class BlockArray
     }
   }
   
-  void update(Ball ball)
+  Item update(Ball ball)
   {
     boolean hit_detected = false;
     for (int i = 0; i < blocks.size(); ++i)
@@ -40,10 +42,12 @@ class BlockArray
       hit_detected = ball.hit(blocks.get(i));
       if (hit_detected)
       {
+        Item item = blocks.get(i).item; 
         blocks.remove(i);
-        break;
+        return item;
       }
     }
+    return null;
   }
   
   void draw()
