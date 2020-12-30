@@ -10,6 +10,7 @@ Ball ball = new Ball(color(255),
                      new PVector(300, 500),
                      new PVector(10, 10),
                      new PVector(3, 3));
+ArrayList<Ball> balls;
 
 FloatList x_list;
 FloatList y_list;
@@ -27,6 +28,8 @@ void setup()
   for (int i = 0; i < 6; ++i) y_list.append((i + 1) * offset.y + i * size.y);
   for (int i = 0; i < 12; ++i) x_list.append((i + 1) * offset.x + i * size.x);
   
+  balls = new ArrayList<Ball>();
+  balls.add(ball);
   blocks = new BlockArray(x_list,
                           y_list,
                           size,
@@ -39,23 +42,26 @@ void draw()
   background(0);
   
   bar.update();
-  ball.update();
-  Item new_item = blocks.update(ball);
-  if (new_item != null)
-    items.add(new_item);
-  ball.hit(bar);
-  for (int i = 0; i < items.size(); ++i)
+  for (Ball ball : balls)
   {
-    HitPattern pattern = detect_hit_pattern(bar.pos, bar.size, items.get(i).pos, items.get(i).size);
-    if (pattern == HitPattern.Absolute)
+    ball.update();
+    Item new_item = blocks.update(ball);
+    if (new_item != null)
+      items.add(new_item);
+    ball.hit(bar);
+    for (int i = 0; i < items.size(); ++i)
     {
-      items.remove(i);
-      continue;
-    }
-    if (items.get(i).pos.y >= height)
-    {
-      items.remove(i);
-      continue;
+      HitPattern pattern = detect_hit_pattern(bar.pos, bar.size, items.get(i).pos, items.get(i).size);
+      if (pattern == HitPattern.Absolute)
+      {
+        items.remove(i);
+        continue;
+      }
+      if (items.get(i).pos.y >= height)
+      {
+        items.remove(i);
+        continue;
+      }
     }
   }
 
@@ -65,6 +71,7 @@ void draw()
     item.draw();  
   }
   bar.draw();
-  ball.draw();
+  for (Ball ball : balls)
+    ball.draw();
   blocks.draw();
 }
