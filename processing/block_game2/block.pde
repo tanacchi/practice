@@ -22,13 +22,15 @@ class Block extends Base
 class BlockArray
 {
   ArrayList<Block> blocks;
-  BlockArray(FloatList x_list, FloatList y_list, PVector size, color col)
+  BlockArray(PVector nums, PVector size, PVector offset, color col)
   {
     blocks = new ArrayList<Block>();
-    for (float x : x_list)
+    for (int i = 0; i < nums.x; ++i)
     {
-      for (float y : y_list)
+      for (int j = 0; j < nums.y; ++j)
       {
+        float x = (i + 1) * offset.x + i * size.x;
+        float y = (j + 1) * offset.y + j * size.y;
         blocks.add(new Block(col, new PVector(x, y), size, random(1) >= 0.5));
       }
     }

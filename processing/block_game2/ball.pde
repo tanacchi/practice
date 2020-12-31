@@ -65,3 +65,59 @@ class Ball extends Base
     return true;
   }
 }
+
+class BallArray
+{
+  color col;
+  ArrayList<Ball> balls;
+  BallArray(color c, PVector p, PVector s, PVector v)
+  {
+    balls = new ArrayList<Ball>();
+    col = c;
+    Ball first_ball = new Ball(c, p, s, v);
+    balls.add(first_ball);
+  }
+ 
+  void update()
+  {
+    for (int i = 0; i < balls.size(); ++i)
+    {
+      balls.get(i).update();
+      if (balls.get(i).pos.y >= height)
+        balls.remove(i);
+    }
+  }
+  
+  void draw()
+  {
+    for (Ball ball : balls)
+      ball.draw();
+  }
+  
+  int count()
+  {
+    return balls.size();
+  }
+  
+  ArrayList<Ball> clone()
+  {
+    return new ArrayList<Ball>(balls);
+  }
+  
+  void multiply(int num)
+  {
+    ArrayList<Ball> new_balls = new ArrayList<Ball>();
+    for (Ball ball : balls)
+    {
+      for (int i = 0; i < num; ++i)
+      {
+        Ball new_ball = new Ball(ball);
+        float theta = random(PI*2);
+        new_ball.vec.x *= cos(theta);
+        new_ball.vec.y *= sin(theta);
+        new_balls.add(new_ball);
+      }
+    }
+    balls.addAll(new_balls);
+  }
+}
