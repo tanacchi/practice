@@ -89,6 +89,11 @@ impl DiskManager {
         self.heap_file.seek(SeekFrom::Start(offset))?;
         self.heap_file.write_all(data)
     }
+
+    pub fn sync(&mut self) -> io::Result<()> {
+        self.heap_file.flush()?;
+        self.heap_file.sync_all()
+    }
 }
 
 #[cfg(test)]
