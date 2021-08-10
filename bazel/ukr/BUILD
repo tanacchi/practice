@@ -62,3 +62,23 @@ py_binary(
         requirement("matplotlib"),
     ],
 )
+
+py_binary(
+    name = "autograd",
+    main = "ukr_autograd.py",
+    srcs = [
+        "ukr_autograd.py",
+        "visualizer.py",
+    ],
+    deps = [
+        ":data",
+        ":utils",
+        requirement("numpy"),
+        requirement("jax"),
+        requirement("jaxlib"),
+        requirement("scipy"),
+        requirement("tqdm"),
+        requirement("matplotlib"),
+    ],
+)
+

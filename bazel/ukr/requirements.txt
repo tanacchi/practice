@@ -3,3 +3,4 @@ scipy
 tqdm
 matplotlib
 jax
+jaxlib
