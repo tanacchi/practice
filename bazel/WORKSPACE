@@ -13,3 +13,19 @@ pip_install(
     name = "ukr_deps",
     requirements = "//ukr:requirements.txt",
 )
+
+# use pyenv to enforce python version
+http_archive(
+    name = "dpu_rules_pyenv",
+    sha256 = "d057168a757efa74e6345edd4776a1c0f38134c2d48eea4f3ef4783e1ea2cb0f",
+    strip_prefix = "rules_pyenv-0.1.4",
+    urls = ["https://github.com/digital-plumbers-union/rules_pyenv/archive/v0.1.4.tar.gz"],
+)
+
+load("@dpu_rules_pyenv//pyenv:defs.bzl", "pyenv_install")
+
+pyenv_install(
+    hermetic = False,
+    py2 = "2.7.18",
+    py3 = "3.9.0",
+)

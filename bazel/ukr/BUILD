@@ -8,6 +8,7 @@ py_library(
     srcs = [
         "data.py",
     ],
+    srcs_version = "PY3",
     deps = [
         requirement("numpy"),
     ],
@@ -19,6 +20,7 @@ py_binary(
     srcs = [
         "data.py",
     ],
+    srcs_version = "PY3",
     deps = [
         ":data",
         requirement("matplotlib"),
@@ -30,6 +32,7 @@ py_library(
     srcs = [
         "utils.py"
     ],
+    srcs_version = "PY3",
     deps = [
         requirement("numpy")
     ],
@@ -41,6 +44,7 @@ py_binary(
     srcs = [
         "utils.py"
     ],
+    srcs_version = "PY3",
     deps = [
         ":utils"
     ],
@@ -53,6 +57,7 @@ py_binary(
         "ukr_uniform.py",
         "visualizer.py",
     ],
+    srcs_version = "PY3",
     deps = [
         ":data",
         ":utils",
@@ -70,6 +75,7 @@ py_binary(
         "ukr_autograd.py",
         "visualizer.py",
     ],
+    srcs_version = "PY3",
     deps = [
         ":data",
         ":utils",
