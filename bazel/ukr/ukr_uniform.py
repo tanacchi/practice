@@ -117,7 +117,7 @@ if __name__ == '__main__':
     from visualizer import visualize_history
 
 
-    X = data.gen_saddle_shape(num_samples=200, random_seed=0, noise_scale=0.05)
+    X = data.gen_saddle_shape(num_samples=5000, random_seed=0, noise_scale=0.05)
     # X = data.gen_2d_sin_curve(100, random_seed=0, noise_scale=0.01)
     ukr = UKR(latent_dim=2, eta=8, sigma=0.2, scale=1e-3, clipping=(-1, 1))
     history = ukr.fit(X, num_epoch=300)
