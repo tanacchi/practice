@@ -21,7 +21,7 @@ py_binary(
     ],
     deps = [
         ":data",
-        # requirement("matplotlib"),
+        requirement("matplotlib"),
     ],
 )
 
@@ -32,6 +32,17 @@ py_library(
     ],
     deps = [
         requirement("numpy")
+    ],
+)
+
+py_binary(
+    name = "utils_check",
+    main = "utils.py",
+    srcs = [
+        "utils.py"
+    ],
+    deps = [
+        ":utils"
     ],
 )
 
