@@ -4,7 +4,7 @@ py_library(
 )
 
 py_binary(
-    name = 'hello.py',
+    name = 'hello',
     main = 'hello.py',
     srcs = ['hello.py'],
     deps = [':greeting'],
