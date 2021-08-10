@@ -13,6 +13,18 @@ py_library(
     ],
 )
 
+py_binary(
+    name = "data_check",
+    main = "data.py",
+    srcs = [
+        "data.py",
+    ],
+    deps = [
+        ":data",
+        # requirement("matplotlib"),
+    ],
+)
+
 py_library(
     name = "utils",
     srcs = [
