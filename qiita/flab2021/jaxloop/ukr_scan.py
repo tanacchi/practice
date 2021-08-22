@@ -1,7 +1,7 @@
+import jax
 import jax.numpy as jnp
 from jax.config import config
 import numpy as np
-import jax
 from tqdm import tqdm
 
 
@@ -27,13 +27,18 @@ class UKR(object):
             Y=np.zeros((num_epoch, N, D)),
             Z=np.zeros((num_epoch, N, self.L)))
 
+        def scan_body(carry, _):
+           Z = estimate_z(X, carry, self.sigma, self.eta, self.clipping)
+           return Z, Z
+
+        _, Zs = jax.lax.scan(f=scan_body, init=Z, xs=jnp.array((num_epoch, 1)))
+
         for epoch in tqdm(range(num_epoch)):
-            Y = estimate_f(Z, Z, X, self.sigma)
-            Z = estimate_z(X, Z, self.sigma, self.eta, self.clipping)
+            Y = estimate_f(Zs[epoch], Zs[epoch], X, self.sigma)
 
             history['E'][epoch] = np.sum((Y - X)**2) / N
             history['Y'][epoch] = np.array(Y)
-            history['Z'][epoch] = np.array(Z)
+        history['Z'] = np.array(Zs)
         return history
 
 
@@ -45,13 +50,14 @@ def estimate_f(Z1, Z2, X, sigma):
 
 
 @jax.jit
-def estimate_z(X, Z, sigma, eta, clipping):
+def estimate_z(X, Z, sigma, eta, clipping) -> jnp.ndarray:
     dZ = jax.grad(lambda z: obf(X, z, sigma))(Z)
     Z -= eta * dZ
     Z = jnp.clip(Z, clipping[0], clipping[1])
     return Z
 
 
+@jax.jit
 def obf(X, Z, sigma):
     return jnp.sum((estimate_f(Z, Z, X, sigma) - X)**2) / X.shape[0]
 
