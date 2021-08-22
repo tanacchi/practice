@@ -3,20 +3,20 @@ import jax.numpy as jnp
 from jax.config import config
 import numpy as np
 from tqdm import tqdm
+import time
 
 
 config.update("jax_enable_x64", True)
 
 
 class UKR(object):
-    def __init__(self, latent_dim, eta, sigma, scale, clipping=(-1, +1)):
+    def __init__(self, latent_dim, eta, sigma, clipping=(-1, +1)):
         self.L = latent_dim
         self.eta = eta
         self.sigma = sigma
-        self.scale = scale
         self.clipping = clipping
 
-    def fit(self, X, num_epoch=50, seed=0, f_resolution=10):
+    def fit(self, X, num_epoch=50, seed=0):
         N, D = X.shape
         np.random.seed(seed)
         Z = np.random.uniform(low=-0.01, high=0.01, size=(N, self.L))
@@ -27,11 +27,16 @@ class UKR(object):
             Y=np.zeros((num_epoch, N, D)),
             Z=np.zeros((num_epoch, N, self.L)))
 
+        @jax.jit
         def scan_body(carry, _):
            Z = estimate_z(X, carry, self.sigma, self.eta, self.clipping)
            return Z, Z
 
-        _, Zs = jax.lax.scan(f=scan_body, init=Z, xs=jnp.array((num_epoch, 1)))
+        # _, Zs = jax.lax.scan(f=scan_body, init=Z, xs=jnp.array((num_epoch, 1)))
+        begin = time.time()
+        _, Zs = jax.lax.scan(f=scan_body, init=Z, xs=None, length=num_epoch)
+        end = time.time()
+        print("time:", end - begin)
 
         for epoch in tqdm(range(num_epoch)):
             Y = estimate_f(Zs[epoch], Zs[epoch], X, self.sigma)
@@ -39,6 +44,7 @@ class UKR(object):
             history['E'][epoch] = np.sum((Y - X)**2) / N
             history['Y'][epoch] = np.array(Y)
         history['Z'] = np.array(Zs)
+        print(history['Z'].shape)
         return history
 
 
@@ -68,7 +74,6 @@ if __name__ == '__main__':
 
 
     X = data.gen_saddle_shape(num_samples=1000, random_seed=0, noise_scale=0.05)
-    # X = data.gen_2d_sin_curve(100, random_seed=0, noise_scale=0.01)
-    ukr = UKR(latent_dim=2, eta=8, sigma=0.2, scale=1e-3, clipping=(-1, 1))
+    ukr = UKR(latent_dim=2, eta=8, sigma=0.2, clipping=(-1, 1))
     history = ukr.fit(X, num_epoch=300)
-    # visualize_history(X, history['Y'], history['Z'], save_gif=False)
+    visualize_history(X, history['Y'], history['Z'], save_gif=False)

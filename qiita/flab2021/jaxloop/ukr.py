@@ -3,6 +3,7 @@ from jax.config import config
 import numpy as np
 import jax
 from tqdm import tqdm
+import time
 
 
 config.update("jax_enable_x64", True)
@@ -26,14 +27,20 @@ class UKR(object):
             E=np.zeros((num_epoch,)),
             Y=np.zeros((num_epoch, N, D)),
             Z=np.zeros((num_epoch, N, self.L)))
+        Zs = []
+
+        begin = time.time()
+        for epoch in range(num_epoch):
+            Z = estimate_z(X, Z, self.sigma, self.eta, self.clipping)
+            Zs.append(Z)
+        end = time.time()
+        print("time:", end - begin)
 
         for epoch in tqdm(range(num_epoch)):
-            Y = estimate_f(Z, Z, X, self.sigma)
-            Z = estimate_z(X, Z, self.sigma, self.eta, self.clipping)
-
+            Y = estimate_f(Zs[epoch], Zs[epoch], X, self.sigma)
             history['E'][epoch] = np.sum((Y - X)**2) / N
             history['Y'][epoch] = np.array(Y)
-            history['Z'][epoch] = np.array(Z)
+        history['Z'] = np.array(Zs)
         return history
 
 
@@ -44,7 +51,6 @@ def estimate_f(Z1, Z2, X, sigma):
     return R @ X
 
 
-@jax.jit
 def estimate_z(X, Z, sigma, eta, clipping):
     dZ = jax.grad(lambda z: obf(X, z, sigma))(Z)
     Z -= eta * dZ
@@ -62,7 +68,6 @@ if __name__ == '__main__':
 
 
     X = data.gen_saddle_shape(num_samples=1000, random_seed=0, noise_scale=0.05)
-    # X = data.gen_2d_sin_curve(100, random_seed=0, noise_scale=0.01)
     ukr = UKR(latent_dim=2, eta=8, sigma=0.2, scale=1e-3, clipping=(-1, 1))
     history = ukr.fit(X, num_epoch=300)
-    # visualize_history(X, history['Y'], history['Z'], save_gif=False)
+    visualize_history(X, history['Y'], history['Z'], save_gif=False)
