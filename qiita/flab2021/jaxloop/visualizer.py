@@ -14,9 +14,6 @@ def visualize_history(X, Y_history, Z_history, save_gif=False, filename="tmp"):
     latent_ax = fig.add_subplot(1, 2, 2)
     num_epoch = len(Y_history)
 
-    if input_dim == 3 and latent_dim == 2:
-        Y_history = np.array(Y_history).reshape((num_epoch, 10, 10, input_dim))
-
     observable_drawer = [None, None, draw_observable_2D,
                          draw_observable_3D][input_dim]
     latent_drawer = [None, draw_latent_1D, draw_latent_2D][latent_dim]
@@ -52,10 +49,10 @@ def draw_observable_3D(ax, X, Y, colormap):
     ax.scatter(X[:, 0], X[:, 1], X[:, 2], c=colormap)
     # ax.set_zlim(-1, 1)
     if len(Y.shape) == 3:
-        ax.plot_wireframe(Y[:, :, 0], Y[:, :, 1], Y[:, :, 2], color='black')
-        # ax.scatter(Y[:, :, 0], Y[:, :, 1], Y[:, :, 2], color='black')
+        # ax.plot_wireframe(Y[:, :, 0], Y[:, :, 1], Y[:, :, 2], color='black')
+        ax.scatter(Y[:, :, 0], Y[:, :, 1], Y[:, :, 2], color='black')
     else:
-        ax.plot(Y[:, 0], Y[:, 1], Y[:, 2], color='black')
+        ax.scatter(Y[:, 0], Y[:, 1], Y[:, 2], color='black')
 # ax.plot(Y[:, 0], Y[:, 1], Y[:, 2], color='black')
 # ax.plot_wireframe(Y[:, :, 0], Y[:, :, 1], Y[:, :, 2], color='black')
 

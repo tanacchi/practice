@@ -1,8 +1,11 @@
+import jax.numpy as jnp
+from jax.config import config
 import numpy as np
+from jax import grad
 from tqdm import tqdm
-from scipy.spatial.distance import cdist
 
-from utils import make_grid
+
+config.update("jax_enable_x64", True)
 
 
 class UKR(object):
@@ -12,69 +15,44 @@ class UKR(object):
         self.sigma = sigma
         self.scale = scale
         self.clipping = clipping
-        self.kernel = lambda Z1, Z2: np.exp(-cdist(Z1, Z2)**2 / (2 * self.sigma**2))
 
-    def fit(self, X, num_epoch=50, seed=0, f_resolution=10, init='random'):
+    def fit(self, X, num_epoch=50, seed=0, f_resolution=10):
         N, D = X.shape
+        np.random.seed(seed)
+        Z = np.random.uniform(low=-0.01, high=0.01, size=(N, self.L))
+        X, Z = jnp.array(X), jnp.array(Z)
 
-        if init != 'random':
-            Z = init.copy()
-        else:
-            width = (max(self.clipping) - min(self.clipping))
-            mid = sum(self.clipping) / 2
-            low, high = mid - self.scale*width, mid + self.scale* width
-            np.random.seed(seed)
-            Z = np.random.uniform(low=low, high=high, size=(N, self.L))
         history = dict(
             E=np.zeros((num_epoch,)),
             Y=np.zeros((num_epoch, N, D)),
-            f=np.zeros((num_epoch, f_resolution**self.L, D)),
             Z=np.zeros((num_epoch, N, self.L)))
 
         for epoch in tqdm(range(num_epoch)):
-            Y, R = self.estimate_f(X, Z)
-            Z = self.estimate_e(X, Y, Z, R)
+            Y = estimate_f(Z, Z, X, self.sigma)
+            Z = estimate_z(X, Z, self.sigma, self.eta, self.clipping)
 
-            Z_new = make_grid(f_resolution,
-                              bounds=(np.min(Z), np.max(Z)),
-                              dim=self.L)
-            f, _ = self.estimate_f(X, Z_new, Z)
-
-            history['Y'][epoch] = Y
-            history['f'][epoch] = f
-            history['Z'][epoch] = Z
             history['E'][epoch] = np.sum((Y - X)**2) / N
+            history['Y'][epoch] = np.array(Y)
+            history['Z'][epoch] = np.array(Z)
         return history
 
-    def estimate_f(self, X, Z1, Z2=None):
-        Z2 = np.copy(Z1) if Z2 is None else Z2
-        kernels = self.kernel(Z1, Z2)
-        R = kernels / np.sum(kernels, axis=1, keepdims=True)
-        return R @ X, R
 
-    def estimate_e(self, X, Y, Z, R):
-        d_ii = Y - X
-        d_in = Y[:, np.newaxis, :] - X[np.newaxis, :, :]
-        d_ni = - d_in
-        δ_in = Z[:, np.newaxis, :] - Z[np.newaxis, :, :]
-        δ_ni = - δ_in
+def estimate_f(Z1, Z2, X, sigma):
+    dists = ((Z1[:, None, :] - Z2[None, :, :])**2).sum(axis=2)
+    R = jnp.exp(-0.5 * dists / sigma**2)
+    R /= R.sum(axis=1, keepdims=True)
+    return R @ X
 
-        diff_left = np.einsum("ni,nd,nid,nil->nl",
-                              R,
-                              d_ii,
-                              d_ni,
-                              δ_ni,
-                              optimize=True)
-        diff_right = np.einsum("in,id,ind,inl->nl",
-                               R,
-                               d_ii,
-                               d_in,
-                               δ_in,
-                               optimize=True)
-        diff = 2 * (diff_left - diff_right) / (self.sigma**2 * X.shape[0])
-        Z -= self.eta * diff
-        Z = np.clip(Z, self.clipping[0], self.clipping[1])
-        return Z
+
+def estimate_z(X, Z, sigma, eta, clipping):
+    dZ = grad(lambda z: obf(X, z, sigma))(Z)
+    Z -= eta * dZ
+    Z = jnp.clip(Z, clipping[0], clipping[1])
+    return Z
+
+
+def obf(X, Z, sigma):
+    return jnp.sum((estimate_f(Z, Z, X, sigma) - X)**2) / X.shape[0]
 
 
 if __name__ == '__main__':
@@ -86,4 +64,4 @@ if __name__ == '__main__':
     # X = data.gen_2d_sin_curve(100, random_seed=0, noise_scale=0.01)
     ukr = UKR(latent_dim=2, eta=8, sigma=0.2, scale=1e-3, clipping=(-1, 1))
     history = ukr.fit(X, num_epoch=300)
-    visualize_history(X, history['f'], history['Z'], save_gif=False)
+    visualize_history(X, history['Y'], history['Z'], save_gif=False)
