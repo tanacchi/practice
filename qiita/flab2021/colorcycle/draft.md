@@ -1,4 +1,4 @@
-この記事は古川研究室 Advent_calendar 4日目の記事です。
+この記事は[古川研究室 AdventCalendar](https://qiita.com/flab5420/items/fc94dadc49635f0e5c9f) 4日目の記事です。
 本記事は古川研究室の学生が学習の一環として書いたものです。
 内容が曖昧であったり表現が多少異なったりする場合があります。
 
@@ -38,19 +38,20 @@ matplotlib の機能として，
 
 https://matplotlib.org/stable/users/dflt_style_changes.html
 
+![newcolors.png](https://qiita-image-store.s3.ap-northeast-1.amazonaws.com/0/199099/4ecd1d88-4ab4-2796-1b9a-b216076366f7.png)
+（公式サイトより抜粋）
 
-これらの色は 'cyan' など特別な名前が付いているわけではありません．
-しかしこれは，視認性の観点から非常によく練られた配色になっています．
-（ソースがあったはずですが見失ってしまいました…．）
+描画関数を複数回呼び出すと， その配色がデフォルトでは`#1f77b4`（青）→`#ff7f0e`（オレンジ）→`#2ca02c`（緑）→...のように変化します（上図の上から順に）．
+これらの色には 'cyan' など特別な名前が付いているわけではありません．
+この配色や順番は，視認性の観点から非常によく練られています．
 
 デフォルトの配色も非常に良いのですが，
 「どういう順番になっているか」という情報が欲しいときには不便です．
 描画結果のみから，どういう順番になっているかを読み取るには
-配色の順番を把握する必要があります．
-慣れていれば配色の順番はわかってくるものですが，
+色の順番を把握する必要があります．
+慣れていれば色の順番はわかってくるものですが，
 わかっていたとしても描画回数が多くなると
 ごちゃごちゃして視認性が悪くなってしまいます．
-
 
 例えば，sin(x) + 0.1*i　を描画するとこのようになる。
 
@@ -98,12 +99,14 @@ https://matplotlib.org/stable/api/_as_gen/matplotlib.axes.Axes.set_prop_cycle.ht
 
 ```Python
 ```
+![sin.png](https://qiita-image-store.s3.ap-northeast-1.amazonaws.com/0/199099/070fda73-526f-8c3d-052c-a66e99e52aa4.png)
 
 
 # おまけ：2次元のグラデーション
 
 ```Python
 ```
+![star.png](https://qiita-image-store.s3.ap-northeast-1.amazonaws.com/0/199099/236b875b-72e1-f111-0c30-8f80e6991340.png)
 
 
 # おわりに
@@ -125,3 +128,4 @@ http://www.brain.kyutech.ac.jp/~furukawa/myresearch.html
 - https://qiita.com/okd46/items/5940b317cd4ef5dd2dd8
 
 ## 公式ドキュメントなど
+

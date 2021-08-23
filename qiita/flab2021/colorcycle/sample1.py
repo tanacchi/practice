@@ -13,7 +13,7 @@ if __name__ == '__main__':
         Y[i] = np.sin(x) + 0.1*i
 
     # Making list of colors.
-    colors = [ mpl.cm.cool(h) for h in np.linspace(0, 1, num_tasks, endpoint=False) ]
+    colors = [ mpl.cm.cool(i) for i in np.linspace(0, 1, num_tasks, endpoint=False) ]
 
     # Drawing sine curvies.
     fig = plt.figure(figsize=(7, 7))
