@@ -1,11 +1,10 @@
-from matplotlib import colors
 import numpy as np
 import matplotlib as mpl
 from matplotlib import pyplot as plt
-# from colorsys import hsv_to_rgb
 
 
 if __name__ == '__main__':
+    # Making multiple sine curves.
     num_tasks = 30
     num_samples = 1000
     x = np.linspace(-np.pi, np.pi, num_samples)
@@ -13,11 +12,13 @@ if __name__ == '__main__':
     for i in range(num_tasks):
         Y[i] = np.sin(x) + 0.1*i
 
+    # Making list of colors.
+    colors = [ mpl.cm.cool(h) for h in np.linspace(0, 1, num_tasks, endpoint=False) ]
+
+    # Drawing sine curvies.
     fig = plt.figure()
     ax = fig.add_subplot(111)
-
-    colors = [ mpl.cm.cool(h) for h in np.linspace(0, 1, 30, endpoint=False) ]
-    ax.set_prop_cycle(color=colors)
+    ax.set_prop_cycle(color=colors)  # Setting color cycle !
     for y in Y:
         ax.plot(x, y)
     plt.show()
