@@ -28,7 +28,7 @@ def visualize_history(X, Y_history, Z_history, save_gif=False, filename="tmp"):
                input_ax, latent_ax, num_epoch))
     plt.show()
     if save_gif:
-        ani.save(f"{filename}.mp4", writer='ffmpeg')
+        ani.save(f"{filename}.mkv", writer='ffmpeg')
 
 
 def update_graph(epoch, observable_drawer, latent_drawer, X, Y_history,
