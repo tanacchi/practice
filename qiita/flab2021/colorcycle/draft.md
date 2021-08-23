@@ -10,12 +10,12 @@ matplotlib で描画関数を呼び出す度に
 今回はその方法について書かせていただこうと思います．
 何番煎じかわかりませんが，
 様々な記事を参考にさせていただき
-個人的に落ち着く方法までたどり着いたので共有させていただこうと思った次第です．
+個人的に落ち着く方法までたどり着いたので投稿しようと思った次第です．
 
 この記事を読んでくれた方には
-ぜひ参考文献にある記事とも比較して
+ぜひ[参考文献](#参考文献)にある記事とも比較して
 どの方法を採用するかを決めていただけたらと思っております．
-本記事には個人的な好みが散りばめられていることをご了承ください。
+また，本記事には個人的な好みが散りばめられていることをご了承ください。
 
 お急ぎの方は[実装例](#実装例)までジャンプしてもらって OK です．
 
@@ -28,25 +28,34 @@ matplotlib は言わずと知れた Python の描画ライブラリです．
 matplotlib の機能として，
 `plot` や `scatter` などの描画関数を複数回呼び出す時，
 呼び出す度にグラフの色を変えてくれるというものがあります．
-
+デフォルトでは 青→オレンジ→緑→・・・のように変化します．
+本記事のゴールは，これをグラデーション状に変えることです．
 
 # デフォルトの配色はどうなっているのか
 
-デフォルトの配色はどうなっているかというと
+デフォルトの配色はどうなっているかという話は，
+下のページに詳しく書かれています．
 
-このように（複雑な）カラーコード指定になっている理由としては、
+https://matplotlib.org/stable/users/dflt_style_changes.html
 
-どういう順番になっているかという情報が欲しいときは不便。
-この配色がどういう順番なのかを知っている必要がある。
-慣れていれば配色の順番はわかってくるものですが、
-知っていたとしても描画回数が多くなると
-ごちゃごちゃして視認性が悪くなる。
+
+これらの色は 'cyan' など特別な名前が付いているわけではありません．
+しかしこれは，視認性の観点から非常によく練られた配色になっています．
+（ソースがあったはずですが見失ってしまいました…．）
+
+デフォルトの配色も非常に良いのですが，
+「どういう順番になっているか」という情報が欲しいときには不便です．
+描画結果のみから，どういう順番になっているかを読み取るには
+配色の順番を把握する必要があります．
+慣れていれば配色の順番はわかってくるものですが，
+わかっていたとしても描画回数が多くなると
+ごちゃごちゃして視認性が悪くなってしまいます．
 
 
 例えば，sin(x) + 0.1*i　を描画するとこのようになる。
 
 
-そこで，描画するごとにグラデーション状に配色を変えたいというモチベーションが湧くわけです．
+そこで，描画する度にグラデーション状に配色を変えたいというモチベーションが湧きます．
 
 # どこをイジればよいか
 
@@ -58,7 +67,7 @@ rcParam で指定するもの良いですが、
 https://matplotlib.org/stable/api/_as_gen/matplotlib.axes.Axes.set_prop_cycle.html
 
 ## `matplotlib.cm`
-`cm` は **C**olor**M**ap の略でしょうか．
+`cm` は **C**olor**M**ap の略です．
 割と他の記事ですと
 描画関数を呼び出す度に color 引数とループのインデックスで色指定するのが多い印象．
 
@@ -88,36 +97,13 @@ https://matplotlib.org/stable/api/_as_gen/matplotlib.axes.Axes.set_prop_cycle.ht
 # 実装例
 
 ```Python
-import numpy as np
-import matplotlib as mpl
-from matplotlib import pyplot as plt
-
-
-if __name__ == '__main__':
-    # Making multiple sine curves.
-    num_tasks = 30
-    num_samples = 1000
-    x = np.linspace(-np.pi, np.pi, num_samples)
-    Y = np.empty((num_tasks, num_samples))
-    for i in range(num_tasks):
-        Y[i] = np.sin(x) + 0.1*i
-
-    # Making list of colors.
-    colors = [
-        mpl.cm.cool(i) for i in np.linspace(0, 1, num_tasks, endpoint=False)
-    ]
-
-    # Drawing sine curvies.
-    fig = plt.figure()
-    ax = fig.add_subplot(111)
-    ax.set_prop_cycle(color=colors)  # Setting color cycle !
-    for y in Y:
-        ax.plot(x, y)  # Just calling plot without color option...
-    plt.show()
 ```
 
 
 # おまけ：2次元のグラデーション
+
+```Python
+```
 
 
 # おわりに
@@ -132,6 +118,10 @@ if __name__ == '__main__':
 http://www.brain.kyutech.ac.jp/~furukawa/myresearch.html
 
 # 参考文献
+## 先駆者様
+- https://qiita.com/skotaro/items/5c9893d186ccd31f459d
+- https://qiita.com/hokekiyoo/items/cea310b2c36a01b970a6
+- https://qiita.com/ShoheiKojima/items/6705ce31d6cffb64daff
+- https://qiita.com/okd46/items/5940b317cd4ef5dd2dd8
 
--
-
+## 公式ドキュメントなど

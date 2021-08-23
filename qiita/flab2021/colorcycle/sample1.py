@@ -16,8 +16,10 @@ if __name__ == '__main__':
     colors = [ mpl.cm.cool(h) for h in np.linspace(0, 1, num_tasks, endpoint=False) ]
 
     # Drawing sine curvies.
-    fig = plt.figure()
+    fig = plt.figure(figsize=(7, 7))
     ax = fig.add_subplot(111)
+    ax.set_aspect('equal')
+
     ax.set_prop_cycle(color=colors)  # Setting color cycle !
     for y in Y:
         ax.plot(x, y)

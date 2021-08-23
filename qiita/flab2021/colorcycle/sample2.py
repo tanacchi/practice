@@ -18,26 +18,23 @@ def gen_star_dots(center, radius):
 
 
 if __name__ == '__main__':
+    # Making multiple stars (7*7).
     resolution = 7
     grid = make_grid(resolution, domain=(0, 1))
     X = np.empty((resolution**2, 6, 2))
     for i, center in enumerate(grid):
         X[i] = gen_star_dots(center, radius=0.05)
 
-    fig = plt.figure(figsize=(7, 7))
-    ax = fig.add_subplot(111)
-    ax.set_aspect('equal')
-
+    # Making list of colors (7*7 × RGB).
     colors = [
         hsv_to_rgb(h, 0.8, v) for h, v in make_grid(resolution, domain=(0.3, 1))
     ]
-    # ax.set_prop_cycle(color=colors)
 
+    # Drawing sine stars.
+    fig = plt.figure(figsize=(7, 7))
+    ax = fig.add_subplot(111)
+    ax.set_aspect('equal')
+    ax.set_prop_cycle(color=colors)  # Setting color cycle !
     for x in X:
         ax.plot(x[:, 0], x[:, 1], lw=3)
-    plt.show()
-    exit(0)
-
-    for y in Y:
-        ax.plot(x, y)
     plt.show()
