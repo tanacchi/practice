@@ -1,20 +1,12 @@
 mod stone;
+mod input;
 
-use std::io;
 use stone::Stone;
+
+use crate::input::get_hand;
 
 const WIDTH:  usize = 9;
 const HEIGHT: usize = 9;
-
-fn get_hand(msg: &str) -> usize {
-    println!("{}", msg);
-    let mut hand = String::new();
-    io::stdin().read_line(&mut hand)
-               .expect("Failed to read_line.");
-    hand.trim()
-        .parse::<usize>()
-        .expect("Prease type a number.") - 1
-}
 
 fn show_board(board: &[Stone; WIDTH*HEIGHT]) {
     // chunks can be useful.
