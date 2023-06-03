@@ -1,24 +1,10 @@
+mod stone;
+
 use std::io;
+use stone::Stone;
 
 const WIDTH:  usize = 9;
 const HEIGHT: usize = 9;
-
-#[derive(Debug, Clone, Copy, PartialEq)]
-enum Stone {
-    White,
-    Black,
-    Space
-}
-
-impl Stone {
-    fn to_char(&self) -> char {
-        match self {
-            Stone::White => 'O',
-            Stone::Black => 'X',
-            Stone::Space => ' '
-        }
-    }
-}
 
 fn get_hand(msg: &str) -> usize {
     println!("{}", msg);
@@ -76,7 +62,7 @@ fn is_game_finished(board: &[Stone; WIDTH*HEIGHT], active_stone: &Stone) -> bool
         let vertival_line   = extract_partial_line(&board, i, WIDTH);
         let fall_left_line  = extract_partial_line(&board, i, WIDTH-1);
         let fall_right_line = extract_partial_line(&board, i, WIDTH+1);
-        
+
         let is_finished = if horizontal_line.iter().all(|&stone| stone == active_stone) {
             println!("horizontal_line completed.");
             true
