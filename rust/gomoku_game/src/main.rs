@@ -1,5 +1,8 @@
 mod stone;
+mod coord;
 mod input;
+mod board;
+mod Coord;
 
 use stone::Stone;
 
