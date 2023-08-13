@@ -1,6 +1,7 @@
 import { useState } from "react";
 import reactLogo from "./assets/react.svg";
 import { invoke } from "@tauri-apps/api/tauri";
+import { open } from '@tauri-apps/api/dialog'
 import "./App.css";
 
 function App() {
@@ -32,6 +33,10 @@ function App() {
     }).catch(message => {
       console.error('command_with_error', message)
     })
+  }
+
+  function openDialog () {
+    open().then(files => console.log(files))
   }
 
   return (
@@ -70,6 +75,7 @@ function App() {
       <p>{greetMsg}</p>
 
       <button onClick={executeCommands}>Click to execute command</button>
+      <button onClick={openDialog}>Click to open dialog</button>
     </div>
   );
 }
