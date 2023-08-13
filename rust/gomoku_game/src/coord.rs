@@ -6,14 +6,14 @@ pub struct Coord {
 impl From<Directions> for Coord {
     fn from(dir: Directions) -> Self {
         match dir {
-          Directions::Up => Coord { x: 0, y: -1 },
-          Directions::UpRight => Coord { x: 1, y: -1 },
-          Directions::Right => Coord { x: 1, y: 0 },
-          Directions::DownRight => Coord { x: 1, y: 1 },
-          Directions::Down => Coord { x: 0, y: 1 },
-          Directions::DownLeft => Coord { x: -1, y: 1 },
-          Directions::Left => Coord { x: -1, y: 0 },
-          Directions::UpLeft => Coord { x: -1, y: -1 },
+          Directions::Up =>        Coord { x:  0, y: -1 },
+          Directions::UpRight =>   Coord { x:  1, y: -1 },
+          Directions::Right =>     Coord { x:  1, y:  0 },
+          Directions::DownRight => Coord { x:  1, y:  1 },
+          Directions::Down =>      Coord { x:  0, y:  1 },
+          Directions::DownLeft =>  Coord { x: -1, y:  1 },
+          Directions::Left =>      Coord { x: -1, y:  0 },
+          Directions::UpLeft =>    Coord { x: -1, y: -1 },
         }
     }
 }
