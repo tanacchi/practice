@@ -12,9 +12,14 @@ function App() {
     setGreetMsg(await invoke("greet", { name }));
   }
 
-function executeCommands() {
-    invoke('simple_command')
-}
+  function executeCommands() {
+      invoke('simple_command')
+  }
+
+  invoke('command_with_message', { message: 'some message' })
+    .then(message => {
+      console.log('command_with_message', message)
+    });
 
   return (
     <div className="container">

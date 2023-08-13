@@ -12,11 +12,17 @@ fn simple_command() {
     println!("I was invoked from JS!");
 }
 
+#[tauri::command]
+fn command_with_message(message: String) -> String {
+    format!("hello {}", message)
+}
+
 fn main() {
     tauri::Builder::default()
         .invoke_handler(tauri::generate_handler![
             greet,
             simple_command,
+            command_with_message,
         ])
         .run(tauri::generate_context!())
         .expect("error while running tauri application");
