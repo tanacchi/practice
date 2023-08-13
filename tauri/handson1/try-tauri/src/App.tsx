@@ -26,6 +26,14 @@ function App() {
       console.log('command_with_object', JSON.stringify(message));
   });
 
+  for (let arg of [1, 2]) {
+    invoke('command_with_error', { arg }).then(message => {
+      console.log('command_with_error', message)
+    }).catch(message => {
+      console.error('command_with_error', message)
+    })
+  }
+
   return (
     <div className="container">
       <h1>Welcome to Tauri!</h1>

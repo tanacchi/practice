@@ -38,6 +38,17 @@ fn command_with_object(message: MyMessage) -> MyMessage {
     }
 }
 
+#[tauri::command]
+fn command_with_error(arg: u32) -> Result<String, String> {
+    if arg % 2 == 0 {
+        Ok(format!("even value {}", arg))
+    } else {
+        Err(format!("odd value {}", arg))
+    }
+}
+
+
+
 fn main() {
     tauri::Builder::default()
         .invoke_handler(tauri::generate_handler![
@@ -45,6 +56,7 @@ fn main() {
             simple_command,
             command_with_message,
             command_with_object,
+            command_with_error,
         ])
         .run(tauri::generate_context!())
         .expect("error while running tauri application");
