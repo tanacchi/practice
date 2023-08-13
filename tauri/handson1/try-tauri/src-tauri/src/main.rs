@@ -48,8 +48,6 @@ fn command_with_error(arg: u32) -> Result<String, String> {
     }
 }
 
-
-
 fn main() {
     tauri::Builder::default()
         .invoke_handler(tauri::generate_handler![
@@ -66,11 +64,21 @@ fn main() {
                 window.open_devtools();
                 window.close_devtools();
 
-                let id = app.listen_global("front-to-back", |event| {
+                // Sample emit (WebView -> Core).
+                let _ = app.listen_global("front-to-back", |event| {
                     println!(
                         "got front-to-back with payload {:?}",
                         event.payload().unwrap()
                     )
+                });
+
+                // Sample emit-all (Core -> WebView).
+                let app_handle = app.app_handle();
+                std::thread::spawn(move || loop {
+                    app_handle
+                        .emit_all("back-to-front", "ping frontend".to_string())
+                        .unwrap();
+                    std::thread::sleep(std::time::Duration::from_secs(5))
                 });
             }
             Ok(())
