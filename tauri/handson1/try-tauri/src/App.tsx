@@ -21,6 +21,11 @@ function App() {
       console.log('command_with_message', message)
     });
 
+  invoke('command_with_object', { message: { field_str: 'some message', field_u32: 12 }})
+    .then(message => {
+      console.log('command_with_object', JSON.stringify(message));
+  });
+
   return (
     <div className="container">
       <h1>Welcome to Tauri!</h1>
