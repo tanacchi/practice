@@ -12,6 +12,10 @@ function App() {
     setGreetMsg(await invoke("greet", { name }));
   }
 
+function executeCommands() {
+    invoke('simple_command')
+}
+
   return (
     <div className="container">
       <h1>Welcome to Tauri!</h1>
@@ -46,6 +50,8 @@ function App() {
       </form>
 
       <p>{greetMsg}</p>
+
+      <button onClick={executeCommands}>Click to execute command</button>
     </div>
   );
 }
