@@ -2,6 +2,7 @@ import { useState } from "react";
 import reactLogo from "./assets/react.svg";
 import { invoke } from "@tauri-apps/api/tauri";
 import { open } from '@tauri-apps/api/dialog'
+import { emit } from '@tauri-apps/api/event'
 import "./App.css";
 
 function App() {
@@ -37,6 +38,10 @@ function App() {
 
   function openDialog () {
     open().then(files => console.log(files))
+  }
+
+  function emitMessage() {
+    emit('front-to-back', "hello from front")
   }
 
   return (
@@ -76,6 +81,7 @@ function App() {
 
       <button onClick={executeCommands}>Click to execute command</button>
       <button onClick={openDialog}>Click to open dialog</button>
+      <button onClick={emitMessage}>Click to emit message</button>
     </div>
   );
 }

@@ -65,6 +65,13 @@ fn main() {
                 let window = app.get_window("main").unwrap();
                 window.open_devtools();
                 window.close_devtools();
+
+                let id = app.listen_global("front-to-back", |event| {
+                    println!(
+                        "got front-to-back with payload {:?}",
+                        event.payload().unwrap()
+                    )
+                });
             }
             Ok(())
         })
