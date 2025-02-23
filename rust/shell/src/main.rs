@@ -1,4 +1,4 @@
-use std::{env, io::{stdin, stdout, Write}, path::Path, process::Command};
+use std::{env, io::{stdin, stdout, Write}, path::Path, process::{Child, Command}};
 
 fn main() {
   loop {
@@ -9,7 +9,10 @@ fn main() {
     stdin().read_line(& mut input).unwrap();
 
     let mut parts = input.trim().split_whitespace();
-    let command = parts.next().unwrap();
+    let command = match parts.next() {
+      Some(command) => command,
+      None => continue,
+    };
     let args = parts;
 
     match command {
@@ -20,16 +23,18 @@ fn main() {
           eprintln!("{}", e);
         }
       },
+      "exit" => return,
       command => {
         let mut child = Command::new(command);
         args.for_each(|arg| {
           child.arg(arg);
           ()
         });
-        let mut child = child.spawn()
-          .unwrap();
 
-        let _ = child.wait();
+        match child.spawn() {
+          Ok(mut child) => { child.wait(); }
+          Err(e) => eprint!("{}", e),
+        }
       }
     }
     }
