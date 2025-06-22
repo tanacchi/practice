@@ -1,6 +1,6 @@
-import { bubbleSort } from "./bubbleSort";
-import { insertionSort } from "./insertionSort";
-import { selectionSort } from "./selectionSort";
+import { bubbleSort } from "./logic/bubbleSort";
+import { insertionSort } from "./logic/insertionSort";
+import { selectionSort } from "./logic/selectionSort";
 
 const algorithms = [
 	{ name: "bubbleSort", fn: bubbleSort },

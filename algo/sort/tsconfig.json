@@ -9,5 +9,10 @@
 		"skipLibCheck": true,
 		"outDir": "dist"
 	},
-	"include": ["*.ts"]
+	"include": [
+		"*.ts",
+		"logic/bubbleSort.ts",
+		"logic/insertionSort.ts",
+		"logic/selectionSort.ts"
+	]
 }
