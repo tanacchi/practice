@@ -1,11 +1,13 @@
 import { bubbleSort } from "./logic/bubbleSort";
 import { insertionSort } from "./logic/insertionSort";
+import { quickSort } from "./logic/quickSort";
 import { selectionSort } from "./logic/selectionSort";
 
 const algorithms = [
 	{ name: "bubbleSort", fn: bubbleSort },
 	{ name: "selectionSort", fn: selectionSort },
 	{ name: "insertionSort", fn: insertionSort },
+	{ name: "quickSort", fn: quickSort },
 ];
 
 describe("Sort Algorithms", () => {
