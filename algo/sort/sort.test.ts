@@ -1,5 +1,6 @@
 import { bubbleSort } from "./logic/bubbleSort";
 import { insertionSort } from "./logic/insertionSort";
+import { mergeSort } from "./logic/mergeSort";
 import { quickSort } from "./logic/quickSort";
 import { selectionSort } from "./logic/selectionSort";
 
@@ -8,6 +9,7 @@ const algorithms = [
 	{ name: "selectionSort", fn: selectionSort },
 	{ name: "insertionSort", fn: insertionSort },
 	{ name: "quickSort", fn: quickSort },
+	{ name: "mergeSort", fn: mergeSort },
 ];
 
 describe("Sort Algorithms", () => {

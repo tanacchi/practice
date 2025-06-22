@@ -6,6 +6,5 @@ export const quickSort: SortAlgorithm<number> = (arr: number[]): number[] => {
 	const pivot = arr[0];
 	const smaller = arr.slice(1).filter((elm) => elm < pivot);
 	const larger = arr.slice(1).filter((elm) => elm >= pivot);
-	console.log(`${smaller}, ${pivot}, ${larger}`);
 	return [...quickSort(smaller), pivot, ...quickSort(larger)];
 };
